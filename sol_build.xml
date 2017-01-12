@@ -17,6 +17,11 @@
         </fileset>
     </path>
 
+    <!-- my init -->
+    <target name="sol-init">
+        <mkdir dir="src/it/polito/dp2/NFFG/sol3/models"/>
+    </target>
+
     <!-- all necessary operations to build the web-server service (part 1) -->
     <target name="build-service">
 
@@ -52,6 +57,11 @@
     <!-- all necessary operations to build the client (part 2) -->
     <target name="build-client">
         <!-- TODO -->
+    </target>
+
+    <!-- my clean -->
+    <target name="sol-clean">
+        <delete dir="src/it/polito/dp2/NFFG/sol3/models"/>
     </target>
 
 </project>

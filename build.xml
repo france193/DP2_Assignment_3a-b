@@ -79,6 +79,10 @@
     <target name="init">
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${gen-tomcat-service.dir}"/>
+
+        <ant antfile="${sol.build.filepath}" target="sol-init">
+            <property name="basedir" value="${lab3.location}"/>
+        </ant>
     </target>
 
     <!-- The target for compiling the NFFGInfo application -->
@@ -232,6 +236,10 @@
     <target name="clean">
         <delete dir="${build.dir}"/>
         <delete dir="${gen-tomcat-service.dir}"/>
+
+        <ant antfile="${sol.build.filepath}" target="sol-clean">
+            <property name="basedir" value="${lab3.location}"/>
+        </ant>
     </target>
 
     <!--target for building the final zip containing the solution -->
