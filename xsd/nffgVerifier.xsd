@@ -9,22 +9,33 @@
             elementFormDefault="qualified">
 
     <!-- SINGLE ELEMENT:
-        * nffg
-        * node
-        * link
+        * nffg - OK
+        * node - OK
+        * link - OK
         * policy
     -->
 
     <!-- COLLECTION OF ELEMENTS:
-        * nffgs
-        * nodes
-        * links
-        * policies
-        * v_results
+        * nffgs - OK
+        * nodes - OK
+        * links - OK
+        * policies - OK
+        * v_results - OK
     -->
 
-    <!-- SINGLE ELEMENT DECLARATION -->
-    <xsd:element name="nffg" type="flo:nffgType">
+    <!-- SINGLE ELEMENT -->
+    <xsd:element name="nffg">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="nodes" type="flo:nodesType" minOccurs="0"/>
+                <xsd:element name="links" type="flo:linksType" minOccurs="0"/>
+                <xsd:element name="policies" type="flo:policiesType" minOccurs="0"/>
+            </xsd:sequence>
+            <xsd:attribute name="id" type="xsd:long" use="required"/>
+            <xsd:attribute name="name" type="xsd:string" use="optional"/>
+            <xsd:attribute name="last_updated_time" type="xsd:dateTime" use="required"/>
+        </xsd:complexType>
+
         <xsd:unique name="node_id_key">
             <xsd:selector xpath="flo:nodes/flo:node"/>
             <xsd:field xpath="@id"/>
@@ -59,37 +70,84 @@
         </xsd:keyref>
     </xsd:element>
 
-    <xsd:element name="node" type="flo:nodeType"/>
+    <xsd:element name="node">
+        <xsd:complexType>
+            <xsd:attribute name="id" type="xsd:long" use="required"/>
+            <xsd:attribute name="name" type="xsd:string" use="optional"/>
+            <xsd:attribute name="functional_type" type="flo:nodeFunctionalType" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
 
-    <xsd:element name="link" type="flo:linkType"/>
+    <xsd:element name="link">
+        <xsd:complexType>
+            <xsd:attribute name="id" type="xsd:long" use="required"/>
+            <xsd:attribute name="name" type="xsd:string" use="optional"/>
+            <xsd:attribute name="source_node" type="xsd:long" use="required"/>
+            <xsd:attribute name="destination_node" type="xsd:long" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="policy">
+        <xsd:complexType>
+            <xsd:choice>
+                <xsd:element ref="flo:r_policy"/>
+                <xsd:element ref="flo:t_policy"/>
+            </xsd:choice>
+        </xsd:complexType>
+    </xsd:element>
 
     <xsd:element name="r_policy" type="flo:r_policyType"/>
 
     <xsd:element name="t_policy" type="flo:t_policyType"/>
 
-    <!-- COLLECTION OF ELEMENTS DECLARATION -->
-    <xsd:element name="nffgs" type="flo:nffgsType">
+    <!-- COLLECTION OF ELEMENTS -->
+    <xsd:element name="nffgs">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="flo:nffg" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
         <xsd:unique name="nffg_id_key">
             <xsd:selector xpath="flo:nffg"/>
             <xsd:field xpath="@id"/>
         </xsd:unique>
     </xsd:element>
 
-    <xsd:element name="nodes" type="flo:nodesType">
+    <xsd:element name="nodes">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="flo:node" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
         <xsd:unique name="node_id_key_collection_of_elements">
             <xsd:selector xpath="flo:node"/>
             <xsd:field xpath="@id"/>
         </xsd:unique>
     </xsd:element>
 
-    <xsd:element name="links" type="flo:linksType">
+    <xsd:element name="links">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="flo:link" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
         <xsd:unique name="link_id_key_collection_of_elements">
             <xsd:selector xpath="flo:link"/>
             <xsd:field xpath="@id"/>
         </xsd:unique>
     </xsd:element>
 
-    <xsd:element name="policies" type="flo:policiesType">
+    <xsd:element name="policies">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="flo:r_policy" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element ref="flo:t_policy" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
         <xsd:unique name="policy_id_key_collection_of_elements">
             <xsd:selector xpath="flo:r_policy|flo:t_policy"/>
             <xsd:field xpath="@id"/>
@@ -100,33 +158,22 @@
         </xsd:keyref>
     </xsd:element>
 
-    <xsd:element name="v_results" type="flo:v_resultsType"/>
+    <xsd:element name="v_results">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="v_result" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:attribute name="policy" type="xsd:long" use="required"/>
+                        <xsd:attribute name="result" type="xsd:boolean" use="optional"/>
+                        <xsd:attribute name="time" type="xsd:dateTime" use="optional"/>
+                        <xsd:attribute name="message" type="xsd:string" use="optional"/>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 
     <!-- SINGLE ELEMENT IMPLEMENTATION -->
-    <xsd:complexType name="nffgType">
-        <xsd:sequence>
-            <xsd:element name="nodes" type="flo:nodesType" minOccurs="0"/>
-            <xsd:element name="links" type="flo:linksType" minOccurs="0"/>
-            <xsd:element name="policies" type="flo:policiesType" minOccurs="0"/>
-        </xsd:sequence>
-        <xsd:attribute name="id" type="xsd:long" use="required"/>
-        <xsd:attribute name="name" type="xsd:string" use="optional"/>
-        <xsd:attribute name="last_updated_time" type="xsd:dateTime" use="required"/>
-    </xsd:complexType>
-
-    <xsd:complexType name="nodeType">
-        <xsd:attribute name="id" type="xsd:long" use="required"/>
-        <xsd:attribute name="name" type="xsd:string" use="optional"/>
-        <xsd:attribute name="functional_type" type="flo:nodeFunctionalType" use="required"/>
-    </xsd:complexType>
-
-    <xsd:complexType name="linkType">
-        <xsd:attribute name="id" type="xsd:long" use="required"/>
-        <xsd:attribute name="name" type="xsd:string" use="optional"/>
-        <xsd:attribute name="source_node" type="xsd:long" use="required"/>
-        <xsd:attribute name="destination_node" type="xsd:long" use="required"/>
-    </xsd:complexType>
-
     <xsd:complexType name="policyType">
         <xsd:sequence>
             <xsd:element name="v_result" minOccurs="0" maxOccurs="1">
@@ -169,12 +216,6 @@
     </xsd:complexType>
 
     <!-- COLLECTION OF ELEMENT IMPLEMENTATION -->
-    <xsd:complexType name="nffgsType">
-        <xsd:sequence>
-            <xsd:element ref="flo:nffg" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-    </xsd:complexType>
-
     <xsd:complexType name="nodesType">
         <xsd:sequence>
             <xsd:element ref="flo:node" minOccurs="0" maxOccurs="unbounded"/>
@@ -191,19 +232,6 @@
         <xsd:sequence>
             <xsd:element ref="flo:r_policy" minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element ref="flo:t_policy" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-    </xsd:complexType>
-
-    <xsd:complexType name="v_resultsType">
-        <xsd:sequence>
-            <xsd:element name="v_result" minOccurs="0" maxOccurs="unbounded">
-                <xsd:complexType>
-                    <xsd:attribute name="policy" type="xsd:long" use="required"/>
-                    <xsd:attribute name="result" type="xsd:boolean" use="optional"/>
-                    <xsd:attribute name="time" type="xsd:dateTime" use="optional"/>
-                    <xsd:attribute name="message" type="xsd:string" use="optional"/>
-                </xsd:complexType>
-            </xsd:element>
         </xsd:sequence>
     </xsd:complexType>
 

@@ -19,8 +19,8 @@
 
     <!-- all necessary operations to build the web-server service (part 1) -->
     <target name="build-service">
-        <!-- Create annotated classes from xsd schema: -->
 
+        <!-- Create annotated classes from xsd schema: -->
         <echo message="Generating annotated classes from the xsd schema..."/>
         <exec executable="xjc" failonerror="true">
             <arg value="-d"/>
@@ -29,7 +29,6 @@
             <arg value="it.polito.dp2.NFFG.sol3.models"/>
             <arg value="${schema.dir}/nffgVerifier.xsd"/>
         </exec>
-        <touch file="${lab3.location}/.flagfile"/>
         <echo message="Done!"/>
 
         <!-- Build classes from java file -->
