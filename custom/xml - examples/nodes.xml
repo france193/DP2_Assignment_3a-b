@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flo:nodes xmlns:flo="https://france193.wordpress.com"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://france193.wordpress.com nffgVerifier.xsd">
+
+    <flo:node id="0" name="node0" functional_type="MAIL_CLIENT">
+        <flo:link id="0" name="link0" source_node="0" destination_node="1"/>
+    </flo:node>
+
+    <flo:node id="1" name="node1" functional_type="FW">
+        <flo:link id="1" name="link1" source_node="1" destination_node="2"/>
+        <flo:link id="3" name="link3" source_node="1" destination_node="0"/>
+    </flo:node>
+
+    <flo:node id="2" name="node2" functional_type="MAIL_SERVER">
+        <flo:link id="2" name="link2" source_node="2" destination_node="1"/>
+    </flo:node>
+
+    <flo:node id="3" name="node0" functional_type="MAIL_CLIENT"/>
+    <flo:node id="4" name="node1" functional_type="FW"/>
+    <flo:node id="5" name="node2" functional_type="MAIL_SERVER"/>
+
+</flo:nodes>

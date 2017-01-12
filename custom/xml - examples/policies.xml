@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flo:policies xmlns:flo="https://france193.wordpress.com"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://france193.wordpress.com nffgVerifier.xsd">
+
+    <flo:r_policy id="1"
+                  name="policy0"
+                  nffg="0"
+                  isPositive="true"
+                  source_node="2"
+                  destination_node="0">
+        <flo:v_result policy="2"
+                      result="true"
+                      time="2010-09-29T03:49:45"
+                      message="Policy is verified and it's true"/>
+    </flo:r_policy>
+
+    <flo:r_policy id="2"
+                  name="policy0"
+                  nffg="0"
+                  isPositive="true"
+                  source_node="2"
+                  destination_node="0"/>
+
+    <flo:t_policy id="3" nffg="0" isPositive="true" source_node="2" destination_node="0">
+        <flo:v_result policy="2"
+                      result="true"
+                      time="2010-09-29T03:49:45"
+                      message="Policy is verified and it's true"/>
+        <flo:traversal_requested_node functional_type="CACHE"/>
+    </flo:t_policy>
+
+</flo:policies>
