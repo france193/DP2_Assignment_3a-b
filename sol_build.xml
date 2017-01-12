@@ -19,7 +19,7 @@
 
     <!-- my init -->
     <target name="sol-init">
-        <mkdir dir="src/it/polito/dp2/NFFG/sol3/models"/>
+        <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models"/>
     </target>
 
     <!-- all necessary operations to build the web-server service (part 1) -->
@@ -31,7 +31,7 @@
             <arg value="-d"/>
             <arg value="${src.dir}"/>
             <arg value="-p"/>
-            <arg value="it.polito.dp2.NFFG.sol3.models"/>
+            <arg value="it.polito.dp2.NFFG.sol3.service.models"/>
             <arg value="${schema.dir}/nffgVerifier.xsd"/>
         </exec>
         <echo message="Done!"/>
@@ -61,7 +61,7 @@
 
     <!-- my clean -->
     <target name="sol-clean">
-        <delete dir="src/it/polito/dp2/NFFG/sol3/models"/>
+        <delete dir="src/it/polito/dp2/NFFG/sol3/service/models"/>
     </target>
 
 </project>
