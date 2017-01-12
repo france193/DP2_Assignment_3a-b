@@ -19,18 +19,18 @@
 
     <!-- all necessary operations to build the web-server service (part 1) -->
     <target name="build-service">
-        <!-- Create annotated classes from xsd schema:
+        <!-- Create annotated classes from xsd schema: -->
 
-            <echo message="Generating annotated classes from the xsd schema..."/>
-            <exec executable="xjc" failonerror="true">
-                <arg value="-d"/>
-                <arg value="${src.dir}"/>
-                <arg value="-p"/>
-                <arg value="it.polito.dp2.NFFG.lab3.sol3.service.models"/>
-                <arg value="${schema.dir}/nffgVerifier.xsd"/>
-            </exec>
-            <echo message="Done!"/>
-        -->
+        <echo message="Generating annotated classes from the xsd schema..."/>
+        <exec executable="xjc" failonerror="true">
+            <arg value="-d"/>
+            <arg value="${src.dir}"/>
+            <arg value="-p"/>
+            <arg value="it.polito.dp2.NFFG.sol3.models"/>
+            <arg value="${schema.dir}/nffgVerifier.xsd"/>
+        </exec>
+        <touch file="${lab3.location}/.flagfile"/>
+        <echo message="Done!"/>
 
         <!-- Build classes from java file -->
         <echo message="Building java classes from java code..."/>
