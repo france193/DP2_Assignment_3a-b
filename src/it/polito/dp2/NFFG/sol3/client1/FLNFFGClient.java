@@ -16,7 +16,6 @@ public class FLNFFGClient implements NFFGClient {
     private static final String DEFAULT_URL = "http://localhost:8080/NffgService/rest";
 
     private NffgVerifier monitor;
-    private NetworkService myNetworkService;
 
     public FLNFFGClient() {
 
@@ -25,61 +24,6 @@ public class FLNFFGClient implements NFFGClient {
 
         if (fileName == null) {
             fileName = DEFAULT_URL;
-        }
-
-        NffgVerifierFactory factory = NffgVerifierFactory.newInstance();
-        monitor = factory.newNffgVerifier();
-        // create a new NetworkServices root element
-        myNetworkService = new NetworkService();
-
-        // get the list of NFFGs as a set
-        Set<NffgReader> nffgs_set = monitor.getNffgs();
-
-        // for each Nffg read
-        for (NffgReader nffg : nffgs_set) {
-
-            /** NFFG **/
-            /* create myNffg */
-            NetworkService.Nffg myNffg = new NetworkService.Nffg();
-            /* setting parameter on myNffg */
-            myNffg.setNffgNameId(nffg.getName());
-            myNffg.setLastUpdatedTime(getXMLCal(nffg.getUpdateTime()));
-
-            /** NODES **/
-            /* take nodes of myNffg */
-            Set<NodeReader> node_set = nffg.getNodes();
-
-            /* for each node */
-            for (NodeReader node : node_set) {
-
-                /* create myNode */
-                NetworkService.Nffg.Node myNode = new NetworkService.Nffg.Node();
-                /* setting parameter of myNode */
-                myNode.setNodeNameId(node.getName());
-                myNode.setFunctionalType(NodeFunctionalType.valueOf(node.getFuncType().value()));
-
-                /* add myNode to my myNffg */
-                myNffg.getNode().add(myNode);
-
-                /** LINKS **/
-                /* take links of every node and save it to my nffg */
-                Set<LinkReader> link_set = node.getLinks();
-
-                for (LinkReader link : link_set) {
-                    /* create myNode */
-                    NetworkService.Nffg.Link myLink = new NetworkService.Nffg.Link();
-
-                    /* setting parameter of myLink */
-                    myLink.setLinkNameId(link.getName());
-                    myLink.setLinkSourceNodeNameIdRefer(link.getSourceNode().getName());
-                    myLink.setLinkDestinationNodeNameIdRefer(link.getDestinationNode().getName());
-
-                    myNffg.getLink().add(myLink);
-                }
-            }
-
-            /* add myNffg to my NetworkService */
-            myNetworkService.getNffg().add(myNffg);
         }
     }
 
