@@ -24,7 +24,7 @@
     -->
 
     <!-- SINGLE ELEMENT -->
-    <xsd:element name="nffg">
+    <xsd:element name="FLNffg">
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:element name="nodes" type="flo:nodesType" minOccurs="0"/>
@@ -70,7 +70,7 @@
         </xsd:keyref>
     </xsd:element>
 
-    <xsd:element name="node">
+    <xsd:element name="FLNode">
         <xsd:complexType>
             <xsd:attribute name="id" type="xsd:long" use="required"/>
             <xsd:attribute name="name" type="xsd:string" use="optional"/>
@@ -78,7 +78,7 @@
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:element name="link">
+    <xsd:element name="FLLink">
         <xsd:complexType>
             <xsd:attribute name="id" type="xsd:long" use="required"/>
             <xsd:attribute name="name" type="xsd:string" use="optional"/>
@@ -87,7 +87,7 @@
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:element name="policy">
+    <xsd:element name="FLPolicy">
         <xsd:complexType>
             <xsd:choice>
                 <xsd:element ref="flo:r_policy"/>
@@ -101,10 +101,10 @@
     <xsd:element name="t_policy" type="flo:t_policyType"/>
 
     <!-- COLLECTION OF ELEMENTS -->
-    <xsd:element name="nffgs">
+    <xsd:element name="FLNffgs">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element ref="flo:nffg" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element ref="flo:FLNffg" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
 
@@ -114,10 +114,10 @@
         </xsd:unique>
     </xsd:element>
 
-    <xsd:element name="nodes">
+    <xsd:element name="FLNodes">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element ref="flo:node" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element ref="flo:FLNode" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
 
@@ -127,10 +127,10 @@
         </xsd:unique>
     </xsd:element>
 
-    <xsd:element name="links">
+    <xsd:element name="FLLinks">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element ref="flo:link" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element ref="flo:FLLink" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
 
@@ -140,7 +140,7 @@
         </xsd:unique>
     </xsd:element>
 
-    <xsd:element name="policies">
+    <xsd:element name="FLPolicies">
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:element ref="flo:r_policy" minOccurs="0" maxOccurs="unbounded"/>
@@ -158,7 +158,7 @@
         </xsd:keyref>
     </xsd:element>
 
-    <xsd:element name="v_results">
+    <xsd:element name="FLV_results">
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:element name="v_result" minOccurs="0" maxOccurs="unbounded">
@@ -218,13 +218,13 @@
     <!-- COLLECTION OF ELEMENT IMPLEMENTATION -->
     <xsd:complexType name="nodesType">
         <xsd:sequence>
-            <xsd:element ref="flo:node" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="flo:FLNode" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
 
     <xsd:complexType name="linksType">
         <xsd:sequence>
-            <xsd:element ref="flo:link" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="flo:FLLink" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
 

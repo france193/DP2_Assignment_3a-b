@@ -3,7 +3,7 @@ package it.polito.dp2.NFFG.sol3.service.resources;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
-import it.polito.dp2.NFFG.sol3.service.models.*;
+import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
 import it.polito.dp2.NFFG.sol3.service.services.NffgServices;
 
 import javax.ws.rs.GET;
@@ -31,10 +31,11 @@ public class NffgsResources {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Nffg> getNffgs() {
+    public List<FLNffg> getNffgs() {
        return service.getNffgs();
     }
 
+    /*
     // A NFFG
     @GET
     @Path("/nffgs/{nffg_id}")
@@ -44,7 +45,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Nffg getNffg(@PathParam("nffg_id") int nffg_id) {
+    public FLNffg getNffg(@PathParam("nffg_id") int nffg_id) {
         return service.getNffg(nffg_id);
     }
 
@@ -57,7 +58,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Nodes getNffgNodes(@PathParam("nffg_id") int nffg_id) {
+    public FLNodes getNffgNodes(@PathParam("nffg_id") int nffg_id) {
         return service.getNffgNodes(nffg_id);
     }
 
@@ -70,7 +71,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Node getNffgNode(@PathParam("nffg_id") int nffg_id,
+    public FLNode getNffgNode(@PathParam("nffg_id") int nffg_id,
                         @PathParam("node_id") int node_id) {
         return service.getNffgNode(nffg_id, node_id);
     }
@@ -84,7 +85,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Links getNffgNodeLinks(@PathParam("nffg_id") int nffg_id,
+    public FLLinks getNffgNodeLinks(@PathParam("nffg_id") int nffg_id,
                          @PathParam("node_id") int node_id) {
         return service.getNffgNodeLinks(nffg_id, node_id);
     }
@@ -98,7 +99,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Link getNffgNodeLink(@PathParam("nffg_id") int nffg_id,
+    public FLLink getNffgNodeLink(@PathParam("nffg_id") int nffg_id,
                         @PathParam("node_id") int node_id,
                         @PathParam("link_id") int link_id) {
         return service.getNffgNodeLink(nffg_id, node_id, link_id);
@@ -113,7 +114,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Links getNffgLinks(@PathParam("nffg_id") int nffg_id) {
+    public FLLinks getNffgLinks(@PathParam("nffg_id") int nffg_id) {
         return service.getNffgLinks(nffg_id);
     }
 
@@ -126,7 +127,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Link getNffgLink(@PathParam("nffg_id") int nffg_id,
+    public FLLink getNffgLink(@PathParam("nffg_id") int nffg_id,
                         @PathParam("link_id") int link_id) {
         return service.getNffgLink(nffg_id, link_id);
     }
@@ -140,7 +141,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Policies getNffgPolicies(@PathParam("nffg_id") int nffg_id) {
+    public FLPolicies getNffgPolicies(@PathParam("nffg_id") int nffg_id) {
         return service.getNffgPolicies(nffg_id);
     }
 
@@ -153,7 +154,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Policy getNffgPolicy(@PathParam("nffg_id") int nffg_id,
+    public FLPolicy getNffgPolicy(@PathParam("nffg_id") int nffg_id,
                           @PathParam("policy_id") int policy_id) {
         return service.getNffgPolicy(nffg_id, policy_id);
     }
@@ -166,7 +167,7 @@ public class NffgsResources {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Policies getPolicies() {
+    public FLPolicies getPolicies() {
         return service.getPolicies();
     }
 
@@ -179,7 +180,8 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Policy getNode(@PathParam("policy_id") int policy_id) {
+    public FLPolicy getNode(@PathParam("policy_id") int policy_id) {
         return service.getPolicy(policy_id);
     }
+    */
 }

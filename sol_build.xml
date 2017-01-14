@@ -9,7 +9,14 @@
 
     <property name="lab3.location" location="."/>
     <property name="schema.dir" location="${lab3.location}/xsd"/>
-    <property name="path.prefix" value="it/polito/dp2/NFFG/sol3"/>
+    <property name="path.prefix" value="it/polito/dp2/NFFG/sol3/service"/>
+
+    <!-- The location of the ... web service -->
+    <property name="PORT" value="8080"/>
+    <property name="URLNeo4j" value="http://localhost:${PORT}/Neo4JXML/rest"/>
+    <property name="WADL" value="${URLNeo4j}/application.wadl"/>
+
+    <property name="gen.dir" value="src/it/polito/dp2/NFFG/sol3/service/models/Neo4jXML"/>
 
     <path id="classpath">
         <fileset dir="${lib.dir}">
@@ -20,24 +27,46 @@
     <!-- my init -->
     <target name="sol-init">
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models"/>
+        <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models/NffgService"/>
+        <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models/Neo4jXML"/>
     </target>
+
+    <!-- use a task of the library "org.jvnet.ws.wadl2java.WJCTask" creating a new task type named "wjc" -->
+    <taskdef name="wjc" classname="org.jvnet.ws.wadl2java.WJCTask">
+        <classpath>
+            <!-- where can be find the library and the .jar file -->
+            <fileset dir="${lib.dir}" includes="*.jar"/>
+        </classpath>
+    </taskdef>
 
     <!-- all necessary operations to build the web-server service (part 1) -->
     <target name="build-service">
 
+        <!-- Create annotated classes from wadl from Neo4jXML -->
+        <echo message=" --(1)--> Generating annotated classes from the wadl of Neo4jXML..." />
+        <wjc description="${WADL}"
+             package="it.polito.dp2.NFFG.sol3.service.models.Neo4jXML"
+             autoSchemaPackage="false"
+             target="${src.dir}">
+            <customizations dir="." includes="binding.xjc"/>
+            <produces dir="${src.dir}/it/polito/dp2/NFFG/sol3/service/models/Neo4jXML" includes="*.java"/>
+            <depends dir="." includes="build.xml"/>
+        </wjc>
+        <echo message=" --(1)--> Done"/>
+
         <!-- Create annotated classes from xsd schema: -->
-        <echo message="Generating annotated classes from the xsd schema..."/>
+        <echo message=" --(2)--> Generating annotated classes from the xsd schema..."/>
         <exec executable="xjc" failonerror="true">
             <arg value="-d"/>
             <arg value="${src.dir}"/>
             <arg value="-p"/>
-            <arg value="it.polito.dp2.NFFG.sol3.service.models"/>
+            <arg value="it.polito.dp2.NFFG.sol3.service.models.NffgService"/>
             <arg value="${schema.dir}/nffgVerifier.xsd"/>
         </exec>
-        <echo message="Done!"/>
+        <echo message=" --(2)--> Done"/>
 
         <!-- Build classes from java file -->
-        <echo message="Building java classes from java code..."/>
+        <echo message=" --(3)--> Building java classes from java code..."/>
         <javac debug="on"
                fork="true"
                destdir="${build.dir}"
@@ -45,12 +74,16 @@
                includeantruntime="false"
                source="${source}"
                target="${target}">
-            <include name="${path.prefix}/**/*.java"/>
+            <include name="${path.prefix}/database/*.java"/>
+            <include name="${path.prefix}/models/NffgService/*.java"/>
+            <include name="${path.prefix}/models/Neo4jXML/*.java"/>
+            <include name="${path.prefix}/resources/*.java"/>
+            <include name="${path.prefix}/services/*.java"/>
             <classpath>
                 <path refid="classpath"/>
             </classpath>
         </javac>
-        <echo message="Done!"/>
+        <echo message=" --(3)--> Done"/>
 
     </target>
 
