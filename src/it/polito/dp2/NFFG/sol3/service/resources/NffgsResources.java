@@ -11,16 +11,25 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by FLDeviOS on 13/01/2017.
  */
+@Path("")
 public class NffgsResources {
 
     NffgServices service = new NffgServices();
 
     public NffgsResources() {
+    }
+
+    @GET
+    @Path("/test")
+    @Produces("text/plain")
+    public String getTime() {
+        return new Date().toString();
     }
 
     // ALL NFFGS
@@ -38,7 +47,7 @@ public class NffgsResources {
     /*
     // A NFFG
     @GET
-    @Path("/nffgs/{nffg_id}")
+    @Path("/nffg/{nffg_id}")
     @ApiOperation(value = "get a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -51,7 +60,7 @@ public class NffgsResources {
 
     // NODES OF A NFFG
     @GET
-    @Path("/nffgs/{nffg_id}/nodes")
+    @Path("/nffg/{nffg_id}/nodes")
     @ApiOperation(value = "get all nodes of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -64,7 +73,7 @@ public class NffgsResources {
 
     // A NODE OF AN NFFG
     @GET
-    @Path("/nffgs/{nffg_id}/nodes/{node_id}")
+    @Path("/nffg/{nffg_id}/node/{node_id}")
     @ApiOperation(value = "get a specific node of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -78,7 +87,7 @@ public class NffgsResources {
 
     // ALL LINKS OF A NODE OF AN NFFG
     @GET
-    @Path("/nffgs/{nffg_id}/nodes/{node_id}/links")
+    @Path("/nffg/{nffg_id}/node/{node_id}/links")
     @ApiOperation(value = "get all links of a specific node of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -92,7 +101,7 @@ public class NffgsResources {
 
     // A LINK OF A NODE OF AN NFFG
     @GET
-    @Path("/nffgs/{nffg_id}/nodes/{node_id}/links/{link_id}")
+    @Path("/nffg/{nffg_id}/node/{node_id}/link/{link_id}")
     @ApiOperation(value = "get a specific link of a specific node of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -107,7 +116,7 @@ public class NffgsResources {
 
     // ALL LINKS OF A NFFG
     @GET
-    @Path("/nffgs/{nffg_id}/links")
+    @Path("/nffg/{nffg_id}/links")
     @ApiOperation(value = "get all links of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -120,7 +129,7 @@ public class NffgsResources {
 
     // A LINK OF A NFFG
     @GET
-    @Path("/nffgs/{nffg_id}/links/{link_id}")
+    @Path("/nffg/{nffg_id}/link/{link_id}")
     @ApiOperation(value = "get a specific link of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -134,7 +143,7 @@ public class NffgsResources {
 
     // ALL POLICIES OF A NFFG
     @GET
-    @Path("/nffgs/{nffg_id}/policies")
+    @Path("/nffg/{nffg_id}/policies")
     @ApiOperation(value = "get all policies of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -147,7 +156,7 @@ public class NffgsResources {
 
     // A POLICY OF A NFFG
     @GET
-    @Path("/nffgs/{nffg_id}/policies/{policy_id}")
+    @Path("/nffg/{nffg_id}/policy/{policy_id}")
     @ApiOperation(value = "get a specific policy of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -173,7 +182,7 @@ public class NffgsResources {
 
     // A POLICY OF ALL NFFGS
     @GET
-    @Path("policies/{policy_id}")
+    @Path("policy/{policy_id}")
     @ApiOperation(value = "get a specifc policy of all nffgs ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
