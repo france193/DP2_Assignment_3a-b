@@ -22,7 +22,8 @@ import java.util.Map;
 public class NffgServices {
 
     private Map<Long, FLNffg> nffgs = NffgDB.getNffgs();
-    private static HashMap<String, Node> myNodes;
+
+    private HashMap<Long, String> nodesID;
 
     private WebTarget target;
     private String baseURL = "http://localhost:8080/Neo4JXML/rest/resource";
@@ -80,113 +81,83 @@ public class NffgServices {
     }
     */
 
-    private void updateDB () {
+    private URI getBaseURI(String url) {
+        return UriBuilder.fromUri(url).build();
+    }
+
+    private void updateDB() {
+
         // create a new client
         client = ClientBuilder.newClient();
 
         // create a webtarget from the baseURL string
         target = client.target(getBaseURI(baseURL));
 
-        Response response = target.path("nodes")
+        getNodeIDs("nodes");
+        getAllNodesInfo("node");
+
+        // empty the local DB
+        nffgs.clear();
+    }
+
+    private void getNodeIDs(String path) {
+        Response response = target.path(path)
                 .request()
                 .accept("application/xml")
                 .get();
 
-        System.out.println("--> Getting all nodes: " + response.getStatus());
-
         if (response.getStatus() == 200) {
-            myNodes = new HashMap<>();
-            String name = null;
+            nodesID = new HashMap<>();
 
-            // for each node
             for (Nodes.Node node : response.readEntity(Nodes.class).getNode()) {
-
-                // create a new node in local setting the id of the one received from Neo4JXML
-                Node n = new Node();
-                n.setId(node.getId());
-
-                // save all properties of the node
-                for (Property property : node.getProperty()) {
-                    name = property.getValue();
-
-                    Property p = new Property();
-                    p.setName(property.getName());
-                    p.setValue(name);
-                    n.getProperty().add(p);
-                }
-
-                // save all labels pf the node
-                node.setLabels(node.getLabels());
-
-                myNodes.put(name, n);
+                nodesID.put(Long.parseLong(node.getId()), node.getProperty().get(0).getValue());
             }
+        }
+    }
 
-            // empty the local DB
-            nffgs.clear();
+    private void getAllNodesInfo(String path) {
+        Response response;
 
-            for (Node node : myNodes.values()) {
-                // is a NFFG, add the new nffg
-                if ( getCorrectProperty(node.getProperty(), "NFFG").contains("NFFG") ) {
-                    FLNffg nffg = new FLNffg();
-                    nffg.setId(Long.parseLong(node.getId()));
-                    nffg.setName(getCorrectProperty(node.getProperty(), "name"));
-                    nffgs.put(nffg.getId(), nffg);
-                } else {
-                    // is a node
-                    FLNode node_temp = new FLNode();
-                    node_temp.setId(Long.parseLong(node.getId()));
-                    node_temp.setName(getCorrectProperty(node.getProperty(), "name"));
+        for(Map.Entry<Long, String> entry : nodesID.entrySet()) {
+            response = target.path(path)
+                    .path(entry.getKey().toString())
+                    .request()
+                    .accept("application/xml")
+                    .get();
 
-                    NodeFunctionalType functionalType = NodeFunctionalType.valueOf((getCorrectProperty(node.getProperty(), "functionalType")));
-                    node_temp.setFunctionalType(functionalType);
+            if (response.getStatus() == 200) {
+                Node node = response.readEntity(Node.class);
 
-                    getCorrectNffg(getCorrectProperty(node.getProperty(), "belongs")).getFLNode().add(node_temp);
+                if (node.getProperty().size() > 0) {
 
-                    for (String s : node.getLabels().getValue()) {
-                        FLLink flLink = new FLLink();
-                        flLink.setId(0);
-                        flLink.setName(s);
-                        flLink.setSourceNode(getCorrectNodeID(getCorrectProperty(node.getProperty(), "name")));
-                        flLink.setDestinationNode(getCorrectNodeID(s));
+                    // NFFG
+                    if ( isNffg(node.getProperty()) ) {
+                        Property p = node.getProperty().get(1);
+                        // System.out.println("  - " + p.getName() + ": " + p.getValue());
+                    } else {
 
-                        getCorrectNffg(getCorrectProperty(node.getProperty(), "belongs")).getFLLink().add(flLink);
+                        // NODE
+                        for (Property p : node.getProperty()) {
+                            //System.out.println("  - " + p.getName() + ": " + p.getValue());
+                        }
+
+                        if (node.getLabels() != null) {
+                            for (String s : node.getLabels().getValue()) {
+                                //System.out.println("  - Linked to: " + s);
+                            }
+                        }
                     }
                 }
             }
         }
-
-
     }
 
-    private long getCorrectNodeID(String name) {
-        for (Node n : myNodes.values()) {
-            if (getCorrectProperty(n.getProperty(), "name").contains(name)) {
-                return Long.parseLong(n.getId());
+    private boolean isNffg(List<Property> properties) {
+        for (Property p : properties) {
+            if ( p.getName().equals("NFFG") && p.getValue().equals("NFFG") ) {
+                return true;
             }
         }
-
-        return -1;
-    }
-
-    private URI getBaseURI(String url) {
-        return UriBuilder.fromUri(url).build();
-    }
-
-    private String getCorrectProperty(List<Property> properies, String string) {
-        for (Property property : properies) {
-            if (property.getName().contains(string)) {
-                return property.getValue();
-            }
-        }
-        return "-1";
-    }
-
-    private FLNffg getCorrectNffg(String string) {
-        for (FLNffg flNffg : nffgs.values()) {
-            if (flNffg.getName().contains(string)) {
-                return flNffg;
-            }
-        }
-        return null;
+        return false;
     }
 }
