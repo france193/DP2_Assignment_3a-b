@@ -1,0 +1,10 @@
+<fran:FLNodes xmlns:fran="https://france193.wordpress.com"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="https://france193.wordpress.com ../xsd/nffgVerifier.xsd">
+
+    <fran:FLNode id="10" name="string" functional_type="NAT"/>
+    <fran:FLNode id="11" name="string" functional_type="NAT"/>
+    <fran:FLNode id="12" name="string" functional_type="NAT"/>
+    <fran:FLNode id="13" name="string" functional_type="NAT"/>
+
+</fran:FLNodes>

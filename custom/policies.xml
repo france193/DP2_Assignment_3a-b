@@ -1,0 +1,35 @@
+<fran:FLPolicies xmlns:fran="https://france193.wordpress.com"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="https://france193.wordpress.com ../xsd/nffgVerifier.xsd">
+
+    <fran:FLPolicy id="10"
+                   name="string"
+                   nffg="10"
+                   isPositive="false"
+                   source_node="10"
+                   destination_node="10">
+
+        <fran:FLV_result policy="10"
+                         result="true"
+                         time="2013-11-23T15:44:07"
+                         message="string"/>
+
+        <fran:FLTraversal_requested_node functional_type="MAIL_SERVER"/>
+    </fran:FLPolicy>
+
+    <fran:FLPolicy id="11"
+                   name="string"
+                   nffg="10"
+                   isPositive="false"
+                   source_node="10"
+                   destination_node="10">
+
+        <fran:FLV_result policy="10"
+                         result="true"
+                         time="2013-11-23T15:44:07"
+                         message="string"/>
+
+        <fran:FLTraversal_requested_node functional_type="MAIL_SERVER"/>
+    </fran:FLPolicy>
+
+</fran:FLPolicies>

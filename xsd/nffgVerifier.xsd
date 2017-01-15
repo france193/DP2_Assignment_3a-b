@@ -37,35 +37,35 @@
         </xsd:complexType>
 
         <xsd:unique name="node_id_key">
-            <xsd:selector xpath="flo:FLNodes/flo:FLNode"/>
+            <xsd:selector xpath="flo:FLNode"/>
             <xsd:field xpath="@id"/>
         </xsd:unique>
         <xsd:unique name="link_id_key">
-            <xsd:selector xpath="flo:FLLinks/flo:FLLink"/>
+            <xsd:selector xpath="flo:FLLink"/>
             <xsd:field xpath="@id"/>
         </xsd:unique>
         <xsd:unique name="policy_id_key">
-            <xsd:selector xpath="flo:FLPolicies/flo:FLPolicy"/>
+            <xsd:selector xpath="flo:FLPolicy"/>
             <xsd:field xpath="@id"/>
         </xsd:unique>
         <xsd:keyref name="policy_id_keyref" refer="flo:policy_id_key">
-            <xsd:selector xpath="flo:FLPolicies/flo:FLPolicy/flo:FLV_result"/>
+            <xsd:selector xpath="flo:FLPolicy/flo:FLV_result"/>
             <xsd:field xpath="@policy"/>
         </xsd:keyref>
         <xsd:keyref name="link_source_node_id_keyref" refer="flo:node_id_key">
-            <xsd:selector xpath="flo:FLLinks/flo:FLLink"/>
+            <xsd:selector xpath="flo:FLLink"/>
             <xsd:field xpath="@source_node"/>
         </xsd:keyref>
         <xsd:keyref name="link_destination_node_id_keyref" refer="flo:node_id_key">
-            <xsd:selector xpath="flo:FLLinks/flo:FLLink"/>
+            <xsd:selector xpath="flo:FLLink"/>
             <xsd:field xpath="@destination_node"/>
         </xsd:keyref>
         <xsd:keyref name="policy_source_node_id_keyref" refer="flo:node_id_key">
-            <xsd:selector xpath="flo:FLPolicies/flo:FLPolicy"/>
+            <xsd:selector xpath="flo:FLPolicy"/>
             <xsd:field xpath="@source_node"/>
         </xsd:keyref>
         <xsd:keyref name="policy_destination_node_id_keyref" refer="flo:node_id_key">
-            <xsd:selector xpath="flo:FLPolicies/flo:FLPolicy"/>
+            <xsd:selector xpath="flo:FLPolicy"/>
             <xsd:field xpath="@destination_node"/>
         </xsd:keyref>
     </xsd:element>
@@ -90,7 +90,7 @@
     <xsd:element name="FLPolicy">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="v_result" minOccurs="0" maxOccurs="1">
+                <xsd:element name="FLV_result" minOccurs="0" maxOccurs="1">
                     <xsd:complexType>
                         <xsd:attribute name="policy" type="xsd:long" use="required"/>
                         <xsd:attribute name="result" type="xsd:boolean" use="optional"/>
@@ -98,7 +98,7 @@
                         <xsd:attribute name="message" type="xsd:string" use="optional"/>
                     </xsd:complexType>
                 </xsd:element>
-                <xsd:element name="traversal_requested_node" minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="FLTraversal_requested_node" minOccurs="0" maxOccurs="unbounded">
                     <xsd:complexType>
                         <xsd:attribute name="functional_type"
                                        type="flo:nodeFunctionalType"
