@@ -3,8 +3,6 @@ package it.polito.dp2.NFFG.sol3.service.services;
 import it.polito.dp2.NFFG.sol3.service.database.NffgDB;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.*;
 import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
-import scala.Int;
-import scala.util.parsing.combinator.testing.Str;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -40,43 +38,93 @@ public class NffgServices {
     // method for service
     public List<FLNffg> getNffgs() {
         updateDB();
+
         return new ArrayList<>(nffgs.values());
     }
 
+    public FLNffg getNffg(String nffg_id) {
+        updateDB();
+
+        return nffgs.get(nffg_id);
+    }
+
+    public FLNodes getNffgNodes(String nffg_id) {
+        updateDB();
+
+        FLNodes nodes = new FLNodes();
+        nodes.getFLNode().addAll(nffgs.get(nffg_id).getFLNode());
+
+        return nodes;
+    }
+
+    public FLNode getNffgNode(String nffg_id, String node_id) {
+        updateDB();
+
+        for (FLNode node : nffgs.get(nffg_id).getFLNode()) {
+            if (node.getId().contains(node_id)) {
+                return node;
+            }
+        }
+
+        return null;
+    }
+
+    public FLLinks getNffgNodeLinks(String nffg_id, String node_id) {
+        updateDB();
+
+        FLLinks links = new FLLinks();
+
+        for (FLLink link : nffgs.get(nffg_id).getFLLink()) {
+            if (link.getSourceNode().equals(node_id)) {
+                links.getFLLink().add(link);
+            }
+        }
+
+        return links;
+    }
+
+    public FLLink getNffgNodeLink(String nffg_id, String node_id, String link_id) {
+        updateDB();
+
+        for (FLLink link : nffgs.get(nffg_id).getFLLink()) {
+            if (link.getSourceNode().equals(node_id) && link.getId().equals(link_id)) {
+                return link;
+            }
+        }
+
+        return null;
+    }
+
+    public FLLinks getNffgLinks(String nffg_id) {
+        updateDB();
+
+        FLLinks links = new FLLinks();
+
+        for (FLLink link : nffgs.get(nffg_id).getFLLink()) {
+            links.getFLLink().add(link);
+        }
+
+        return links;
+    }
+
+    public FLLink getNffgLink(String nffg_id, String link_id) {
+        updateDB();
+
+        for (FLLink link : nffgs.get(nffg_id).getFLLink()) {
+            if (link.getId().equals(link_id)) {
+                return  link;
+            }
+        }
+
+        return null;
+    }
+
     /*
-    public FLNffg getNffg(int nffg_id) {
+    public FLPolicies getNffgPolicies(String nffg_id) {
         updateDB(); //TODO
     }
 
-    public FLNodes getNffgNodes(int nffg_id) {
-        updateDB(); //TODO
-    }
-
-    public FLNode getNffgNode(int nffg_id, int node_id) {
-        updateDB(); //TODO
-    }
-
-    public FLLinks getNffgNodeLinks(int nffg_id, int node_id) {
-        updateDB(); //TODO
-    }
-
-    public FLLink getNffgNodeLink(int nffg_id, int node_id, int link_id) {
-        updateDB(); //TODO
-    }
-
-    public FLLinks getNffgLinks(int nffg_id) {
-        updateDB(); //TODO
-    }
-
-    public FLLink getNffgLink(int nffg_id, int link_id) {
-        updateDB(); //TODO
-    }
-
-    public FLPolicies getNffgPolicies(int nffg_id) {
-        updateDB(); //TODO
-    }
-
-    public FLPolicy getNffgPolicy(int nffg_id, int policy_id) {
+    public FLPolicy getNffgPolicy(String nffg_id, String policy_id) {
         updateDB(); //TODO
     }
 
@@ -84,10 +132,14 @@ public class NffgServices {
         updateDB(); //TODO
     }
 
-    public FLPolicy getPolicy(int policy_id) {
+    public FLPolicy getPolicy(String policy_id) {
         updateDB(); //TODO
     }
     */
+
+    /**
+     * OTHER METHODS
+     **/
 
     private URI getBaseURI(String url) {
         return UriBuilder.fromUri(url).build();
@@ -217,7 +269,7 @@ public class NffgServices {
                         case "name":
                             nodeName = p.getValue();
                             break;
-                            
+
                         case "belongs":
                             NffgID = findNffgID(p.getValue());
                             break;
@@ -229,7 +281,7 @@ public class NffgServices {
 
                 if (node.getLabels() != null) {
                     for (String s : node.getLabels().getValue()) {
-                        if ( !s.contains("NFFG") ) {
+                        if (!s.contains("NFFG")) {
                             FLLink link = new FLLink();
                             link.setId("FROM_" + nodeName + "_TO_" + s);
                             link.setSourceNode(node.getId());

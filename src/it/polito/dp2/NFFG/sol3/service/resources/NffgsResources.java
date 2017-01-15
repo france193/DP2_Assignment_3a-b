@@ -11,25 +11,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by FLDeviOS on 13/01/2017.
  */
-@Path("")
+@Path("resource")
 public class NffgsResources {
 
     NffgServices service = new NffgServices();
 
     public NffgsResources() {
-    }
-
-    @GET
-    @Path("/test")
-    @Produces("text/plain")
-    public String getTime() {
-        return new Date().toString();
     }
 
     // ALL NFFGS
@@ -44,7 +36,6 @@ public class NffgsResources {
        return service.getNffgs();
     }
 
-    /*
     // A NFFG
     @GET
     @Path("/nffg/{nffg_id}")
@@ -54,7 +45,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLNffg getNffg(@PathParam("nffg_id") int nffg_id) {
+    public FLNffg getNffg(@PathParam("nffg_id") String nffg_id) {
         return service.getNffg(nffg_id);
     }
 
@@ -67,7 +58,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLNodes getNffgNodes(@PathParam("nffg_id") int nffg_id) {
+    public FLNodes getNffgNodes(@PathParam("nffg_id") String nffg_id) {
         return service.getNffgNodes(nffg_id);
     }
 
@@ -80,8 +71,8 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLNode getNffgNode(@PathParam("nffg_id") int nffg_id,
-                        @PathParam("node_id") int node_id) {
+    public FLNode getNffgNode(@PathParam("nffg_id") String nffg_id,
+                              @PathParam("node_id") String node_id) {
         return service.getNffgNode(nffg_id, node_id);
     }
 
@@ -94,8 +85,8 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLLinks getNffgNodeLinks(@PathParam("nffg_id") int nffg_id,
-                         @PathParam("node_id") int node_id) {
+    public FLLinks getNffgNodeLinks(@PathParam("nffg_id") String nffg_id,
+                                    @PathParam("node_id") String node_id) {
         return service.getNffgNodeLinks(nffg_id, node_id);
     }
 
@@ -108,9 +99,9 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLLink getNffgNodeLink(@PathParam("nffg_id") int nffg_id,
-                        @PathParam("node_id") int node_id,
-                        @PathParam("link_id") int link_id) {
+    public FLLink getNffgNodeLink(@PathParam("nffg_id") String nffg_id,
+                                  @PathParam("node_id") String node_id,
+                                  @PathParam("link_id") String link_id) {
         return service.getNffgNodeLink(nffg_id, node_id, link_id);
     }
 
@@ -123,7 +114,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLLinks getNffgLinks(@PathParam("nffg_id") int nffg_id) {
+    public FLLinks getNffgLinks(@PathParam("nffg_id") String nffg_id) {
         return service.getNffgLinks(nffg_id);
     }
 
@@ -136,11 +127,12 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLLink getNffgLink(@PathParam("nffg_id") int nffg_id,
-                        @PathParam("link_id") int link_id) {
+    public FLLink getNffgLink(@PathParam("nffg_id") String nffg_id,
+                              @PathParam("link_id") String link_id) {
         return service.getNffgLink(nffg_id, link_id);
     }
 
+    /*
     // ALL POLICIES OF A NFFG
     @GET
     @Path("/nffg/{nffg_id}/policies")
