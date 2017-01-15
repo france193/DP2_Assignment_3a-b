@@ -9,14 +9,14 @@ import java.util.Map;
  * Created by FLDeviOS on 13/01/2017.
  */
 public class NffgDB {
-    private static Map<Long, FLPolicy> policyes = new HashMap<>();
-    private static Map<Long, FLNffg> nffgs = new HashMap<>();
+    private static Map<String, FLPolicy> policyes = new HashMap<>();
+    private static Map<String, FLNffg> nffgs = new HashMap<>();
 
-    public static Map<Long, FLPolicy> getPolicyes() {
+    public static Map<String, FLPolicy> getPolicyes() {
         return policyes;
     }
 
-    public static Map<Long, FLNffg> getNffgs() {
+    public static Map<String, FLNffg> getNffgs() {
         return nffgs;
     }
 }
