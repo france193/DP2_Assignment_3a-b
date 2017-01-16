@@ -188,6 +188,7 @@ public class NffgsResources {
 
     // ADD ENTIRE NFFGS
     @POST
+    @Path("nffgs")
     @ApiOperation(value = "insert an entire nffgs", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created"),

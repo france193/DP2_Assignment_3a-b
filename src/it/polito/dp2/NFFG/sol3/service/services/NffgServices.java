@@ -151,7 +151,7 @@ public class NffgServices {
         return null;
     }
 
-    public Boolean addNffgs(FLNffgs nffgs_t) throws ServiceException {
+    public FLNffgs addNffgs(FLNffgs nffgs_t) throws ServiceException {
         for (FLNffg nffg : nffgs_t.getFLNffg()) {
 
             // Save Nffg, Node and Links on Neo4JXML
@@ -271,9 +271,7 @@ public class NffgServices {
             }
         }
 
-        updateDB();
-
-        return true;
+        return nffgs;
     }
 
     /**
@@ -282,178 +280,5 @@ public class NffgServices {
 
     private URI getBaseURI(String url) {
         return UriBuilder.fromUri(url).build();
-    }
-
-    private void updateDB() throws ServiceException {
-        // empty the local DB
-        nffgs.clear();
-
-        getNodeIDs("nodes");
-        getAllNodesInfo("node");
-    }
-
-    private void getNodeIDs(String path) throws ServiceException {
-        Response response = target.path(path)
-                .request()
-                .accept("application/xml")
-                .get();
-
-        if (response.getStatus() == 200) {
-            nodesID = new HashMap<>();
-
-            for (Nodes.Node node : response.readEntity(Nodes.class).getNode()) {
-                nodesID.put(node.getId(), node.getProperty().get(0).getValue());
-            }
-        } else {
-            throw new ServiceException();
-        }
-    }
-
-    private void getAllNodesInfo(String path) throws ServiceException {
-        Response response;
-        String NffgID = null;
-        String id;
-        String nodeName = null;
-
-        // Save Nffgs
-        for (Map.Entry<String, String> entry : nodesID.entrySet()) {
-
-            response = target.path(path)
-                    .path(entry.getKey().toString())
-                    .request()
-                    .accept("application/xml")
-                    .get();
-
-            if (response.getStatus() == 200) {
-                Node node = response.readEntity(Node.class);
-
-                if (node.getProperty().size() > 0) {
-
-                    // NFFG
-                    if (isNffg(node.getProperty())) {
-                        FLNffg nffg = new FLNffg();
-
-                        id = node.getId();
-                        nffg.setId(id);
-                        nffg.setName(node.getProperty().get(1).getValue());
-
-                        nffgs.put(id, nffg);
-                    }
-                }
-            } else {
-                throw new ServiceException();
-            }
-        }
-
-        // Save Nodes
-        for (Map.Entry<String, String> entry : nodesID.entrySet()) {
-
-            response = target.path(path)
-                    .path(entry.getKey().toString())
-                    .request()
-                    .accept("application/xml")
-                    .get();
-
-            if (response.getStatus() == 200) {
-                Node node = response.readEntity(Node.class);
-
-                if (node.getProperty().size() > 0) {
-
-                    // Node
-                    if (!isNffg(node.getProperty())) {
-                        FLNode n = new FLNode();
-                        n.setId(node.getId());
-
-                        for (Property p : node.getProperty()) {
-
-                            switch (p.getName()) {
-                                case "name":
-                                    n.setName(p.getValue());
-                                    break;
-
-                                case "belongs":
-                                    NffgID = findNffgID(p.getValue());
-                                    break;
-
-                                case "functionalType":
-                                    n.setFunctionalType(NodeFunctionalType.valueOf(p.getValue()));
-                                    break;
-
-                                default:
-                                    break;
-                            }
-                        }
-                        nffgs.get(NffgID).getFLNode().add(n);
-                    }
-                }
-            } else {
-                throw new ServiceException();
-            }
-        }
-
-        // Save Links
-        for (Map.Entry<String, String> entry : nodesID.entrySet()) {
-
-            response = target.path(path)
-                    .path(entry.getKey().toString())
-                    .request()
-                    .accept("application/xml")
-                    .get();
-
-            if (response.getStatus() == 200) {
-                Node node = response.readEntity(Node.class);
-
-                for (Property p : node.getProperty()) {
-
-                    switch (p.getName()) {
-
-                        case "name":
-                            nodeName = p.getValue();
-                            break;
-
-                        case "belongs":
-                            NffgID = findNffgID(p.getValue());
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-
-                if (node.getLabels() != null) {
-                    for (String s : node.getLabels().getValue()) {
-                        if (!s.contains("NFFG")) {
-                            FLLink link = new FLLink();
-                            //TODO name and id of the link?
-                            link.setSourceNode(node.getId());
-                            link.setDestinationNode(s);
-
-                            nffgs.get(NffgID).getFLLink().add(link);
-                        }
-                    }
-                }
-
-            } else {
-                throw new ServiceException();
-            }
-        }
-    }
-
-    private String findNffgID(String name) {
-        for (Map.Entry<String, FLNffg> entry : nffgs.entrySet()) {
-            if (entry.getValue().getName().equals(name)) {
-                return entry.getValue().getId();
-            }
-        }
-        return null;
-    }
-
-    private boolean isNffg(List<Property> properties) {
-        for (Property p : properties) {
-            if (p.getName().equals("NFFG") && p.getValue().equals("NFFG")) {
-                return true;
-            }
-        }
-        return false;
     }
 }
