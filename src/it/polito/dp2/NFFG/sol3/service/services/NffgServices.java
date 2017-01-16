@@ -1,11 +1,13 @@
 package it.polito.dp2.NFFG.sol3.service.services;
 
+import it.polito.dp2.NFFG.lab3.ServiceException;
 import it.polito.dp2.NFFG.sol3.service.database.NffgDB;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.*;
 import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -21,11 +23,13 @@ import java.util.Map;
 public class NffgServices {
 
     private Map<String, FLNffg> nffgs = NffgDB.getNffgs();
+    private Map<String, FLPolicy> policies = NffgDB.getPolicyes();
     private HashMap<String, String> nodesID;
 
     private WebTarget target;
     private String baseURL = "http://localhost:8080/Neo4JXML/rest/resource";
     private Client client;
+    private Response response;
 
     public NffgServices() {
         // create a new client
@@ -37,20 +41,14 @@ public class NffgServices {
 
     // method for service
     public List<FLNffg> getNffgs() {
-        updateDB();
-
         return new ArrayList<>(nffgs.values());
     }
 
     public FLNffg getNffg(String nffg_id) {
-        updateDB();
-
         return nffgs.get(nffg_id);
     }
 
     public FLNodes getNffgNodes(String nffg_id) {
-        updateDB();
-
         FLNodes nodes = new FLNodes();
         nodes.getFLNode().addAll(nffgs.get(nffg_id).getFLNode());
 
@@ -58,8 +56,6 @@ public class NffgServices {
     }
 
     public FLNode getNffgNode(String nffg_id, String node_id) {
-        updateDB();
-
         for (FLNode node : nffgs.get(nffg_id).getFLNode()) {
             if (node.getId().contains(node_id)) {
                 return node;
@@ -70,8 +66,6 @@ public class NffgServices {
     }
 
     public FLLinks getNffgNodeLinks(String nffg_id, String node_id) {
-        updateDB();
-
         FLLinks links = new FLLinks();
 
         for (FLLink link : nffgs.get(nffg_id).getFLLink()) {
@@ -84,8 +78,6 @@ public class NffgServices {
     }
 
     public FLLink getNffgNodeLink(String nffg_id, String node_id, String link_id) {
-        updateDB();
-
         for (FLLink link : nffgs.get(nffg_id).getFLLink()) {
             if (link.getSourceNode().equals(node_id) && link.getId().equals(link_id)) {
                 return link;
@@ -96,8 +88,6 @@ public class NffgServices {
     }
 
     public FLLinks getNffgLinks(String nffg_id) {
-        updateDB();
-
         FLLinks links = new FLLinks();
 
         for (FLLink link : nffgs.get(nffg_id).getFLLink()) {
@@ -108,8 +98,6 @@ public class NffgServices {
     }
 
     public FLLink getNffgLink(String nffg_id, String link_id) {
-        updateDB();
-
         for (FLLink link : nffgs.get(nffg_id).getFLLink()) {
             if (link.getId().equals(link_id)) {
                 return  link;
@@ -119,23 +107,174 @@ public class NffgServices {
         return null;
     }
 
-    /*
     public FLPolicies getNffgPolicies(String nffg_id) {
-        updateDB(); //TODO
+        FLPolicies policies = new FLPolicies();
+
+        for (FLPolicy policy : NffgDB.getNffgs().get(nffg_id).getFLPolicy()) {
+            policies.getFLPolicy().add(policy);
+        }
+
+        return policies;
     }
 
     public FLPolicy getNffgPolicy(String nffg_id, String policy_id) {
-        updateDB(); //TODO
+        for (FLPolicy policy : NffgDB.getNffgs().get(nffg_id).getFLPolicy()) {
+            if (policy.getId().equals(policy_id)) {
+                return policy;
+            }
+        }
+
+        return null;
     }
 
     public FLPolicies getPolicies() {
-        updateDB(); //TODO
+        FLPolicies policies = new FLPolicies();
+
+        for (FLNffg nffg : nffgs.values()) {
+            for (FLPolicy policy : nffg.getFLPolicy()) {
+                policies.getFLPolicy().add(policy);
+            }
+        }
+
+        return policies;
     }
 
     public FLPolicy getPolicy(String policy_id) {
-        updateDB(); //TODO
+        for (FLNffg nffg : nffgs.values()) {
+            for (FLPolicy policy : nffg.getFLPolicy()) {
+                if (policy.getId().equals(policy_id)) {
+                    return policy;
+                }
+            }
+        }
+
+        return null;
     }
-    */
+
+    public Boolean addNffgs(FLNffgs nffgs_t) throws ServiceException {
+        for (FLNffg nffg : nffgs_t.getFLNffg()) {
+
+            // Save Nffg, Node and Links on Neo4JXML
+
+            // NFFG
+            Node n = new Node();
+
+            Property p = new Property();
+            p.setName("name");
+            p.setValue(nffg.getName());
+            n.getProperty().add(p);
+
+            n.getLabels().getValue().add("NFFG");
+
+            // upload nffg-node
+            response = target.path("node")
+                    .request()
+                    .accept("application/xml")
+                    .post(Entity.entity(n, "application/xml"));
+
+            if (response.getStatus() != 200) {
+                throw new ServiceException();
+            }
+
+            String nffgID = response.readEntity(Node.class).getId();
+            nffg.setId(nffgID);
+            nffgs.put(nffgID, nffg);
+
+            // NODES
+            for (FLNode node : nffg.getFLNode()) {
+                Node n1 = new Node();
+
+                Property p1 = new Property();
+                p1.setName("name");
+                p1.setValue(node.getName());
+                n1.getProperty().add(p1);
+
+                Property p2 = new Property();
+                p2.setName("belongs");
+                p2.setValue(nffg.getId());
+                n1.getProperty().add(p2);
+
+                Property p3 = new Property();
+                p3.setName("functionalType");
+                p3.setValue(node.getFunctionalType().toString());
+                n1.getProperty().add(p3);
+
+                response = target.path("node")
+                        .request()
+                        .accept("application/xml")
+                        .post(Entity.entity(n, "application/xml"));
+
+                if (response.getStatus() != 200) {
+                    throw new ServiceException();
+                }
+
+                node.setId(response.readEntity(Node.class).getId());
+                nffgs.get(nffgID).getFLNode().add(node);
+
+                Relationship r = new Relationship();
+
+                r.setType("belongs");
+                r.setSrcNode(nffgID);
+                r.setDstNode(node.getId());
+
+                response = target.path("node")
+                        .path(nffgID)
+                        .path("relationship")
+                        .request()
+                        .accept("application/xml")
+                        .post(Entity.entity(r, "application/xml"));
+
+                if (response.getStatus() != 200) {
+                    throw new ServiceException();
+                }
+            }
+
+            // LINK
+            for (FLLink link : nffg.getFLLink()) {
+                Relationship r = new Relationship();
+
+                r.setType("Link");
+                r.setSrcNode(link.getSourceNode());
+                r.setDstNode(link.getDestinationNode());
+
+                response = target.path("node")
+                        .path(link.getSourceNode())
+                        .path("relationship")
+                        .request()
+                        .accept("application/xml")
+                        .post(Entity.entity(r, "application/xml"));
+
+                if (response.getStatus() != 200) {
+                    throw new ServiceException();
+                }
+
+                r.setId(response.readEntity(Relationship.class).getId());
+
+                Labels l = new Labels();
+                l.getValue().add(link.getDestinationNode());
+
+                response = target.path("node")
+                        .path(link.getSourceNode())
+                        .path("label")
+                        .request()
+                        .accept("application/xml")
+                        .post(Entity.entity(l, "application/xml"));
+
+                if (response.getStatus() != 200) {
+                    throw new ServiceException();
+                }
+            }
+
+            // Save Policies on the server
+            for (FLPolicy policy : nffg.getFLPolicy()) {
+                policies.put(policy.getId(), policy);
+            }
+        }
+
+        updateDB();
+
+        return true;
+    }
 
     /**
      * OTHER METHODS
@@ -145,7 +284,7 @@ public class NffgServices {
         return UriBuilder.fromUri(url).build();
     }
 
-    private void updateDB() {
+    private void updateDB() throws ServiceException {
         // empty the local DB
         nffgs.clear();
 
@@ -153,7 +292,7 @@ public class NffgServices {
         getAllNodesInfo("node");
     }
 
-    private void getNodeIDs(String path) {
+    private void getNodeIDs(String path) throws ServiceException {
         Response response = target.path(path)
                 .request()
                 .accept("application/xml")
@@ -165,10 +304,12 @@ public class NffgServices {
             for (Nodes.Node node : response.readEntity(Nodes.class).getNode()) {
                 nodesID.put(node.getId(), node.getProperty().get(0).getValue());
             }
+        } else {
+            throw new ServiceException();
         }
     }
 
-    private void getAllNodesInfo(String path) {
+    private void getAllNodesInfo(String path) throws ServiceException {
         Response response;
         String NffgID = null;
         String id;
@@ -200,7 +341,7 @@ public class NffgServices {
                     }
                 }
             } else {
-                // TODO EXCEPTION CONNECTION NEO4JXML
+                throw new ServiceException();
             }
         }
 
@@ -246,7 +387,7 @@ public class NffgServices {
                     }
                 }
             } else {
-                // TODO EXCEPTION CONNECTION NEO4JXML
+                throw new ServiceException();
             }
         }
 
@@ -283,7 +424,7 @@ public class NffgServices {
                     for (String s : node.getLabels().getValue()) {
                         if (!s.contains("NFFG")) {
                             FLLink link = new FLLink();
-                            link.setId("FROM_" + nodeName + "_TO_" + s);
+                            //TODO name and id of the link?
                             link.setSourceNode(node.getId());
                             link.setDestinationNode(s);
 
@@ -293,57 +434,9 @@ public class NffgServices {
                 }
 
             } else {
-                // TODO EXCEPTION CONNECTION NEO4JXML
+                throw new ServiceException();
             }
         }
-
-        /*
-        else {
-                        FLNode n = new FLNode();
-                        n.setId(node.getId());
-
-                        // NODE
-                        for (Property p : node.getProperty()) {
-
-                            switch (p.getName()) {
-                                case "name":
-                                    n.setName(p.getValue());
-                                    break;
-
-                                case "belongs":
-                                    FLNffg nffg1 = new FLNffg();
-                                    if (findNffgID(p.getValue()) == null) {
-                                        nffg1.setName(node.getId() + " null " + i);
-                                    } else {
-                                        nffg1.setName(node.getId() + " not null " + findNffgID(p.getValue()) + " " + i);
-                                    }
-                                    nffgs.put("" + i, nffg1);
-                                    break;
-
-                                case "functionalType":
-                                    n.setFunctionalType(NodeFunctionalType.valueOf(p.getValue()));
-                                    break;
-
-                                default:
-                                    break;
-                            }
-
-                            //nffgs.get(NffgID).getFLNode().add(n);
-                        }
-
-                        // NODE has some links
-                        if (node.getLabels() != null) {
-                            for (String s : node.getLabels().getValue()) {
-                                FLLink link = new FLLink();
-                                link.setId("FROM" + node.getId() + "TO" + s);
-                                link.setSourceNode(node.getId());
-                                link.setDestinationNode(s);
-
-                                //nffgs.get(NffgID).getFLLink().add(link);
-                            }
-                        }
-                    }
-        */
     }
 
     private String findNffgID(String name) {

@@ -31,7 +31,7 @@
                 <xsd:element ref="flo:FLLink" minOccurs="0" maxOccurs="unbounded"/>
                 <xsd:element ref="flo:FLPolicy" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
-            <xsd:attribute name="id" type="xsd:string" use="required"/>
+            <xsd:attribute name="id" type="xsd:string" use="optional"/>
             <xsd:attribute name="name" type="xsd:string" use="optional"/>
             <xsd:attribute name="last_updated_time" type="xsd:dateTime" use="required"/>
         </xsd:complexType>
@@ -72,7 +72,7 @@
 
     <xsd:element name="FLNode">
         <xsd:complexType>
-            <xsd:attribute name="id" type="xsd:string" use="required"/>
+            <xsd:attribute name="id" type="xsd:string" use="optional"/>
             <xsd:attribute name="name" type="xsd:string" use="optional"/>
             <xsd:attribute name="functional_type" type="flo:nodeFunctionalType" use="required"/>
         </xsd:complexType>
@@ -80,7 +80,7 @@
 
     <xsd:element name="FLLink">
         <xsd:complexType>
-            <xsd:attribute name="id" type="xsd:string" use="required"/>
+            <xsd:attribute name="id" type="xsd:string" use="optional"/>
             <xsd:attribute name="name" type="xsd:string" use="optional"/>
             <xsd:attribute name="source_node" type="xsd:string" use="required"/>
             <xsd:attribute name="destination_node" type="xsd:string" use="required"/>
@@ -92,7 +92,7 @@
             <xsd:sequence>
                 <xsd:element name="FLV_result" minOccurs="0" maxOccurs="1">
                     <xsd:complexType>
-                        <xsd:attribute name="policy" type="xsd:string" use="required"/>
+                        <xsd:attribute name="policy" type="xsd:string" use="optional"/>
                         <xsd:attribute name="result" type="xsd:boolean" use="optional"/>
                         <xsd:attribute name="time" type="xsd:dateTime" use="optional"/>
                         <xsd:attribute name="message" type="xsd:string" use="optional"/>
@@ -177,7 +177,7 @@
             <xsd:sequence>
                 <xsd:element name="v_result" minOccurs="0" maxOccurs="unbounded">
                     <xsd:complexType>
-                        <xsd:attribute name="policy" type="xsd:string" use="required"/>
+                        <xsd:attribute name="policy" type="xsd:string" use="optional"/>
                         <xsd:attribute name="result" type="xsd:boolean" use="optional"/>
                         <xsd:attribute name="time" type="xsd:dateTime" use="optional"/>
                         <xsd:attribute name="message" type="xsd:string" use="optional"/>
