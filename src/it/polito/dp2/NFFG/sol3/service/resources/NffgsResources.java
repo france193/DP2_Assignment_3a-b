@@ -4,14 +4,12 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
-import it.polito.dp2.NFFG.lab3.ServiceException;
 import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
 import it.polito.dp2.NFFG.sol3.service.services.NffgServices;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
-import java.util.List;
 
 /**
  * Created by FLDeviOS on 13/01/2017.
@@ -251,9 +249,11 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public synchronized Response postNffgs(FLNffgs nffgs, @Context UriInfo uriInfo) {
-        FLNffgs created = service.addNffgs(nffgs);
 
-        if (created != null) {
+
+
+        if (service.addNffgs(nffgs)) {
+            //TODO
             return Response.created(URI.create("/nffgs")).build();
         } else {
             throw new NotAcceptableException();
