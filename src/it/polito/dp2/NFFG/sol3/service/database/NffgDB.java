@@ -2,21 +2,25 @@ package it.polito.dp2.NFFG.sol3.service.database;
 
 import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by FLDeviOS on 13/01/2017.
  */
 public class NffgDB {
-    private static Map<String, FLPolicy> policyes = new HashMap<>();
-    private static Map<String, FLNffg> nffgs = new HashMap<>();
+    private static ConcurrentHashMap<String, FLPolicy> policies;
+    private static ConcurrentHashMap<String, FLNffg> nffgs;
 
-    public static Map<String, FLPolicy> getPolicyes() {
-        return policyes;
+    public NffgDB() {
+        policies = new ConcurrentHashMap<>();
+        nffgs = new ConcurrentHashMap<>();
     }
 
-    public static Map<String, FLNffg> getNffgs() {
+    public static synchronized ConcurrentHashMap<String, FLPolicy> getPolicies() {
+        return policies;
+    }
+
+    public static synchronized ConcurrentHashMap<String, FLNffg> getNffgs() {
         return nffgs;
     }
 }

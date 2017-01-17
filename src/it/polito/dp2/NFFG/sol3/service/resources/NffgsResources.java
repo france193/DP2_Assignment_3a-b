@@ -28,10 +28,16 @@ public class NffgsResources {
     @GET
     @Path("/nffgs")
     @ApiOperation(value = "get all the nffgs ", notes = "xml and json formats")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<FLNffg> getNffgs() {
-        return service.getNffgs();
+    public FLNffgs getNffgs() {
+        try {
+            return service.getNffgs();
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
     }
 
     // A NFFG
@@ -43,12 +49,10 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLNffg getNffg(@PathParam("nffg_id") String nffg_id) {
-        FLNffg nffg = service.getNffg(nffg_id);
-
-        if (nffg == null) {
+        try {
+            return service.getNffg(nffg_id);
+        } catch (NullPointerException e) {
             throw new NotFoundException();
-        } else {
-            return nffg;
         }
     }
 
@@ -56,10 +60,16 @@ public class NffgsResources {
     @GET
     @Path("/nffg/{nffg_id}/nodes")
     @ApiOperation(value = "get all nodes of a specific nffg ", notes = "xml and json formats")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLNodes getNffgNodes(@PathParam("nffg_id") String nffg_id) {
-        return service.getNffgNodes(nffg_id);
+        try {
+            return service.getNffgNodes(nffg_id);
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
     }
 
     // A NODE OF AN NFFG
@@ -72,12 +82,16 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLNode getNffgNode(@PathParam("nffg_id") String nffg_id,
                               @PathParam("node_id") String node_id) {
-        FLNode node = service.getNffgNode(nffg_id, node_id);
+        try {
+            FLNode node = service.getNffgNode(nffg_id, node_id);
 
-        if (node == null) {
+            if (node == null) {
+                throw new NotFoundException();
+            } else {
+                return node;
+            }
+        } catch (NullPointerException e) {
             throw new NotFoundException();
-        } else {
-            return node;
         }
     }
 
@@ -85,11 +99,17 @@ public class NffgsResources {
     @GET
     @Path("/nffg/{nffg_id}/node/{node_id}/links")
     @ApiOperation(value = "get all links of a specific node of a specific nffg ", notes = "xml and json formats")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLLinks getNffgNodeLinks(@PathParam("nffg_id") String nffg_id,
                                     @PathParam("node_id") String node_id) {
-        return service.getNffgNodeLinks(nffg_id, node_id);
+        try {
+            return service.getNffgNodeLinks(nffg_id, node_id);
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
     }
 
     // A LINK OF A NODE OF AN NFFG
@@ -103,12 +123,16 @@ public class NffgsResources {
     public FLLink getNffgNodeLink(@PathParam("nffg_id") String nffg_id,
                                   @PathParam("node_id") String node_id,
                                   @PathParam("link_id") String link_id) {
-        FLLink link = service.getNffgNodeLink(nffg_id, node_id, link_id);
+        try {
+            FLLink link = service.getNffgNodeLink(nffg_id, node_id, link_id);
 
-        if (link == null) {
+            if (link == null) {
+                throw new NotFoundException();
+            } else {
+                return link;
+            }
+        } catch (NullPointerException e) {
             throw new NotFoundException();
-        } else {
-            return link;
         }
     }
 
@@ -116,10 +140,16 @@ public class NffgsResources {
     @GET
     @Path("/nffg/{nffg_id}/links")
     @ApiOperation(value = "get all links of a specific nffg ", notes = "xml and json formats")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLLinks getNffgLinks(@PathParam("nffg_id") String nffg_id) {
-        return service.getNffgLinks(nffg_id);
+        try {
+            return service.getNffgLinks(nffg_id);
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
     }
 
     // A LINK OF A NFFG
@@ -132,12 +162,16 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLLink getNffgLink(@PathParam("nffg_id") String nffg_id,
                               @PathParam("link_id") String link_id) {
-        FLLink link = service.getNffgLink(nffg_id, link_id);
+        try {
+            FLLink link = service.getNffgLink(nffg_id, link_id);
 
-        if (link == null) {
+            if (link == null) {
+                throw new NotFoundException();
+            } else {
+                return link;
+            }
+        } catch (NullPointerException e) {
             throw new NotFoundException();
-        } else {
-            return link;
         }
     }
 
@@ -145,10 +179,16 @@ public class NffgsResources {
     @GET
     @Path("/nffg/{nffg_id}/policies")
     @ApiOperation(value = "get all policies of a specific nffg ", notes = "xml and json formats")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLPolicies getNffgPolicies(@PathParam("nffg_id") String nffg_id) {
-        return service.getNffgPolicies(nffg_id);
+        try {
+            return service.getNffgPolicies(nffg_id);
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
     }
 
     // A POLICY OF A NFFG
@@ -161,55 +201,63 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLPolicy getNffgPolicy(@PathParam("nffg_id") String nffg_id,
                                   @PathParam("policy_id") String policy_id) {
-        return service.getNffgPolicy(nffg_id, policy_id);
+        try {
+            return service.getNffgPolicy(nffg_id, policy_id);
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
     }
 
     // ALL POLICIES OF ALL NFFGS
     @GET
     @Path("/policies")
     @ApiOperation(value = "get all policies of all nffgs ", notes = "xml and json formats")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLPolicies getPolicies() {
-        return service.getPolicies();
+        try {
+            return service.getPolicies();
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
     }
 
     // A POLICY OF ALL NFFGS
     @GET
-    @Path("policy/{policy_id}")
+    @Path("/policy/{policy_id}")
     @ApiOperation(value = "get a specifc policy of all nffgs ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 404, message = "Not found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLPolicy getNode(@PathParam("policy_id") String policy_id) {
-        return service.getPolicy(policy_id);
+        try {
+            return service.getPolicy(policy_id);
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
     }
 
     // ADD ENTIRE NFFGS
     @POST
-    @Path("nffgs")
-    @ApiOperation(value = "insert an entire nffgs", notes = "json and xml formats")
+    @Path("/nffgs")
+    @ApiOperation(value = "insert an nffgs", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created"),
             @ApiResponse(code = 406, message = "Not Acceptable"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response postNffgs(FLNffgs nffgs, @Context UriInfo uriInfo) {
+    public synchronized Response postNffgs(FLNffgs nffgs, @Context UriInfo uriInfo) {
+        FLNffgs created = service.addNffgs(nffgs);
 
-        try {
-            FLNffgs created = service.addNffgs(nffgs);
-
-            if (created != null) {
-                UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-                URI u = builder.path("0").build();
-                return Response.created(u).entity(created).build();
-            } else {
-                throw new NotAcceptableException();
-            }
-        } catch (ServiceException e) {
-            throw new ServiceUnavailableException();
+        if (created != null) {
+            return Response.created(URI.create("/nffgs")).build();
+        } else {
+            throw new NotAcceptableException();
         }
+
     }
 }

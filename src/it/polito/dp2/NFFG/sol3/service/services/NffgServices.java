@@ -1,6 +1,5 @@
 package it.polito.dp2.NFFG.sol3.service.services;
 
-import it.polito.dp2.NFFG.lab3.ServiceException;
 import it.polito.dp2.NFFG.sol3.service.database.NffgDB;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.*;
 import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
@@ -12,19 +11,15 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by FLDeviOS on 13/01/2017.
  */
 public class NffgServices {
 
-    private Map<String, FLNffg> nffgs = NffgDB.getNffgs();
-    private Map<String, FLPolicy> policies = NffgDB.getPolicyes();
-    private HashMap<String, String> nodesID;
+    private ConcurrentHashMap<String, FLNffg> nffgs = NffgDB.getNffgs();
+    private ConcurrentHashMap<String, FLPolicy> policies = NffgDB.getPolicies();
 
     private WebTarget target;
     private String baseURL = "http://localhost:8080/Neo4JXML/rest/resource";
@@ -40,8 +35,8 @@ public class NffgServices {
     }
 
     // method for service
-    public List<FLNffg> getNffgs() {
-        return new ArrayList<>(nffgs.values());
+    public FLNffgs getNffgs() {
+        return getFLNffgsFromListOfNffg();
     }
 
     public FLNffg getNffg(String nffg_id) {
@@ -49,8 +44,13 @@ public class NffgServices {
     }
 
     public FLNodes getNffgNodes(String nffg_id) {
+        FLNffg n;
         FLNodes nodes = new FLNodes();
-        nodes.getFLNode().addAll(nffgs.get(nffg_id).getFLNode());
+
+        if (nffgs.get(nffg_id) != null) {
+            n = nffgs.get(nffg_id);
+            nodes.getFLNode().addAll(n.getFLNode());
+        }
 
         return nodes;
     }
@@ -66,11 +66,16 @@ public class NffgServices {
     }
 
     public FLLinks getNffgNodeLinks(String nffg_id, String node_id) {
+        FLNffg n;
         FLLinks links = new FLLinks();
 
-        for (FLLink link : nffgs.get(nffg_id).getFLLink()) {
-            if (link.getSourceNode().equals(node_id)) {
-                links.getFLLink().add(link);
+        if (nffgs.get(nffg_id) != null) {
+            n = nffgs.get(nffg_id);
+
+            for (FLLink link : n.getFLLink()) {
+                if (link.getSourceNode().equals(node_id)) {
+                    links.getFLLink().add(link);
+                }
             }
         }
 
@@ -88,10 +93,15 @@ public class NffgServices {
     }
 
     public FLLinks getNffgLinks(String nffg_id) {
+        FLNffg n;
         FLLinks links = new FLLinks();
 
-        for (FLLink link : nffgs.get(nffg_id).getFLLink()) {
-            links.getFLLink().add(link);
+        if (nffgs.get(nffg_id) != null) {
+            n = nffgs.get(nffg_id);
+
+            for (FLLink link : n.getFLLink()) {
+                links.getFLLink().add(link);
+            }
         }
 
         return links;
@@ -108,10 +118,12 @@ public class NffgServices {
     }
 
     public FLPolicies getNffgPolicies(String nffg_id) {
+        FLNffg n;
         FLPolicies policies = new FLPolicies();
 
-        for (FLPolicy policy : NffgDB.getNffgs().get(nffg_id).getFLPolicy()) {
-            policies.getFLPolicy().add(policy);
+        if (nffgs.get(nffg_id) != null) {
+            n = nffgs.get(nffg_id);
+            policies.getFLPolicy().addAll(n.getFLPolicy());
         }
 
         return policies;
@@ -130,9 +142,9 @@ public class NffgServices {
     public FLPolicies getPolicies() {
         FLPolicies policies = new FLPolicies();
 
-        for (FLNffg nffg : nffgs.values()) {
-            for (FLPolicy policy : nffg.getFLPolicy()) {
-                policies.getFLPolicy().add(policy);
+        for (FLNffg f : nffgs.values()) {
+            if (f != null) {
+                policies.getFLPolicy().addAll(f.getFLPolicy());
             }
         }
 
@@ -151,7 +163,7 @@ public class NffgServices {
         return null;
     }
 
-    public FLNffgs addNffgs(FLNffgs nffgs_t) throws ServiceException {
+    public FLNffgs addNffgs(FLNffgs nffgs_t) {
         for (FLNffg nffg : nffgs_t.getFLNffg()) {
 
             // Save Nffg, Node and Links on Neo4JXML
@@ -173,7 +185,7 @@ public class NffgServices {
                     .post(Entity.entity(n, "application/xml"));
 
             if (response.getStatus() != 200) {
-                throw new ServiceException();
+                //throw new ServiceException("ERROR - 1");
             }
 
             String nffgID = response.readEntity(Node.class).getId();
@@ -205,7 +217,7 @@ public class NffgServices {
                         .post(Entity.entity(n, "application/xml"));
 
                 if (response.getStatus() != 200) {
-                    throw new ServiceException();
+                    //throw new ServiceException("ERROR - 2");
                 }
 
                 node.setId(response.readEntity(Node.class).getId());
@@ -225,7 +237,7 @@ public class NffgServices {
                         .post(Entity.entity(r, "application/xml"));
 
                 if (response.getStatus() != 200) {
-                    throw new ServiceException();
+                    //throw new ServiceException("ERROR - 3");
                 }
             }
 
@@ -245,7 +257,7 @@ public class NffgServices {
                         .post(Entity.entity(r, "application/xml"));
 
                 if (response.getStatus() != 200) {
-                    throw new ServiceException();
+                    //throw new ServiceException("ERROR - 4");
                 }
 
                 r.setId(response.readEntity(Relationship.class).getId());
@@ -261,7 +273,7 @@ public class NffgServices {
                         .post(Entity.entity(l, "application/xml"));
 
                 if (response.getStatus() != 200) {
-                    throw new ServiceException();
+                    //throw new ServiceException("ERROR - 5");
                 }
             }
 
@@ -271,7 +283,7 @@ public class NffgServices {
             }
         }
 
-        return nffgs;
+        return getFLNffgsFromListOfNffg();
     }
 
     /**
@@ -280,5 +292,17 @@ public class NffgServices {
 
     private URI getBaseURI(String url) {
         return UriBuilder.fromUri(url).build();
+    }
+
+    private FLNffgs getFLNffgsFromListOfNffg() {
+        FLNffgs t = new FLNffgs();
+
+        if (nffgs != null) {
+            for (FLNffg f : nffgs.values()) {
+                t.getFLNffg().add(f);
+            }
+        }
+
+        return t;
     }
 }
