@@ -238,11 +238,6 @@ public class NffgServices {
                 p1.setValue(node.getName());
                 n1.getProperty().add(p1);
 
-                //Property p2 = new Property();
-                //p2.setName("belongs");
-                //p2.setValue(n.getId());
-                //n1.getProperty().add(p2);
-
                 // upload node
                 response = target.path("node")
                         .request()
@@ -278,6 +273,21 @@ public class NffgServices {
                     // TODO Service Exception
                 }
 
+                // (not requested) add a label representing node belongs to nffg
+                Labels l = new Labels();
+                l.getValue().add("belongs to " + n.getId() + " - R:" + response.readEntity(Relationship.class).getId());
+
+                response = target.path("node")
+                        .path(n_id)
+                        .path("label")
+                        .request()
+                        .accept("application/xml")
+                        .post(Entity.entity(l, "application/xml"));
+
+                if (response.getStatus() != 204) {
+                    return false;
+                    // TODO Service Exception
+                }
             }
 
             // LINKS
@@ -306,10 +316,11 @@ public class NffgServices {
 
                 String id_l = response.readEntity(Relationship.class).getId();
                 link.setId(id_l);
+                link.setSourceNode(src_id);
+                link.setDestinationNode(dst_id);
 
-                /*
                 Labels l = new Labels();
-                l.getValue().add(link.getDestinationNode() + " - R: " + id_l);
+                l.getValue().add(link.getDestinationNode() + " - R:" + id_l);
 
                 response = target.path("node")
                         .path(link.getSourceNode())
@@ -322,64 +333,23 @@ public class NffgServices {
                     return false;
                     // TODO Service Exception
                 }
-                */
             }
 
-            // save on my local DB
+            // save nffg on my local DB
             NffgDB.nffgs.put(id, n);
+
+            // Save Policies on the server (on proper nffg and on a proper Map of only policies)
+            for (FLPolicy policy : n.getFLPolicy()) {
+                policy.setId(""+NffgDB.policyCounter);
+                policy.setNffg(id);
+                policy.setSourceNode(tempNodeIDs.get(policy.getSourceNode()));
+                policy.setDestinationNode(tempNodeIDs.get(policy.getDestinationNode()));
+                policies.put(policy.getId(), policy);
+                NffgDB.policyCounter++;
+            }
         }
 
         return true;
-        /*
-        for (FLNffg nffg : nffgs_t.getFLNffg()) {
-
-            // NODES
-
-
-            // LINK
-            for (FLLink link : nffg.getFLLink()) {
-                Relationship r = new Relationship();
-
-                r.setType("Link");
-                r.setSrcNode(link.getSourceNode());
-                r.setDstNode(link.getDestinationNode());
-
-                response = target.path("node")
-                        .path(link.getSourceNode())
-                        .path("relationship")
-                        .request()
-                        .accept("application/xml")
-                        .post(Entity.entity(r, "application/xml"));
-
-                if (response.getStatus() != 200) {
-                    //throw new ServiceException("ERROR - 4");
-                }
-
-                r.setId(response.readEntity(Relationship.class).getId());
-
-                Labels l = new Labels();
-                l.getValue().add(link.getDestinationNode());
-
-                response = target.path("node")
-                        .path(link.getSourceNode())
-                        .path("label")
-                        .request()
-                        .accept("application/xml")
-                        .post(Entity.entity(l, "application/xml"));
-
-                if (response.getStatus() != 200) {
-                    //throw new ServiceException("ERROR - 5");
-                }
-            }
-
-            // Save Policies on the server
-            for (FLPolicy policy : nffg.getFLPolicy()) {
-                policies.put(policy.getId(), policy);
-            }
-        }
-
-        return getFLNffgsFromListOfNffg();
-        */
     }
 
     /**

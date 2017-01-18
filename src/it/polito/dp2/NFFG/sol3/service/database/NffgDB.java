@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NffgDB {
 
+    public static Integer policyCounter = 0;
     public static ConcurrentHashMap<String, FLNffg> nffgs = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<String, FLPolicy> policies = new ConcurrentHashMap<>();
 

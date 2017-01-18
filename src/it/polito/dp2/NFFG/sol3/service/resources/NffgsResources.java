@@ -249,9 +249,6 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public synchronized Response postNffgs(FLNffgs nffgs, @Context UriInfo uriInfo) {
-
-
-
         if (service.addNffgs(nffgs)) {
             //TODO
             return Response.created(URI.create("/nffgs")).build();
