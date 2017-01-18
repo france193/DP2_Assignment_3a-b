@@ -39,6 +39,20 @@ public class NffgServices {
         target = client.target(getBaseURI(baseURL));
     }
 
+    public Integer init() {
+        Integer t;
+
+        // delete all nodes
+        if (NffgDB.getFirstBoot()) {
+            if ((t = initNeo4JDB()) != 200) {
+                return errorSwitch(t);
+            }
+            NffgDB.setFirstBoot(false);
+        }
+
+        return 0;
+    }
+
     // method for service
     public FLNffgs getNffgs() {
         FLNffgs x = new FLNffgs();
@@ -179,14 +193,6 @@ public class NffgServices {
     public int addNffgs(FLNffgs nffgs_t) {
         Integer t;
         Response response;
-
-        // delete all nodes
-        if (NffgDB.getFirstBoot()) {
-            if ((t = initNeo4JDB()) != 200) {
-                return errorSwitch(t);
-            }
-            NffgDB.setFirstBoot(false);
-        }
 
         //here it is the FLNffgs uploaded
         for (FLNffg n : nffgs_t.getFLNffg()) {

@@ -20,6 +20,13 @@ public class NffgsResources {
     NffgServices service = new NffgServices();
 
     public NffgsResources() {
+        switch (service.init()) {
+            case 1:
+            case 2:
+                throw new ServiceUnavailableException();
+            default:
+                break;
+        }
     }
 
     // ALL NFFGS
