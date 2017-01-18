@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by FLDeviOS on 13/01/2017.
+ * Created by Francesco Longo (s223428) on 13/01/2017.
  */
 public class NffgServices {
     private ConcurrentHashMap<String, FLPolicy> policies = NffgDB.getPolicies();
@@ -51,7 +51,9 @@ public class NffgServices {
         return 0;
     }
 
-    // method for service
+    /**
+     * METHODS FOR SERVICES
+     **/
     public FLNffgs getNffgs() {
         FLNffgs x = new FLNffgs();
 
@@ -70,8 +72,7 @@ public class NffgServices {
         FLNffg n;
         FLNodes nodes = new FLNodes();
 
-        if (NffgDB.nffgs.get(nffg_id) != null) {
-            n = NffgDB.nffgs.get(nffg_id);
+        if ((n = NffgDB.nffgs.get(nffg_id)) != null) {
             nodes.getFLNode().addAll(n.getFLNode());
         } else {
             return null;
@@ -81,10 +82,16 @@ public class NffgServices {
     }
 
     public FLNode getNffgNode(String nffg_id, String node_id) {
-        for (FLNode node : NffgDB.nffgs.get(nffg_id).getFLNode()) {
-            if (node.getId().contains(node_id)) {
-                return node;
+        FLNffg n;
+
+        if ((n = NffgDB.nffgs.get(nffg_id)) != null) {
+            for (FLNode node : n.getFLNode()) {
+                if (node.getId().contains(node_id)) {
+                    return node;
+                }
             }
+        } else {
+            return null;
         }
 
         return null;
@@ -94,24 +101,31 @@ public class NffgServices {
         FLNffg n;
         FLLinks links = new FLLinks();
 
-        if (NffgDB.nffgs.get(nffg_id) != null) {
-            n = NffgDB.nffgs.get(nffg_id);
+        if ((n = NffgDB.nffgs.get(nffg_id)) != null) {
 
             for (FLLink link : n.getFLLink()) {
                 if (link.getSourceNode().equals(node_id)) {
                     links.getFLLink().add(link);
                 }
             }
+        } else {
+            return null;
         }
 
         return links;
     }
 
     public FLLink getNffgNodeLink(String nffg_id, String node_id, String link_id) {
-        for (FLLink link : NffgDB.nffgs.get(nffg_id).getFLLink()) {
-            if (link.getSourceNode().equals(node_id) && link.getId().equals(link_id)) {
-                return link;
+        FLNffg n;
+
+        if ((n = NffgDB.nffgs.get(nffg_id)) != null) {
+            for (FLLink link : n.getFLLink()) {
+                if (link.getSourceNode().equals(node_id) && link.getId().equals(link_id)) {
+                    return link;
+                }
             }
+        } else {
+            return null;
         }
 
         return null;
@@ -121,22 +135,28 @@ public class NffgServices {
         FLNffg n;
         FLLinks links = new FLLinks();
 
-        if (NffgDB.nffgs.get(nffg_id) != null) {
-            n = NffgDB.nffgs.get(nffg_id);
-
+        if ((n = NffgDB.nffgs.get(nffg_id)) != null) {
             for (FLLink link : n.getFLLink()) {
                 links.getFLLink().add(link);
             }
+        } else {
+            return null;
         }
 
         return links;
     }
 
     public FLLink getNffgLink(String nffg_id, String link_id) {
-        for (FLLink link : NffgDB.nffgs.get(nffg_id).getFLLink()) {
-            if (link.getId().equals(link_id)) {
-                return link;
+        FLNffg n;
+
+        if ((n = NffgDB.nffgs.get(nffg_id)) != null) {
+            for (FLLink link : n.getFLLink()) {
+                if (link.getId().equals(link_id)) {
+                    return link;
+                }
             }
+        } else {
+            return null;
         }
 
         return null;
@@ -146,19 +166,26 @@ public class NffgServices {
         FLNffg n;
         FLPolicies policies = new FLPolicies();
 
-        if (NffgDB.nffgs.get(nffg_id) != null) {
-            n = NffgDB.nffgs.get(nffg_id);
+        if ((n = NffgDB.nffgs.get(nffg_id)) != null) {
             policies.getFLPolicy().addAll(n.getFLPolicy());
+        } else {
+            return null;
         }
 
         return policies;
     }
 
     public FLPolicy getNffgPolicy(String nffg_id, String policy_id) {
-        for (FLPolicy policy : NffgDB.nffgs.get(nffg_id).getFLPolicy()) {
-            if (policy.getId().equals(policy_id)) {
-                return policy;
+        FLNffg n;
+
+        if ((n = NffgDB.nffgs.get(nffg_id)) != null) {
+            for (FLPolicy policy : n.getFLPolicy()) {
+                if (policy.getId().equals(policy_id)) {
+                    return policy;
+                }
             }
+        } else {
+            return null;
         }
 
         return null;
@@ -345,7 +372,7 @@ public class NffgServices {
 
             // Save Policies on the server (on proper nffg and on a proper Map of only policies)
             for (FLPolicy policy : n.getFLPolicy()) {
-                policy.setId(""+NffgDB.policyCounter);
+                policy.setId("" + NffgDB.policyCounter);
                 policy.setNffg(id);
                 policy.setSourceNode(tempNodeIDs.get(policy.getSourceNode()));
                 policy.setDestinationNode(tempNodeIDs.get(policy.getDestinationNode()));
@@ -360,7 +387,6 @@ public class NffgServices {
     /**
      * OTHER METHODS
      **/
-
     private URI getBaseURI(String url) {
         return UriBuilder.fromUri(url).build();
     }
