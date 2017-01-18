@@ -7,7 +7,7 @@ import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.Node;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.Property;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.Relationship;
 import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
-import scala.util.parsing.combinator.testing.Str;
+import scala.Int;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -17,7 +17,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,7 +30,6 @@ public class NffgServices {
     private WebTarget target;
     private String baseURL = "http://localhost:8080/Neo4JXML/rest/resource";
     private Client client;
-    private Response response;
 
     public NffgServices() {
         // create a new client
@@ -39,13 +37,6 @@ public class NffgServices {
 
         // create a webtarget from the baseURL string
         target = client.target(getBaseURI(baseURL));
-
-        // delete all nodes
-        if (NffgDB.getFirstBoot()) {
-            initNeo4JDB();
-            // TODO if connection failed
-            NffgDB.setFirstBoot(false);
-        }
     }
 
     // method for service
@@ -70,6 +61,8 @@ public class NffgServices {
         if (NffgDB.nffgs.get(nffg_id) != null) {
             n = NffgDB.nffgs.get(nffg_id);
             nodes.getFLNode().addAll(n.getFLNode());
+        } else {
+            return null;
         }
 
         return nodes;
@@ -183,7 +176,17 @@ public class NffgServices {
         return null;
     }
 
-    public boolean addNffgs(FLNffgs nffgs_t) {
+    public int addNffgs(FLNffgs nffgs_t) {
+        Integer t;
+        Response response;
+
+        // delete all nodes
+        if (NffgDB.getFirstBoot()) {
+            if ((t = initNeo4JDB()) != 200) {
+                return errorSwitch(t);
+            }
+            NffgDB.setFirstBoot(false);
+        }
 
         //here it is the FLNffgs uploaded
         for (FLNffg n : nffgs_t.getFLNffg()) {
@@ -202,9 +205,8 @@ public class NffgServices {
                     .accept("application/xml")
                     .post(Entity.entity(node_t, "application/xml"));
 
-            if (response.getStatus() != 200) {
-                return false;
-                // TODO Service Exception
+            if ((t = response.getStatus()) != 200) {
+                return errorSwitch(t);
             }
 
             // take the id of the Neo4JXML
@@ -222,9 +224,8 @@ public class NffgServices {
                     .accept("application/xml")
                     .post(Entity.entity(labels, "application/xml"));
 
-            if (response.getStatus() != 204) {
-                return false;
-                // TODO Service Exception
+            if ((t = response.getStatus()) != 204) {
+                return errorSwitch(t);
             }
 
             // NODES
@@ -238,15 +239,19 @@ public class NffgServices {
                 p1.setValue(node.getName());
                 n1.getProperty().add(p1);
 
+                Property p2 = new Property();
+                p2.setName("functional_type");
+                p2.setValue(node.getFunctionalType().toString());
+                n1.getProperty().add(p2);
+
                 // upload node
                 response = target.path("node")
                         .request()
                         .accept("application/xml")
                         .post(Entity.entity(n1, "application/xml"));
 
-                if (response.getStatus() != 200) {
-                    return false;
-                    // TODO Service Exception
+                if ((t = response.getStatus()) != 200) {
+                    return errorSwitch(t);
                 }
 
                 // update the new id with the one given by Neo4JXML
@@ -268,9 +273,8 @@ public class NffgServices {
                         .accept("application/xml")
                         .post(Entity.entity(r, "application/xml"));
 
-                if (response.getStatus() != 200) {
-                    return false;
-                    // TODO Service Exception
+                if ((t = response.getStatus()) != 200) {
+                    return errorSwitch(t);
                 }
 
                 // (not requested) add a label representing node belongs to nffg
@@ -284,9 +288,8 @@ public class NffgServices {
                         .accept("application/xml")
                         .post(Entity.entity(l, "application/xml"));
 
-                if (response.getStatus() != 204) {
-                    return false;
-                    // TODO Service Exception
+                if ((t = response.getStatus()) != 204) {
+                    return errorSwitch(t);
                 }
             }
 
@@ -309,9 +312,8 @@ public class NffgServices {
                         .accept("application/xml")
                         .post(Entity.entity(r, "application/xml"));
 
-                if (response.getStatus() != 200) {
-                    return false;
-                    // TODO Service Exception
+                if ((t = response.getStatus()) != 200) {
+                    return errorSwitch(t);
                 }
 
                 String id_l = response.readEntity(Relationship.class).getId();
@@ -329,9 +331,8 @@ public class NffgServices {
                         .accept("application/xml")
                         .post(Entity.entity(l, "application/xml"));
 
-                if (response.getStatus() != 204) {
-                    return false;
-                    // TODO Service Exception
+                if ((t = response.getStatus()) != 204) {
+                    return errorSwitch(t);
                 }
             }
 
@@ -349,7 +350,7 @@ public class NffgServices {
             }
         }
 
-        return true;
+        return 0;
     }
 
     /**
@@ -360,16 +361,21 @@ public class NffgServices {
         return UriBuilder.fromUri(url).build();
     }
 
-    private Boolean initNeo4JDB() {
-        response = target.path("nodes")
+    private Integer initNeo4JDB() {
+        Response response = target.path("nodes")
                 .request()
                 .accept("application/xml")
                 .delete();
 
-        if (response.getStatus() != 200) {
-            return false;
-        }
+        return response.getStatus();
+    }
 
-        return true;
+    private Integer errorSwitch(Integer status) {
+        switch (status) {
+            case 400:
+                return 1;
+            default:
+                return 2;
+        }
     }
 }

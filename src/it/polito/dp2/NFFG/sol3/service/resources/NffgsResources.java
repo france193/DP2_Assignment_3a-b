@@ -28,13 +28,20 @@ public class NffgsResources {
     @ApiOperation(value = "get all the nffgs ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 404, message = "Not found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLNffgs getNffgs() {
         try {
-            return service.getNffgs();
+            FLNffgs x = service.getNffgs();
+
+            if (x == null) {
+                throw new NotFoundException();
+            } else {
+                return x;
+            }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -48,9 +55,15 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLNffg getNffg(@PathParam("nffg_id") String nffg_id) {
         try {
-            return service.getNffg(nffg_id);
+            FLNffg x = service.getNffg(nffg_id);
+
+            if (x == null) {
+                throw new NotFoundException();
+            } else {
+                return x;
+            }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -64,9 +77,15 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLNodes getNffgNodes(@PathParam("nffg_id") String nffg_id) {
         try {
-            return service.getNffgNodes(nffg_id);
+            FLNodes x = service.getNffgNodes(nffg_id);
+
+            if (x == null) {
+                throw new NotFoundException();
+            } else {
+                return x;
+            }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -81,13 +100,7 @@ public class NffgsResources {
     public FLNode getNffgNode(@PathParam("nffg_id") String nffg_id,
                               @PathParam("node_id") String node_id) {
         try {
-            FLNode node = service.getNffgNode(nffg_id, node_id);
-
-            if (node == null) {
-                throw new NotFoundException();
-            } else {
-                return node;
-            }
+            return service.getNffgNode(nffg_id, node_id);
         } catch (NullPointerException e) {
             throw new NotFoundException();
         }
@@ -244,17 +257,25 @@ public class NffgsResources {
     @ApiOperation(value = "insert an nffgs", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created"),
-            @ApiResponse(code = 406, message = "Not Acceptable"),
+            @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public synchronized Response postNffgs(FLNffgs nffgs, @Context UriInfo uriInfo) {
-        if (service.addNffgs(nffgs)) {
-            //TODO
-            return Response.created(URI.create("/nffgs")).build();
-        } else {
-            throw new NotAcceptableException();
-        }
+        try {
+            switch (service.addNffgs(nffgs)) {
+                case 0:
+                    return Response.created(URI.create("NffgService/rest/resource/nffgs")).build();
 
+                case 1:
+                    throw new BadRequestException();
+
+                default:
+                case 2:
+                    throw new ServiceUnavailableException();
+            }
+        } catch (NullPointerException e) {
+            throw new BadRequestException();
+        }
     }
 }
