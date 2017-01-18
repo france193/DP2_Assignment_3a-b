@@ -1,13 +1,11 @@
 package it.polito.dp2.NFFG.sol3.service.services;
 
-import it.polito.dp2.NFFG.lab3.ServiceException;
 import it.polito.dp2.NFFG.sol3.service.database.NffgDB;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.Labels;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.Node;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.Property;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.Relationship;
 import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
-import scala.Int;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
