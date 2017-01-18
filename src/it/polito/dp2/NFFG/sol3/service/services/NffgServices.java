@@ -1,11 +1,13 @@
 package it.polito.dp2.NFFG.sol3.service.services;
 
 import it.polito.dp2.NFFG.sol3.service.database.NffgDB;
+import it.polito.dp2.NFFG.sol3.service.database.oldIDs;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.Labels;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.Node;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.Property;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.Relationship;
 import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
+import scala.util.parsing.combinator.testing.Str;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -14,8 +16,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NffgServices {
     private ConcurrentHashMap<String, FLPolicy> policies = NffgDB.getPolicies();
-    private Map<String, String> tempNodeIDs = new HashMap<>();
+    private ConcurrentHashMap<String, oldIDs> tempNffgIDs = NffgDB.getTempNffgIDs();
 
     private WebTarget target;
     private String baseURL = "http://localhost:8080/Neo4JXML/rest/resource";
@@ -215,173 +215,288 @@ public class NffgServices {
         return null;
     }
 
-    public int addNffgs(FLNffgs nffgs_t) {
-        Integer t;
-        Response response;
+    public FLNffgs postNffgs(FLNffgs nffgs_t) {
+        FLNffgs x = new FLNffgs();
+        FLNffg f;
 
         //here it is the FLNffgs uploaded
         for (FLNffg n : nffgs_t.getFLNffg()) {
-
-            // Create the NFFG as a NODE
-            Node node_t = new Node();
-
-            Property p = new Property();
-            p.setName("name");
-            p.setValue(n.getName());
-            node_t.getProperty().add(p);
-
-            // upload to Neo4JXML
-            response = target.path("node")
-                    .request()
-                    .accept("application/xml")
-                    .post(Entity.entity(node_t, "application/xml"));
-
-            if ((t = response.getStatus()) != 200) {
-                return errorSwitch(t);
-            }
-
-            // take the id of the Neo4JXML
-            String id = response.readEntity(Node.class).getId();
-            n.setId(id);
-
-            // set the label as requested
-            Labels labels = new Labels();
-            labels.getValue().add("NFFG");
-
-            response = target.path("node")
-                    .path(id)
-                    .path("label")
-                    .request()
-                    .accept("application/xml")
-                    .post(Entity.entity(labels, "application/xml"));
-
-            if ((t = response.getStatus()) != 204) {
-                return errorSwitch(t);
-            }
-
-            // NODES
-            for (FLNode node : n.getFLNode()) {
-
-                // create the new node to insert on Neo4JXML
-                Node n1 = new Node();
-
-                Property p1 = new Property();
-                p1.setName("name");
-                p1.setValue(node.getName());
-                n1.getProperty().add(p1);
-
-                Property p2 = new Property();
-                p2.setName("functional_type");
-                p2.setValue(node.getFunctionalType().toString());
-                n1.getProperty().add(p2);
-
-                // upload node
-                response = target.path("node")
-                        .request()
-                        .accept("application/xml")
-                        .post(Entity.entity(n1, "application/xml"));
-
-                if ((t = response.getStatus()) != 200) {
-                    return errorSwitch(t);
-                }
-
-                // update the new id with the one given by Neo4JXML
-                String n_id = response.readEntity(Node.class).getId();
-                tempNodeIDs.put(node.getId(), n_id);
-                node.setId(n_id);
-
-                // create the relationship that indicate that the node belongs to the nffg on Neo4JXML
-                Relationship r = new Relationship();
-
-                r.setType("belongs");
-                r.setSrcNode(id);
-                r.setDstNode(n_id);
-
-                response = target.path("node")
-                        .path(id)
-                        .path("relationship")
-                        .request()
-                        .accept("application/xml")
-                        .post(Entity.entity(r, "application/xml"));
-
-                if ((t = response.getStatus()) != 200) {
-                    return errorSwitch(t);
-                }
-
-                // (not requested) add a label representing node belongs to nffg
-                Labels l = new Labels();
-                l.getValue().add("belongs to " + n.getId() + " - R:" + response.readEntity(Relationship.class).getId());
-
-                response = target.path("node")
-                        .path(n_id)
-                        .path("label")
-                        .request()
-                        .accept("application/xml")
-                        .post(Entity.entity(l, "application/xml"));
-
-                if ((t = response.getStatus()) != 204) {
-                    return errorSwitch(t);
-                }
-            }
-
-            // LINKS
-            for (FLLink link : n.getFLLink()) {
-                Relationship r = new Relationship();
-
-                String src_id, dst_id;
-                src_id = tempNodeIDs.get(link.getSourceNode());
-                dst_id = tempNodeIDs.get(link.getDestinationNode());
-
-                r.setType("link");
-                r.setSrcNode(src_id);
-                r.setDstNode(dst_id);
-
-                response = target.path("node")
-                        .path(src_id)
-                        .path("relationship")
-                        .request()
-                        .accept("application/xml")
-                        .post(Entity.entity(r, "application/xml"));
-
-                if ((t = response.getStatus()) != 200) {
-                    return errorSwitch(t);
-                }
-
-                String id_l = response.readEntity(Relationship.class).getId();
-                link.setId(id_l);
-                link.setSourceNode(src_id);
-                link.setDestinationNode(dst_id);
-
-                Labels l = new Labels();
-                l.getValue().add(link.getDestinationNode() + " - R:" + id_l);
-
-                response = target.path("node")
-                        .path(link.getSourceNode())
-                        .path("label")
-                        .request()
-                        .accept("application/xml")
-                        .post(Entity.entity(l, "application/xml"));
-
-                if ((t = response.getStatus()) != 204) {
-                    return errorSwitch(t);
-                }
-            }
-
-            // save nffg on my local DB
-            NffgDB.nffgs.put(id, n);
-
-            // Save Policies on the server (on proper nffg and on a proper Map of only policies)
-            for (FLPolicy policy : n.getFLPolicy()) {
-                policy.setId("" + NffgDB.policyCounter);
-                policy.setNffg(id);
-                policy.setSourceNode(tempNodeIDs.get(policy.getSourceNode()));
-                policy.setDestinationNode(tempNodeIDs.get(policy.getDestinationNode()));
-                policies.put(policy.getId(), policy);
-                NffgDB.policyCounter++;
+            if ( (f = postNffg(n)) != null ) {
+                x.getFLNffg().add(f);
+            } else {
+                return null;
             }
         }
 
-        return 0;
+        return x;
+    }
+
+    public FLNffg postNffg(FLNffg n) {
+        Response response;
+        oldIDs oldIDs = new oldIDs();
+
+        // Create the NFFG as a NODE
+        Node node_t = new Node();
+
+        oldIDs.setNffgOldID(n.getId());
+
+        Property p = new Property();
+        p.setName("name");
+        p.setValue(n.getName());
+        node_t.getProperty().add(p);
+
+        // upload to Neo4JXML
+        response = target.path("node")
+                .request()
+                .accept("application/xml")
+                .post(Entity.entity(node_t, "application/xml"));
+
+        if (response.getStatus() != 200) {
+            return null;
+        }
+
+        // take the id of the Neo4JXML
+        String id = response.readEntity(Node.class).getId();
+        n.setId(id);
+
+        // set the label as requested
+        Labels labels = new Labels();
+        labels.getValue().add("NFFG");
+
+        response = target.path("node")
+                .path(id)
+                .path("label")
+                .request()
+                .accept("application/xml")
+                .post(Entity.entity(labels, "application/xml"));
+
+        if (response.getStatus() != 204) {
+            return null;
+        }
+
+        // NODES
+        for (FLNode node : n.getFLNode()) {
+
+            // create the new node to insert on Neo4JXML
+            Node n1 = new Node();
+
+            Property p1 = new Property();
+            p1.setName("name");
+            p1.setValue(node.getName());
+            n1.getProperty().add(p1);
+
+            Property p2 = new Property();
+            p2.setName("functional_type");
+            p2.setValue(node.getFunctionalType().toString());
+            n1.getProperty().add(p2);
+
+            // upload node
+            response = target.path("node")
+                    .request()
+                    .accept("application/xml")
+                    .post(Entity.entity(n1, "application/xml"));
+
+            if (response.getStatus() != 200) {
+                return null;
+            }
+
+            // update the new id with the one given by Neo4JXML
+            String n_id = response.readEntity(Node.class).getId();
+            oldIDs.tempNodeIDs.put(node.getId(), n_id);
+            node.setId(n_id);
+
+            tempNffgIDs.put(id, oldIDs);
+
+            // create the relationship that indicate that the node belongs to the nffg on Neo4JXML
+            Relationship r = new Relationship();
+
+            r.setType("belongs");
+            r.setSrcNode(id);
+            r.setDstNode(n_id);
+
+            response = target.path("node")
+                    .path(id)
+                    .path("relationship")
+                    .request()
+                    .accept("application/xml")
+                    .post(Entity.entity(r, "application/xml"));
+
+            if (response.getStatus() != 200) {
+                return null;
+            }
+
+            // (not requested) add a label representing node belongs to nffg
+            Labels l = new Labels();
+            l.getValue().add("belongs to " + n.getId() + " - R:" + response.readEntity(Relationship.class).getId());
+
+            response = target.path("node")
+                    .path(n_id)
+                    .path("label")
+                    .request()
+                    .accept("application/xml")
+                    .post(Entity.entity(l, "application/xml"));
+
+            if (response.getStatus() != 204) {
+                return null;
+            }
+        }
+
+        // LINKS
+        for (FLLink link : n.getFLLink()) {
+            Relationship r = new Relationship();
+
+            String src_id, dst_id;
+            src_id = tempNffgIDs.get(id).tempNodeIDs.get(link.getSourceNode());
+            dst_id = tempNffgIDs.get(id).tempNodeIDs.get(link.getDestinationNode());
+
+            r.setType("link");
+            r.setSrcNode(src_id);
+            r.setDstNode(dst_id);
+
+            response = target.path("node")
+                    .path(src_id)
+                    .path("relationship")
+                    .request()
+                    .accept("application/xml")
+                    .post(Entity.entity(r, "application/xml"));
+
+            if (response.getStatus() != 200) {
+                return null;
+            }
+
+            String id_l = response.readEntity(Relationship.class).getId();
+            link.setId(id_l);
+            link.setSourceNode(src_id);
+            link.setDestinationNode(dst_id);
+
+            Labels l = new Labels();
+            l.getValue().add(link.getDestinationNode() + " - R:" + id_l);
+
+            response = target.path("node")
+                    .path(link.getSourceNode())
+                    .path("label")
+                    .request()
+                    .accept("application/xml")
+                    .post(Entity.entity(l, "application/xml"));
+
+            if (response.getStatus() != 204) {
+                return null;
+            }
+        }
+
+        // save nffg on my local DB
+        NffgDB.nffgs.put(id, n);
+
+        // Save Policies on the server (on proper nffg and on a proper Map of only policies)
+        for (FLPolicy policy : n.getFLPolicy()) {
+            policy.setId("" + NffgDB.policyCounter);
+            policy.setNffg(id);
+            policy.setSourceNode(tempNffgIDs.get(id).tempNodeIDs.get(policy.getSourceNode()));
+            policy.setDestinationNode(tempNffgIDs.get(id).tempNodeIDs.get(policy.getDestinationNode()));
+            policies.put(policy.getId(), policy);
+            NffgDB.policyCounter++;
+        }
+
+        return NffgDB.nffgs.get(n.getId());
+    }
+
+    public FLPolicy postNffgPolicy(String nffg_id, FLPolicy policy)  {
+        policy.setId("" + NffgDB.policyCounter);
+        policy.setNffg(nffg_id);
+
+        String src, dst;
+        src = tempNffgIDs.get(nffg_id).tempNodeIDs.get(policy.getSourceNode());
+        dst = tempNffgIDs.get(nffg_id).tempNodeIDs.get(policy.getDestinationNode());
+
+        policy.setSourceNode(src);
+        policy.setDestinationNode(dst);
+        NffgDB.getPolicies().put(policy.getId(), policy);
+        NffgDB.policyCounter++;
+
+        NffgDB.nffgs.get(nffg_id).getFLPolicy().add(policy);
+
+        return policy;
+    }
+
+    public FLPolicies postNffgPolicies(String nffg_id, FLPolicies policies) {
+        FLPolicies policies1 = new FLPolicies();
+        FLPolicy policy1;
+
+        for (FLPolicy p : policies.getFLPolicy()) {
+            if ( (policy1 = postNffgPolicy(nffg_id, p)) != null ) {
+                policies1.getFLPolicy().add(policy1);
+            } else {
+                return null;
+            }
+        }
+
+        return policies1;
+    }
+
+    public FLPolicy removePolicy(String nffg_id, String policy_id) {
+        FLNffg f;
+
+        if ( (f = NffgDB.nffgs.get(nffg_id)) != null ) {
+            for (FLPolicy policy : f.getFLPolicy()) {
+                if (policy.getId().equals(policy_id)) {
+                    f.getFLPolicy().remove(policy);
+                    policies.remove(policy);
+                    return policy;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public FLPolicies removePolicies(String nffg_id, FLPolicies policies) {
+        FLPolicies f = new FLPolicies();
+        FLPolicy x;
+
+        for (FLPolicy p : policies.getFLPolicy()) {
+            if ( (x = removePolicy(nffg_id, p.getId())) != null ) {
+                f.getFLPolicy().add(x);
+            } else {
+                return  null;
+            }
+        }
+
+        return f;
+    }
+
+    public FLPolicy updatePolicy(String nffg_id, String policy_id, FLPolicy flPolicy) {
+        FLNffg f;
+
+        if ( (f = NffgDB.nffgs.get(nffg_id)) != null ) {
+            for (FLPolicy policy : f.getFLPolicy()) {
+                if (policy.getId().equals(policy_id)) {
+                    policy.setSourceNode(NffgDB.getTempNffgIDs().get(nffg_id).tempNodeIDs.get(flPolicy.getSourceNode()));
+                    policy.setDestinationNode(NffgDB.getTempNffgIDs().get(nffg_id).tempNodeIDs.get(flPolicy.getDestinationNode()));
+                    policy.setIsPositive(flPolicy.isIsPositive());
+                    policy.setFLVResult(flPolicy.getFLVResult());
+                    policy.getFLTraversalRequestedNode().clear();
+                    policy.getFLTraversalRequestedNode().addAll(flPolicy.getFLTraversalRequestedNode());
+                    return policy;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public FLPolicies updatePolicies(String nffg_id, FLPolicies policies) {
+        FLPolicies f = new FLPolicies();
+        FLPolicy x;
+
+        for (FLPolicy p : policies.getFLPolicy()) {
+            if ( (x = updatePolicy(nffg_id, p.getId(), p)) != null ) {
+                f.getFLPolicy().add(x);
+            } else {
+                return  null;
+            }
+        }
+
+        return f;
     }
 
     /**

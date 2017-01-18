@@ -13,10 +13,15 @@ public class NffgDB {
 
     public static ConcurrentHashMap<String, FLNffg> nffgs = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<String, FLPolicy> policies = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, oldIDs> tempNffgIDs = new ConcurrentHashMap<>();
 
     private static Boolean firstBoot = true;
 
     public NffgDB() {
+    }
+
+    public static ConcurrentHashMap<String, oldIDs> getTempNffgIDs() {
+        return tempNffgIDs;
     }
 
     public static synchronized ConcurrentHashMap<String, FLPolicy> getPolicies() {

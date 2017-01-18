@@ -83,6 +83,66 @@ public class NffgsResources {
     }
 
     /**
+     * ADD NFFGS
+     *
+     * @param nffgs
+     * @return
+     */
+    @POST
+    @Path("/nffgs")
+    @ApiOperation(value = "insert an nffgs", notes = "json and xml formats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public synchronized Response postNffgs(FLNffgs nffgs, @Context UriInfo uriInfo) {
+        try {
+            FLNffgs created = service.postNffgs(nffgs);
+
+            if (created != null) { // success
+                UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+                URI u = builder.path("").build();
+                return Response.created(u).entity(created).build();
+            } else {
+                throw new ServiceUnavailableException();
+            }
+        } catch (NullPointerException e) {
+            throw new ServiceUnavailableException();
+        }
+    }
+
+    /**
+     * ADD 1 NFFG
+     *
+     * @param nffg
+     * @return
+     */
+    @POST
+    @Path("/nffg")
+    @ApiOperation(value = "insert an nffgs", notes = "json and xml formats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public synchronized Response postNffg(FLNffg nffg, @Context UriInfo uriInfo) {
+        try {
+            FLNffg created = service.postNffg(nffg);
+
+            if (created != null) { // success
+                UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+                URI u = builder.path(created.getId()).build();
+                return Response.created(u).entity(created).build();
+            } else {
+                throw new ServiceUnavailableException();
+            }
+        } catch (NullPointerException e) {
+            throw new ServiceUnavailableException();
+        }
+    }
+
+    /**
      * NODES OF A NFFG
      *
      * @param nffg_id
@@ -311,6 +371,70 @@ public class NffgsResources {
     }
 
     /**
+     * ADD POLICIES
+     *
+     * @param policies
+     * @return
+     */
+    @POST
+    @Path("/nffg/{nffg_id}/policies")
+    @ApiOperation(value = "insert a group of policies into relatively to a nffg", notes = "json and xml formats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public synchronized Response postNffgPolicies(@PathParam("nffg_id") String nffg_id,
+                                                  FLPolicies policies,
+                                                  @Context UriInfo uriInfo) {
+        try {
+            FLPolicies created = service.postNffgPolicies(nffg_id, policies);
+
+            if (created != null) { // success
+                UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+                URI u = builder.path("").build();
+                return Response.created(u).entity(created).build();
+            } else {
+                throw new ServiceUnavailableException();
+            }
+        } catch (NullPointerException e) {
+            throw new ServiceUnavailableException();
+        }
+    }
+
+    /**
+     * ADD 1 POLICY
+     *
+     * @param policy
+     * @return
+     */
+    @POST
+    @Path("/nffg/{nffg_id}/policy")
+    @ApiOperation(value = "insert a policy into nffg", notes = "json and xml formats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public synchronized Response postNffgPolicy(@PathParam("nffg_id") String nffg_id,
+                                                FLPolicy policy,
+                                                @Context UriInfo uriInfo) {
+        try {
+            FLPolicy created = service.postNffgPolicy(nffg_id, policy);
+
+            if (created != null) { // success
+                UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+                URI u = builder.path(created.getId()).build();
+                return Response.created(u).entity(created).build();
+            } else {
+                throw new ServiceUnavailableException();
+            }
+        } catch (NullPointerException e) {
+            throw new ServiceUnavailableException();
+        }
+    }
+
+    /**
      * ALL POLICIES OF ALL NFFGS
      *
      * @return
@@ -349,7 +473,7 @@ public class NffgsResources {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 404, message = "Not found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLPolicy getNode(@PathParam("policy_id") String policy_id) {
+    public FLPolicy getPolicy(@PathParam("policy_id") String policy_id) {
         try {
             FLPolicy x = service.getPolicy(policy_id);
 
@@ -364,35 +488,114 @@ public class NffgsResources {
     }
 
     /**
-     * ADD NFFGS
+     * Remove A policy
      *
-     * @param nffgs
+     * @param nffg_id
      * @return
      */
-    @POST
-    @Path("/nffgs")
-    @ApiOperation(value = "insert an nffgs", notes = "json and xml formats")
+    @DELETE
+    @Path("/nffg/{nffg_id}/policy/{policy_id}")
+    @ApiOperation(value = "remove a negotiate object", notes = "json and xml formats")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 503, message = "Service Unavailable")})
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public synchronized Response postNffgs(FLNffgs nffgs) {
+    public synchronized FLPolicy deletePolicy(@PathParam("nffg_id") String nffg_id,
+                                              @PathParam("policy_id") String policy_id) {
         try {
-            switch (service.addNffgs(nffgs)) {
-                case 0:
-                    return Response.created(URI.create("NffgService/rest/resource/nffgs")).build();
+            FLPolicy deleted = service.removePolicy(nffg_id, policy_id);
 
-                case 1:
-                    throw new BadRequestException();
-
-                default:
-                case 2:
-                    throw new ServiceUnavailableException();
+            if (deleted != null) { // success
+                return deleted;
+            } else {
+                throw new NotFoundException();
             }
         } catch (NullPointerException e) {
-            throw new BadRequestException();
+            throw new NotFoundException();
         }
     }
+
+    /**
+     * Remove A set of policies
+     *
+     * @return
+     */
+    @DELETE
+    @Path("/nffg/{nffg_id}/policies")
+    @ApiOperation(value = "remove a negotiate object", notes = "json and xml formats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found")})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public synchronized FLPolicies deletePolicies(@PathParam("nffg_id") String nffg_id,
+                                                FLPolicies policies) {
+        try {
+            FLPolicies deleted = service.removePolicies(nffg_id, policies);
+
+            if (deleted != null) { // success
+                return deleted;
+            } else {
+                throw new NotFoundException();
+            }
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
+    }
+
+    /**
+     * Update A policy
+     *
+     * @param nffg_id
+     * @return
+     */
+    @PUT
+    @Path("/nffg/{nffg_id}/policy/{policy_id}")
+    @ApiOperation(value = "remove a negotiate object", notes = "json and xml formats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found")})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public synchronized FLPolicy updatePolicy(@PathParam("nffg_id") String nffg_id,
+                                              @PathParam("policy_id") String policy_id,
+                                              FLPolicy policy) {
+        try {
+            FLPolicy updated = service.updatePolicy(nffg_id, policy_id, policy);
+
+            if (updated != null) { // success
+                return updated;
+            } else {
+                throw new NotFoundException();
+            }
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
+    }
+
+    /**
+     * Remove A set of policies
+     *
+     * @return
+     */
+    @PUT
+    @Path("/nffg/{nffg_id}/policies")
+    @ApiOperation(value = "remove a negotiate object", notes = "json and xml formats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found")})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public synchronized FLPolicies updatePolicies(@PathParam("nffg_id") String nffg_id,
+                                                  FLPolicies policies) {
+        try {
+            FLPolicies updated = service.updatePolicies(nffg_id, policies);
+
+            if (updated != null) { // success
+                return updated;
+            } else {
+                throw new NotFoundException();
+            }
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
+    }
+
 }
