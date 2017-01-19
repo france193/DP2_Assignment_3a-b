@@ -120,7 +120,7 @@ public class NffgsResources {
      */
     @POST
     @Path("/nffg")
-    @ApiOperation(value = "insert an nffgs", notes = "json and xml formats")
+    @ApiOperation(value = "insert an nffg", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
@@ -136,6 +136,62 @@ public class NffgsResources {
                 return Response.created(u).entity(created).build();
             } else {
                 throw new ServiceUnavailableException();
+            }
+        } catch (NullPointerException e) {
+            throw new ServiceUnavailableException();
+        }
+    }
+
+    /**
+     * ADD NFFGS
+     *
+     * @param nffgs
+     * @return
+     */
+    @DELETE
+    @Path("/nffgs")
+    @ApiOperation(value = "delete a group of nffgs", notes = "json and xml formats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found")})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public synchronized FLNffgs deleteNffgs(FLNffgs nffgs) {
+        try {
+            FLNffgs deleted = service.removeNffgs(nffgs);
+
+            if (deleted != null) { // success
+                return deleted;
+            } else {
+                throw new NotFoundException();
+            }
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
+    }
+
+    /**
+     * ADD 1 NFFG
+     *
+     * @param nffg
+     * @return
+     */
+    @DELETE
+    @Path("/nffg/{nffg_id}")
+    @ApiOperation(value = "delete a nffg", notes = "json and xml formats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found")})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public synchronized FLNffg deleteNffg(@PathParam("nffg_id") String nffg_id){
+        try {
+            FLNffg deleted = service.removeNffg(nffg_id);
+
+            if (deleted != null) { // success
+                return deleted;
+            } else {
+                throw new NotFoundException();
             }
         } catch (NullPointerException e) {
             throw new ServiceUnavailableException();
@@ -595,6 +651,62 @@ public class NffgsResources {
             }
         } catch (NullPointerException e) {
             throw new NotFoundException();
+        }
+    }
+
+    /**
+     * Verify 1 policy
+     *
+     * @param policy_id
+     * @return
+     */
+    @GET
+    @Path("/verifyPolicy/{policy_id}")
+    @ApiOperation(value = "verify a policy", notes = "json and xml formats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public synchronized FLVResult verifyPolicy(@PathParam("policy_id") String policy_id) {
+        try {
+            FLVResult verified = service.verifyPolicy(policy_id);
+
+            if (verified != null) { // success
+                return verified;
+            } else {
+                throw new ServiceUnavailableException();
+            }
+        } catch (NullPointerException e) {
+            throw new ServiceUnavailableException();
+        }
+    }
+
+    /**
+     * ADD 1 POLICY
+     *
+     * @param policy
+     * @return
+     */
+    @POST
+    @Path("/verifyPolicies")
+    @ApiOperation(value = "verify a group of policies", notes = "json and xml formats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public synchronized FLVResults verifyPolicies(FLPolicies policies) {
+        try {
+            FLVResults verified = service.verifyPolicies(policies);
+
+            if (verified != null) { // success
+                return verified;
+            } else {
+                throw new ServiceUnavailableException();
+            }
+        } catch (NullPointerException e) {
+            throw new ServiceUnavailableException();
         }
     }
 

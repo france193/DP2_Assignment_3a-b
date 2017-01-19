@@ -90,14 +90,7 @@
     <xsd:element name="FLPolicy">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="FLV_result" minOccurs="0" maxOccurs="1">
-                    <xsd:complexType>
-                        <xsd:attribute name="policy" type="xsd:string" use="optional"/>
-                        <xsd:attribute name="result" type="xsd:boolean" use="optional"/>
-                        <xsd:attribute name="time" type="xsd:dateTime" use="optional"/>
-                        <xsd:attribute name="message" type="xsd:string" use="optional"/>
-                    </xsd:complexType>
-                </xsd:element>
+                <xsd:element ref="flo:FLV_result" minOccurs="0" maxOccurs="1"/>
                 <xsd:element name="FLTraversal_requested_node" minOccurs="0" maxOccurs="unbounded">
                     <xsd:complexType>
                         <xsd:attribute name="functional_type"
@@ -112,6 +105,15 @@
             <xsd:attribute name="isPositive" type="xsd:boolean" use="required"/>
             <xsd:attribute name="source_node" type="xsd:string" use="required"/>
             <xsd:attribute name="destination_node" type="xsd:string" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="FLV_result">
+        <xsd:complexType>
+            <xsd:attribute name="policy" type="xsd:string" use="optional"/>
+            <xsd:attribute name="result" type="xsd:boolean" use="optional"/>
+            <xsd:attribute name="time" type="xsd:dateTime" use="optional"/>
+            <xsd:attribute name="message" type="xsd:string" use="optional"/>
         </xsd:complexType>
     </xsd:element>
 
@@ -175,14 +177,7 @@
     <xsd:element name="FLV_results">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="v_result" minOccurs="0" maxOccurs="unbounded">
-                    <xsd:complexType>
-                        <xsd:attribute name="policy" type="xsd:string" use="optional"/>
-                        <xsd:attribute name="result" type="xsd:boolean" use="optional"/>
-                        <xsd:attribute name="time" type="xsd:dateTime" use="optional"/>
-                        <xsd:attribute name="message" type="xsd:string" use="optional"/>
-                    </xsd:complexType>
-                </xsd:element>
+                <xsd:element ref="flo:FLV_result" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
