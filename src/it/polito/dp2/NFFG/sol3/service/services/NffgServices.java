@@ -28,10 +28,12 @@ public class NffgServices {
     private ConcurrentHashMap<String, oldIDs> tempNffgIDs = NffgDB.getTempNffgIDs();
 
     private WebTarget target;
-    private String baseURL = "http://localhost:8080/Neo4JXML/rest/resource";
+    private String baseURL;
     private Client client;
 
-    public NffgServices() {
+    public NffgServices(String neo4jurl) {
+        baseURL = neo4jurl+"resource";
+
         // create a new client
         client = ClientBuilder.newClient();
 

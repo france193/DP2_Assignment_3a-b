@@ -17,9 +17,19 @@ import java.net.URI;
 @Path("resource")
 public class NffgsResources {
 
-    NffgServices service = new NffgServices();
+    private NffgServices service;
+    private static String defaultNeo4JXMLURL = "http://localhost:8080/Neo4JXML/rest";
 
     public NffgsResources() {
+
+        String neo4jurl;
+
+        if ((neo4jurl = System.getProperty("it.polito.dp2.NFFG.lab3.NEO4JURL")) != null) {
+            service = new NffgServices(neo4jurl);
+        } else {
+            service = new NffgServices(defaultNeo4JXMLURL);
+        }
+
         switch (service.init()) {
             case 1:
             case 2:
@@ -39,7 +49,8 @@ public class NffgsResources {
     @ApiOperation(value = "get all the nffgs ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not found")})
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLNffgs getNffgs() {
         try {
@@ -51,7 +62,7 @@ public class NffgsResources {
                 return x;
             }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -66,7 +77,8 @@ public class NffgsResources {
     @ApiOperation(value = "get a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not found")})
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLNffg getNffg(@PathParam("nffg_id") String nffg_id) {
         try {
@@ -78,7 +90,7 @@ public class NffgsResources {
                 return x;
             }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -184,7 +196,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not Found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public synchronized FLNffg deleteNffg(@PathParam("nffg_id") String nffg_id){
+    public synchronized FLNffg deleteNffg(@PathParam("nffg_id") String nffg_id) {
         try {
             FLNffg deleted = service.removeNffg(nffg_id);
 
@@ -209,7 +221,8 @@ public class NffgsResources {
     @ApiOperation(value = "get all nodes of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not found")})
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLNodes getNffgNodes(@PathParam("nffg_id") String nffg_id) {
         try {
@@ -221,7 +234,7 @@ public class NffgsResources {
                 return x;
             }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -237,7 +250,8 @@ public class NffgsResources {
     @ApiOperation(value = "get a specific node of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not found")})
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLNode getNffgNode(@PathParam("nffg_id") String nffg_id,
                               @PathParam("node_id") String node_id) {
@@ -250,7 +264,7 @@ public class NffgsResources {
                 return x;
             }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -266,7 +280,8 @@ public class NffgsResources {
     @ApiOperation(value = "get all links of a specific node of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not found")})
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLLinks getNffgNodeLinks(@PathParam("nffg_id") String nffg_id,
                                     @PathParam("node_id") String node_id) {
@@ -279,7 +294,7 @@ public class NffgsResources {
                 return x;
             }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -296,7 +311,8 @@ public class NffgsResources {
     @ApiOperation(value = "get a specific link of a specific node of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not found")})
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLLink getNffgNodeLink(@PathParam("nffg_id") String nffg_id,
                                   @PathParam("node_id") String node_id,
@@ -310,7 +326,7 @@ public class NffgsResources {
                 return x;
             }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -325,7 +341,8 @@ public class NffgsResources {
     @ApiOperation(value = "get all links of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not found")})
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLLinks getNffgLinks(@PathParam("nffg_id") String nffg_id) {
         try {
@@ -337,7 +354,7 @@ public class NffgsResources {
                 return x;
             }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -353,7 +370,8 @@ public class NffgsResources {
     @ApiOperation(value = "get a specific link of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not found")})
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLLink getNffgLink(@PathParam("nffg_id") String nffg_id,
                               @PathParam("link_id") String link_id) {
@@ -366,7 +384,7 @@ public class NffgsResources {
                 return x;
             }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -381,7 +399,8 @@ public class NffgsResources {
     @ApiOperation(value = "get all policies of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not found")})
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLPolicies getNffgPolicies(@PathParam("nffg_id") String nffg_id) {
         try {
@@ -393,7 +412,7 @@ public class NffgsResources {
                 return x;
             }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -409,7 +428,8 @@ public class NffgsResources {
     @ApiOperation(value = "get a specific policy of a specific nffg ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not found")})
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLPolicy getNffgPolicy(@PathParam("nffg_id") String nffg_id,
                                   @PathParam("policy_id") String policy_id) {
@@ -422,7 +442,7 @@ public class NffgsResources {
                 return x;
             }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -500,7 +520,8 @@ public class NffgsResources {
     @ApiOperation(value = "get all policies of all nffgs ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not found")})
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLPolicies getPolicies() {
         try {
@@ -512,7 +533,7 @@ public class NffgsResources {
                 return x;
             }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -527,7 +548,8 @@ public class NffgsResources {
     @ApiOperation(value = "get a specifc policy of all nffgs ", notes = "xml and json formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not found")})
+            @ApiResponse(code = 404, message = "Not found"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public FLPolicy getPolicy(@PathParam("policy_id") String policy_id) {
         try {
@@ -539,7 +561,7 @@ public class NffgsResources {
                 return x;
             }
         } catch (NullPointerException e) {
-            throw new NotFoundException();
+            throw new ServiceUnavailableException();
         }
     }
 
@@ -584,7 +606,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not Found")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public synchronized FLPolicies deletePolicies(@PathParam("nffg_id") String nffg_id,
-                                                FLPolicies policies) {
+                                                  FLPolicies policies) {
         try {
             FLPolicies deleted = service.removePolicies(nffg_id, policies);
 
@@ -665,6 +687,7 @@ public class NffgsResources {
     @ApiOperation(value = "verify a policy", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -675,7 +698,7 @@ public class NffgsResources {
             if (verified != null) { // success
                 return verified;
             } else {
-                throw new ServiceUnavailableException();
+                throw new NotFoundException();
             }
         } catch (NullPointerException e) {
             throw new ServiceUnavailableException();
