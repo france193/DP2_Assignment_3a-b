@@ -18,25 +18,9 @@ import java.net.URI;
 public class NffgsResources {
 
     private NffgServices service;
-    private static String defaultNeo4JXMLURL = "http://localhost:8080/Neo4JXML/rest";
 
     public NffgsResources() {
-
-        String neo4jurl;
-
-        if ((neo4jurl = System.getProperty("it.polito.dp2.NFFG.lab3.NEO4JURL")) != null) {
-            service = new NffgServices(neo4jurl);
-        } else {
-            service = new NffgServices(defaultNeo4JXMLURL);
-        }
-
-        switch (service.init()) {
-            case 1:
-            case 2:
-                throw new ServiceUnavailableException();
-            default:
-                break;
-        }
+        service = new NffgServices(System.getProperty("it.polito.dp2.NFFG.lab3.NEO4JURL"));
     }
 
     /**

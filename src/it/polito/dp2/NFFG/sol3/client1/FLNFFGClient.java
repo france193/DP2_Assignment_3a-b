@@ -20,10 +20,10 @@ public class FLNFFGClient implements NFFGClient {
     public FLNFFGClient() {
 
         // try to read default URL
-        String fileName = System.getProperty("it.polito.dp2.NFFG.sol1.NffgInfo.file");
+        String url = System.getProperty("it.polito.dp2.NFFG.sol1.NffgInfo.file");
 
-        if (fileName == null) {
-            fileName = DEFAULT_URL;
+        if (url == null) {
+            url = DEFAULT_URL;
         }
     }
 

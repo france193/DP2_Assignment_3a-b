@@ -5,6 +5,7 @@ import it.polito.dp2.NFFG.sol3.service.database.oldIDs;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.*;
 import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
 
+import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -24,6 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by Francesco Longo (s223428) on 13/01/2017.
  */
 public class NffgServices {
+    private static String defaultNeo4JXMLURL = "http://localhost:8080/Neo4JXML/rest";
+
     private ConcurrentHashMap<String, FLPolicy> policies = NffgDB.getPolicies();
     private ConcurrentHashMap<String, oldIDs> tempNffgIDs = NffgDB.getTempNffgIDs();
 
@@ -32,16 +35,28 @@ public class NffgServices {
     private Client client;
 
     public NffgServices(String neo4jurl) {
-        baseURL = neo4jurl+"resource";
+        if (neo4jurl == null) {
+            baseURL = defaultNeo4JXMLURL+"/resource";
+        } else {
+            baseURL = neo4jurl+"/resource";
+        }
 
         // create a new client
         client = ClientBuilder.newClient();
 
         // create a webtarget from the baseURL string
         target = client.target(getBaseURI(baseURL));
+
+        switch (init()) {
+            case 1:
+            case 2:
+                throw new ServiceUnavailableException();
+            default:
+                break;
+        }
     }
 
-    public Integer init() {
+    public synchronized Integer init() {
         Integer t;
 
         // delete all nodes
@@ -72,7 +87,7 @@ public class NffgServices {
         return NffgDB.nffgs.get(nffg_id);
     }
 
-    public FLNffgs postNffgs(FLNffgs nffgs_t) {
+    public synchronized FLNffgs postNffgs(FLNffgs nffgs_t) {
         FLNffgs x = new FLNffgs();
         FLNffg f;
 
@@ -88,7 +103,7 @@ public class NffgServices {
         return x;
     }
 
-    public FLNffg postNffg(FLNffg n) {
+    public synchronized FLNffg postNffg(FLNffg n) {
         Response response;
         oldIDs oldIDs = new oldIDs();
 
@@ -257,7 +272,7 @@ public class NffgServices {
         return NffgDB.nffgs.get(n.getId());
     }
 
-    public FLNffgs removeNffgs(FLNffgs flNffgs) {
+    public synchronized FLNffgs removeNffgs(FLNffgs flNffgs) {
         FLNffgs x = new FLNffgs();
         FLNffg y;
 
@@ -272,7 +287,7 @@ public class NffgServices {
         return x;
     }
 
-    public FLNffg removeNffg(String nffg_id) {
+    public synchronized FLNffg removeNffg(String nffg_id) {
         Response response;
 
         // retrieve all data
@@ -483,7 +498,7 @@ public class NffgServices {
         return null;
     }
 
-    public FLPolicy postNffgPolicy(String nffg_id, FLPolicy policy)  {
+    public synchronized FLPolicy postNffgPolicy(String nffg_id, FLPolicy policy)  {
         policy.setId("" + NffgDB.policyCounter);
         policy.setNffg(nffg_id);
 
@@ -501,7 +516,7 @@ public class NffgServices {
         return policy;
     }
 
-    public FLPolicies postNffgPolicies(String nffg_id, FLPolicies policies) {
+    public synchronized FLPolicies postNffgPolicies(String nffg_id, FLPolicies policies) {
         FLPolicies policies1 = new FLPolicies();
         FLPolicy policy1;
 
@@ -516,7 +531,7 @@ public class NffgServices {
         return policies1;
     }
 
-    public FLPolicy removePolicy(String nffg_id, String policy_id) {
+    public synchronized FLPolicy removePolicy(String nffg_id, String policy_id) {
         FLNffg f;
 
         if ( (f = NffgDB.nffgs.get(nffg_id)) != null ) {
@@ -532,7 +547,7 @@ public class NffgServices {
         return null;
     }
 
-    public FLPolicies removePolicies(String nffg_id, FLPolicies policies) {
+    public synchronized FLPolicies removePolicies(String nffg_id, FLPolicies policies) {
         FLPolicies f = new FLPolicies();
         FLPolicy x;
 
@@ -547,7 +562,7 @@ public class NffgServices {
         return f;
     }
 
-    public FLPolicy updatePolicy(String nffg_id, String policy_id, FLPolicy flPolicy) {
+    public synchronized FLPolicy updatePolicy(String nffg_id, String policy_id, FLPolicy flPolicy) {
         FLNffg f;
 
         if ( (f = NffgDB.nffgs.get(nffg_id)) != null ) {
@@ -567,7 +582,7 @@ public class NffgServices {
         return null;
     }
 
-    public FLPolicies updatePolicies(String nffg_id, FLPolicies policies) {
+    public synchronized FLPolicies updatePolicies(String nffg_id, FLPolicies policies) {
         FLPolicies f = new FLPolicies();
         FLPolicy x;
 
@@ -582,7 +597,7 @@ public class NffgServices {
         return f;
     }
 
-    public FLVResult verifyPolicy(String policy_id) {
+    public synchronized FLVResult verifyPolicy(String policy_id) {
         Response response;
         FLVResult flvResult = new FLVResult();
         XMLGregorianCalendar date2;
@@ -629,7 +644,7 @@ public class NffgServices {
         return flvResult;
     }
 
-    public FLVResults verifyPolicies(FLPolicies policies) {
+    public synchronized FLVResults verifyPolicies(FLPolicies policies) {
         FLVResult y;
         FLVResults flvResults = new FLVResults();
 
@@ -647,11 +662,11 @@ public class NffgServices {
     /**
      * OTHER METHODS
      **/
-    private URI getBaseURI(String url) {
+    private synchronized URI getBaseURI(String url) {
         return UriBuilder.fromUri(url).build();
     }
 
-    private Integer initNeo4JDB() {
+    private synchronized Integer initNeo4JDB() {
         Response response = target.path("nodes")
                 .request()
                 .accept("application/xml")
@@ -660,7 +675,7 @@ public class NffgServices {
         return response.getStatus();
     }
 
-    private Integer errorSwitch(Integer status) {
+    private synchronized Integer errorSwitch(Integer status) {
         switch (status) {
             case 400:
                 return 1;
