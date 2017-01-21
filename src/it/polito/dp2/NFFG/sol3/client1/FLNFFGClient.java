@@ -17,14 +17,19 @@ public class FLNFFGClient implements NFFGClient {
 
     private NffgVerifier monitor;
 
-    public FLNFFGClient() {
+    public FLNFFGClient() throws NffgVerifierException {
+
+        NffgVerifierFactory factory = NffgVerifierFactory.newInstance();
+        monitor = factory.newNffgVerifier();
 
         // try to read default URL
-        String url = System.getProperty("it.polito.dp2.NFFG.sol1.NffgInfo.file");
+        String url;
 
-        if (url == null) {
+        if ( (url = System.getProperty("it.polito.dp2.NFFG.sol1.NffgInfo.file")) == null) {
             url = DEFAULT_URL;
         }
+
+        url = url + "/resource";
     }
 
     /**

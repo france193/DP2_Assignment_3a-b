@@ -1,5 +1,6 @@
 package it.polito.dp2.NFFG.sol3.client1;
 
+import it.polito.dp2.NFFG.NffgVerifierException;
 import it.polito.dp2.NFFG.lab3.NFFGClient;
 import it.polito.dp2.NFFG.lab3.NFFGClientException;
 import it.polito.dp2.NFFG.lab3.NFFGClientFactory;
@@ -22,6 +23,8 @@ public class FLNFFGClientFactory extends NFFGClientFactory {
             myFLNffgClient = new FLNFFGClient();
         } catch (NullPointerException e) {
             System.err.println("NullPointerException Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (NffgVerifierException e) {
             e.printStackTrace();
         }
 
