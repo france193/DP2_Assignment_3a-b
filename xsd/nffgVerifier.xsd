@@ -33,7 +33,7 @@
                 <xsd:element ref="flo:FLPolicy" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
             <xsd:attribute name="id" type="xsd:string" use="optional"/>
-            <xsd:attribute name="name" type="xsd:string" use="optional"/>
+            <xsd:attribute name="name" type="xsd:string" use="required"/>
             <xsd:attribute name="last_updated_time" type="xsd:dateTime" use="required"/>
         </xsd:complexType>
 
@@ -47,11 +47,11 @@
         </xsd:unique>
         <xsd:unique name="policy_id_key">
             <xsd:selector xpath="flo:FLPolicy"/>
-            <xsd:field xpath="@id"/>
+            <xsd:field xpath="@name"/>
         </xsd:unique>
         <xsd:keyref name="policy_id_keyref" refer="flo:policy_id_key">
             <xsd:selector xpath="flo:FLPolicy/flo:FLV_result"/>
-            <xsd:field xpath="@policy"/>
+            <xsd:field xpath="@policyName"/>
         </xsd:keyref>
         <xsd:keyref name="link_source_node_id_keyref" refer="flo:node_id_key">
             <xsd:selector xpath="flo:FLLink"/>
@@ -100,9 +100,9 @@
                     </xsd:complexType>
                 </xsd:element>
             </xsd:sequence>
-            <xsd:attribute name="id" type="xsd:string" use="required"/>
-            <xsd:attribute name="name" type="xsd:string" use="optional"/>
-            <xsd:attribute name="nffg" type="xsd:string" use="required"/>
+            <xsd:attribute name="id" type="xsd:string" use="optional"/>
+            <xsd:attribute name="name" type="xsd:string" use="required"/>
+            <xsd:attribute name="nffgName" type="xsd:string" use="required"/>
             <xsd:attribute name="isPositive" type="xsd:boolean" use="required"/>
             <xsd:attribute name="source_node" type="xsd:string" use="required"/>
             <xsd:attribute name="destination_node" type="xsd:string" use="required"/>
@@ -111,7 +111,7 @@
 
     <xsd:element name="FLV_result">
         <xsd:complexType>
-            <xsd:attribute name="policy" type="xsd:string" use="optional"/>
+            <xsd:attribute name="policyName" type="xsd:string" use="required"/>
             <xsd:attribute name="result" type="xsd:boolean" use="optional"/>
             <xsd:attribute name="time" type="xsd:dateTime" use="optional"/>
             <xsd:attribute name="message" type="xsd:string" use="optional"/>
@@ -128,7 +128,7 @@
 
         <xsd:unique name="nffg_id_key">
             <xsd:selector xpath="flo:FLNffg"/>
-            <xsd:field xpath="@id"/>
+            <xsd:field xpath="@name"/>
         </xsd:unique>
     </xsd:element>
 
@@ -167,11 +167,11 @@
 
         <xsd:unique name="policy_id_key_collection_of_elements">
             <xsd:selector xpath="flo:FLPolicy"/>
-            <xsd:field xpath="@id"/>
+            <xsd:field xpath="@name"/>
         </xsd:unique>
         <xsd:keyref name="policy_id_keyref_collection_of_elements" refer="flo:policy_id_key_collection_of_elements">
             <xsd:selector xpath="flo:FLPolicy/flo:FLV_result"/>
-            <xsd:field xpath="@policy"/>
+            <xsd:field xpath="@policyName"/>
         </xsd:keyref>
     </xsd:element>
 

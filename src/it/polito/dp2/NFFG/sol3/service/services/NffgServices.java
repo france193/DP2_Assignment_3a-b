@@ -1,7 +1,7 @@
 package it.polito.dp2.NFFG.sol3.service.services;
 
 import it.polito.dp2.NFFG.sol3.service.database.NffgDB;
-import it.polito.dp2.NFFG.sol3.service.database.oldIDs;
+import it.polito.dp2.NFFG.sol3.service.database.NameRefer;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.*;
 import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
 
@@ -28,7 +28,7 @@ public class NffgServices {
     private static String defaultNeo4JXMLURL = "http://localhost:8080/Neo4JXML/rest";
 
     private ConcurrentHashMap<String, FLPolicy> policies = NffgDB.getPolicies();
-    private ConcurrentHashMap<String, oldIDs> tempNffgIDs = NffgDB.getTempNffgIDs();
+    private ConcurrentHashMap<String, NameRefer> tempNffgIDs = NffgDB.getTempNffgIDs();
 
     private WebTarget target;
     private String baseURL;
@@ -91,6 +91,16 @@ public class NffgServices {
         FLNffgs x = new FLNffgs();
         FLNffg f;
 
+        // check if at least one nffg is a duplicate
+        for (FLNffg n : nffgs_t.getFLNffg()) {
+            if ( tempNffgIDs.get(n.getName()) != null ) {
+                FLNffg x1 = new FLNffg();
+                x1.setId(""+-1);
+                x.getFLNffg().add(x1);
+                return x;
+            }
+        }
+
         //here it is the FLNffgs uploaded
         for (FLNffg n : nffgs_t.getFLNffg()) {
             if ( (f = postNffg(n)) != null ) {
@@ -104,17 +114,24 @@ public class NffgServices {
     }
 
     public synchronized FLNffg postNffg(FLNffg n) {
+
+        // check if a nffg already exists
+        if ( tempNffgIDs.get(n.getName()) != null ) {
+            FLNffg x = new FLNffg();
+            x.setId(""+-1);
+            return x;
+        }
+
         Response response;
-        oldIDs oldIDs = new oldIDs();
+        NameRefer nameRefer = new NameRefer();
+        String nffgCurrentName = n.getName();
 
         // Create the NFFG as a NODE
         Node node_t = new Node();
 
-        oldIDs.setNffgOldID(n.getId());
-
         Property p = new Property();
         p.setName("name");
-        p.setValue(n.getName());
+        p.setValue(nffgCurrentName);
         node_t.getProperty().add(p);
 
         // upload to Neo4JXML
@@ -130,6 +147,7 @@ public class NffgServices {
         // take the id of the Neo4JXML
         String id = response.readEntity(Node.class).getId();
         n.setId(id);
+        nameRefer.setNffgNewID(id);
 
         // set the label as requested
         Labels labels = new Labels();
@@ -145,6 +163,9 @@ public class NffgServices {
         if (response.getStatus() != 204) {
             return null;
         }
+
+        // creates a new entry for the nffg
+        tempNffgIDs.put(nffgCurrentName, nameRefer);
 
         // NODES
         for (FLNode node : n.getFLNode()) {
@@ -174,10 +195,8 @@ public class NffgServices {
 
             // update the new id with the one given by Neo4JXML
             String n_id = response.readEntity(Node.class).getId();
-            oldIDs.tempNodeIDs.put(node.getId(), n_id);
+            nameRefer.tempNodeIDs.put(node.getId(), n_id);
             node.setId(n_id);
-
-            tempNffgIDs.put(id, oldIDs);
 
             // create the relationship that indicate that the node belongs to the nffg on Neo4JXML
             Relationship r = new Relationship();
@@ -218,8 +237,8 @@ public class NffgServices {
             Relationship r = new Relationship();
 
             String src_id, dst_id;
-            src_id = tempNffgIDs.get(id).tempNodeIDs.get(link.getSourceNode());
-            dst_id = tempNffgIDs.get(id).tempNodeIDs.get(link.getDestinationNode());
+            src_id = tempNffgIDs.get(nffgCurrentName).tempNodeIDs.get(link.getSourceNode());
+            dst_id = tempNffgIDs.get(nffgCurrentName).tempNodeIDs.get(link.getDestinationNode());
 
             r.setType("Link");
             r.setDstNode(dst_id);
@@ -262,9 +281,8 @@ public class NffgServices {
         // Save Policies on the server (on proper nffg and on a proper Map of only policies)
         for (FLPolicy policy : n.getFLPolicy()) {
             policy.setId("" + NffgDB.policyCounter);
-            policy.setNffg(id);
-            policy.setSourceNode(tempNffgIDs.get(id).tempNodeIDs.get(policy.getSourceNode()));
-            policy.setDestinationNode(tempNffgIDs.get(id).tempNodeIDs.get(policy.getDestinationNode()));
+            policy.setSourceNode(tempNffgIDs.get(nffgCurrentName).tempNodeIDs.get(policy.getSourceNode()));
+            policy.setDestinationNode(tempNffgIDs.get(nffgCurrentName).tempNodeIDs.get(policy.getDestinationNode()));
             policies.put(policy.getId(), policy);
             NffgDB.policyCounter++;
         }
@@ -500,11 +518,11 @@ public class NffgServices {
 
     public synchronized FLPolicy postNffgPolicy(String nffg_id, FLPolicy policy)  {
         policy.setId("" + NffgDB.policyCounter);
-        policy.setNffg(nffg_id);
+        policy.setNffgName(policy.getNffgName());
 
         String src, dst;
-        src = tempNffgIDs.get(nffg_id).tempNodeIDs.get(policy.getSourceNode());
-        dst = tempNffgIDs.get(nffg_id).tempNodeIDs.get(policy.getDestinationNode());
+        src = tempNffgIDs.get(policy.getNffgName()).tempNodeIDs.get(policy.getSourceNode());
+        dst = tempNffgIDs.get(policy.getNffgName()).tempNodeIDs.get(policy.getDestinationNode());
 
         policy.setSourceNode(src);
         policy.setDestinationNode(dst);
@@ -597,10 +615,11 @@ public class NffgServices {
         return f;
     }
 
-    public synchronized FLVResult verifyPolicy(String policy_id) {
+    public synchronized FLVResult verifyPolicy(FLVResult flvResult) {
         Response response;
-        FLVResult flvResult = new FLVResult();
         XMLGregorianCalendar date2;
+
+        String policyName = flvResult.getPolicyName();
 
         try {
             GregorianCalendar c = new GregorianCalendar();
@@ -610,12 +629,11 @@ public class NffgServices {
             return null;
         }
 
-        flvResult.setPolicy(policy_id);
         flvResult.setTime(date2);
 
         String src, dst;
-        src = NffgDB.getPolicies().get(policy_id).getSourceNode();
-        dst = NffgDB.getPolicies().get(policy_id).getDestinationNode();
+        src = policies.get(getPolicyIDFromName(policyName)).getSourceNode();
+        dst = policies.get(getPolicyIDFromName(policyName)).getDestinationNode();
 
         response = target.path("node")
                 .path(src)
@@ -644,16 +662,11 @@ public class NffgServices {
         return flvResult;
     }
 
-    public synchronized FLVResults verifyPolicies(FLPolicies policies) {
+    public synchronized FLVResults verifyPolicies(FLVResults flvResults) {
         FLVResult y;
-        FLVResults flvResults = new FLVResults();
 
-        for (FLPolicy x : policies.getFLPolicy()) {
-            if ( ( y = verifyPolicy(x.getId()) ) != null ) {
-                flvResults.getFLVResult().add(y);
-            } else {
-                return null;
-            }
+        for (FLVResult x : flvResults.getFLVResult()) {
+            verifyPolicy(x);
         }
 
         return flvResults;
@@ -682,5 +695,15 @@ public class NffgServices {
             default:
                 return 2;
         }
+    }
+
+    private String getPolicyIDFromName(String policyName) {
+        for (FLPolicy f : policies.values()) {
+            if (f.getName().contains(policyName)) {
+                return f.getId();
+            }
+        }
+
+        return null;
     }
 }

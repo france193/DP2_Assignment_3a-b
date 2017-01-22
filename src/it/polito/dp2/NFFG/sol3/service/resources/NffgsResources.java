@@ -89,6 +89,7 @@ public class NffgsResources {
     @ApiOperation(value = "insert an nffgs", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -97,9 +98,13 @@ public class NffgsResources {
             FLNffgs created = service.postNffgs(nffgs);
 
             if (created != null) { // success
-                UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-                URI u = builder.path("").build();
-                return Response.created(u).entity(created).build();
+                if ( (created.getFLNffg().size() == 1) && (created.getFLNffg().get(0).getId().contains("-1")) ) {
+                    throw new BadRequestException("Already loaded nffg");
+                } else {
+                    UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+                    URI u = builder.path("").build();
+                    return Response.created(u).entity(created).build();
+                }
             } else {
                 throw new ServiceUnavailableException();
             }
@@ -119,12 +124,17 @@ public class NffgsResources {
     @ApiOperation(value = "insert an nffg", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public synchronized Response postNffg(FLNffg nffg, @Context UriInfo uriInfo) {
         try {
             FLNffg created = service.postNffg(nffg);
+
+            if (created.getId().contains("-1")) {
+                throw new BadRequestException("Already loaded nffg");
+            }
 
             if (created != null) { // success
                 UriBuilder builder = uriInfo.getAbsolutePathBuilder();
@@ -169,7 +179,7 @@ public class NffgsResources {
     /**
      * ADD 1 NFFG
      *
-     * @param nffg
+     * @param nffg_id
      * @return
      */
     @DELETE
@@ -663,36 +673,38 @@ public class NffgsResources {
     /**
      * Verify 1 policy
      *
-     * @param policy_id
+     * @param flvResult
      * @return
      */
-    @GET
-    @Path("/verifyPolicy/{policy_id}")
-    @ApiOperation(value = "verify a policy", notes = "json and xml formats")
+    @POST
+    @Path("/verifyPolicy")
+    @ApiOperation(value = "verify 1 policy", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public synchronized FLVResult verifyPolicy(@PathParam("policy_id") String policy_id) {
+    public synchronized Response verifyPolicy(FLVResult flvResult, @Context UriInfo uriInfo) {
         try {
-            FLVResult verified = service.verifyPolicy(policy_id);
+            FLVResult verified = service.verifyPolicy(flvResult);
 
             if (verified != null) { // success
-                return verified;
+                UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+                URI u = builder.path("").build();
+                return Response.ok(u).entity(verified).build();
             } else {
-                throw new NotFoundException();
+                throw new ServiceUnavailableException();
             }
         } catch (NullPointerException e) {
-            throw new ServiceUnavailableException();
+            throw new NotFoundException();
         }
     }
 
     /**
-     * ADD 1 POLICY
+     * Verify a group of policies
      *
-     * @param policy
+     * @param flvResults
      * @return
      */
     @POST
@@ -700,20 +712,23 @@ public class NffgsResources {
     @ApiOperation(value = "verify a group of policies", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public synchronized FLVResults verifyPolicies(FLPolicies policies) {
+    public synchronized Response verifyPolicies(FLVResults flvResults, @Context UriInfo uriInfo) {
         try {
-            FLVResults verified = service.verifyPolicies(policies);
+            FLVResults verified = service.verifyPolicies(flvResults);
 
             if (verified != null) { // success
-                return verified;
+                UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+                URI uri = builder.path("").build();
+                return Response.ok(uri).entity(verified).build();
             } else {
                 throw new ServiceUnavailableException();
             }
         } catch (NullPointerException e) {
-            throw new ServiceUnavailableException();
+            throw new NotFoundException();
         }
     }
 
