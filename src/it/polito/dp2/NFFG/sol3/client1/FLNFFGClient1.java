@@ -5,14 +5,12 @@ import it.polito.dp2.NFFG.lab3.AlreadyLoadedException;
 import it.polito.dp2.NFFG.lab3.NFFGClient;
 import it.polito.dp2.NFFG.lab3.ServiceException;
 import it.polito.dp2.NFFG.lab3.UnknownNameException;
-import it.polito.dp2.NFFG.sol3.client1.models.NffgService.*;
 import it.polito.dp2.NFFG.sol3.client1.models.NffgService.FLLink;
 import it.polito.dp2.NFFG.sol3.client1.models.NffgService.FLNffg;
 import it.polito.dp2.NFFG.sol3.client1.models.NffgService.FLNode;
 import it.polito.dp2.NFFG.sol3.client1.models.NffgService.FLPolicy;
 import it.polito.dp2.NFFG.sol3.client1.models.NffgService.FLVResult;
 import it.polito.dp2.NFFG.sol3.client1.models.NffgService.NodeFunctionalType;
-import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -45,20 +43,17 @@ public class FLNFFGClient1 implements NFFGClient {
         NffgVerifierFactory factory1 = NffgVerifierFactory.newInstance();
         monitor = factory1.newNffgVerifier();
 
-        // try to read default URL
-        String url;
-
-        if ( (url = System.getProperty("it.polito.dp2.NFFG.sol1.NffgInfo.file")) == null) {
-            url = DEFAULT_URL;
+        if ( (baseURL = System.getProperty("it.polito.dp2.NFFG.sol1.NffgInfo.file")) == null) {
+            baseURL = DEFAULT_URL;
         }
 
-        url = url + "/resource";
+        baseURL = baseURL + "/resource";
 
         // create a new client
         client = ClientBuilder.newClient();
 
         // create a webtarget from the baseURL string
-        target = client.target(getBaseURI(url));
+        target = client.target(getBaseURI(baseURL));
     }
 
     /**
@@ -105,10 +100,12 @@ public class FLNFFGClient1 implements NFFGClient {
         HashMap<String, String> nffgName_nffgID = new HashMap<>();
 
         for (NffgReader nffg : monitor.getNffgs()) {
+            FLNffg nffg1 = convertNffgReaderToFLNffg(nffg);
+
             response = target.path("nffg")
                     .request()
                     .accept("application/xml")
-                    .post(Entity.entity(convertNffgReaderToFLNffg(nffg), "application/xml"));
+                    .post(Entity.entity(nffg1, "application/xml"));
 
             switch (response.getStatus()) {
                 case 201:
@@ -117,8 +114,11 @@ public class FLNFFGClient1 implements NFFGClient {
                     break;
                 case 400:
                     throw new AlreadyLoadedException();
-                default:
+                case 503:
                     throw new ServiceException();
+                default:
+                    System.out.println("RESPONSE: " + response.getStatus());
+                    System.exit(0);
             }
         }
 
@@ -156,7 +156,28 @@ public class FLNFFGClient1 implements NFFGClient {
      */
     @Override
     public void loadReachabilityPolicy(String name, String nffgName, boolean isPositive, String srcNodeName, String dstNodeName) throws UnknownNameException, ServiceException {
+        Response response;
+        FLPolicy policy = new FLPolicy();
 
+        policy.setName(name);
+        policy.setNffgName(nffgName);
+        policy.setIsPositive(isPositive);
+        policy.setSourceNode(srcNodeName);
+        policy.setDestinationNode(dstNodeName);
+
+        response = target.path("policy")
+                .request()
+                .accept("application/xml")
+                .post(Entity.entity(policy, "application/xml"));
+
+        switch (response.getStatus()) {
+            case 201:
+                break;
+            case 503:
+                throw new ServiceException();
+            default:
+                throw new UnknownNameException();
+        }
     }
 
     /**
@@ -168,7 +189,22 @@ public class FLNFFGClient1 implements NFFGClient {
      */
     @Override
     public void unloadReachabilityPolicy(String name) throws UnknownNameException, ServiceException {
+        Response response;
 
+        response = target.path("policy")
+                .path(name)
+                .request()
+                .accept("application/xml")
+                .delete();
+
+        switch (response.getStatus()) {
+            case 200:
+                break;
+            case 503:
+                throw new ServiceException();
+            default:
+                throw new UnknownNameException();
+        }
     }
 
     /**
@@ -181,7 +217,28 @@ public class FLNFFGClient1 implements NFFGClient {
      */
     @Override
     public boolean testReachabilityPolicy(String name) throws UnknownNameException, ServiceException {
-        return false;
+        Response response;
+        FLVResult flvResult = new FLVResult();
+
+        flvResult.setPolicyName(name);
+
+        response = target.path("verifyPolicy")
+                .request()
+                .accept("application/xml")
+                .post(Entity.entity(flvResult, "application/xml"));
+
+        switch (response.getStatus()) {
+            case 200:
+                if (response.readEntity(FLVResult.class).isResult()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            case 503:
+                throw new ServiceException();
+            default:
+                throw new UnknownNameException();
+        }
     }
 
     private URI getBaseURI(String url) {

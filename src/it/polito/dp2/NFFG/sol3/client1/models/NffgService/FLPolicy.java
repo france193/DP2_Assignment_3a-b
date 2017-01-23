@@ -34,7 +34,6 @@ import javax.xml.bind.annotation.XmlType;
  *           &lt;/complexType>
  *         &lt;/element>
  *       &lt;/sequence>
- *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="nffgName" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="isPositive" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" />
@@ -59,8 +58,6 @@ public class FLPolicy {
     protected FLVResult flvResult;
     @XmlElement(name = "FLTraversal_requested_node")
     protected List<FLPolicy.FLTraversalRequestedNode> flTraversalRequestedNode;
-    @XmlAttribute(name = "id")
-    protected String id;
     @XmlAttribute(name = "name", required = true)
     protected String name;
     @XmlAttribute(name = "nffgName", required = true)
@@ -123,30 +120,6 @@ public class FLPolicy {
             flTraversalRequestedNode = new ArrayList<FLPolicy.FLTraversalRequestedNode>();
         }
         return this.flTraversalRequestedNode;
-    }
-
-    /**
-     * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setId(String value) {
-        this.id = value;
     }
 
     /**

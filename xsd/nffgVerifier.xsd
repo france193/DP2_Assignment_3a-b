@@ -100,7 +100,6 @@
                     </xsd:complexType>
                 </xsd:element>
             </xsd:sequence>
-            <xsd:attribute name="id" type="xsd:string" use="optional"/>
             <xsd:attribute name="name" type="xsd:string" use="required"/>
             <xsd:attribute name="nffgName" type="xsd:string" use="required"/>
             <xsd:attribute name="isPositive" type="xsd:boolean" use="required"/>
