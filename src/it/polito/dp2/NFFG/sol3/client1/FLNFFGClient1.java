@@ -242,7 +242,7 @@ public class FLNFFGClient1 implements NFFGClient {
             policy1.setDestinationNode(policy.getDestinationNode().getName());
 
             if (policy.getResult() != null) {
-                policy1.setFLVResult(readVerificationResult(policy.getResult());
+                policy1.setFLVResult(readVerificationResult(policy.getResult()));
             }
 
             policy1.setIsPositive(policy.isPositive());
@@ -256,7 +256,7 @@ public class FLNFFGClient1 implements NFFGClient {
             policy1.setDestinationNode(policy.getDestinationNode().getName());
 
             if (policy.getResult() != null) {
-                policy1.setFLVResult(readVerificationResult(policy.getResult());
+                policy1.setFLVResult(readVerificationResult(policy.getResult()));
             }
 
             if (policy.getTraversedFuctionalTypes().size() > 0) {
