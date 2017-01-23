@@ -567,7 +567,7 @@ public class NffgsResources {
      */
     @DELETE
     @Path("/nffg/{nffg_id}/policy/{policy_id}")
-    @ApiOperation(value = "remove a negotiate object", notes = "json and xml formats")
+    @ApiOperation(value = "remove 1 policy", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 404, message = "Not Found")})
@@ -594,7 +594,7 @@ public class NffgsResources {
      */
     @DELETE
     @Path("/nffg/{nffg_id}/policies")
-    @ApiOperation(value = "remove a negotiate object", notes = "json and xml formats")
+    @ApiOperation(value = "remove a set of policies", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 404, message = "Not Found")})
@@ -622,7 +622,7 @@ public class NffgsResources {
      */
     @PUT
     @Path("/nffg/{nffg_id}/policy/{policy_id}")
-    @ApiOperation(value = "remove a negotiate object", notes = "json and xml formats")
+    @ApiOperation(value = "update 1 policy", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 404, message = "Not Found")})
@@ -650,7 +650,7 @@ public class NffgsResources {
      */
     @PUT
     @Path("/nffg/{nffg_id}/policies")
-    @ApiOperation(value = "remove a negotiate object", notes = "json and xml formats")
+    @ApiOperation(value = "update a group of policies", notes = "json and xml formats")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 404, message = "Not Found")})

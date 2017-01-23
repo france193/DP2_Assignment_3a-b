@@ -19,6 +19,8 @@
     <ul>
         <li>200 --> after a delete or after a get when all it's cprrect</li>
         <li>201 --> when a new resource is correctly created</li>
+        <li>400 --> in Post nffg/nffgs if the nffg is already loaded</li>
+        <li>400 --> in verifyPolicy/verifyPolicies if a requested policy doesn't exist</li>
         <li>404 --> when the resource that you are looking for doesn't exists</li>
         <li>503 --> when it is required a connection to Neo4JXML and there is an error retrieving response from Neo4JXML</li>
     </ul>
@@ -27,7 +29,7 @@
     <h3><b>/nffg</b></h3>
         <ul>
             <li>POST - Insert 1 nffg
-                <br>("201 - Created" / "503 - Service Unavailable")</li>
+                <br>("201 - Created" / "400 - Bad Request" / "503 - Service Unavailable")</li>
         </ul>
 
     <h3><b>/nffgs</b></h3>
@@ -35,7 +37,7 @@
             <li>GET - Get all nffgs
                 <br>("200 - OK" / "404 - Not Found" / "503 - Service Unavailable")</li>
             <li>POST - Insert a specified group of nffgs
-                <br>("201 - Created" / "503 - Service Unavailable")</li>
+                <br>("201 - Created" / "400 - Bad Request" / "503 - Service Unavailable")</li>
             <li>DELETE - Delete a specified group of nffgs
                 <br>("200 - OK" / "404 - Not Found")</li>
         </ul>
@@ -124,16 +126,16 @@
                 <br>("200 - OK" / "404 - Not Found" / "503 - Service Unavailable")</li>
         </ul>
 
-    <h3><b>/verifyPolicy/{policy_id}</b></h3>
+    <h3><b>/verifyPolicy</b></h3>
         <ul>
-            <li>GET - Verify 1 specified policy getting the resoult
+            <li>POST - Verify 1 specified policy getting the result
                 <br>("200 - OK" / "404 - Not Found" / "503 - Service Unavailable")</li>
         </ul>
 
     <h3><b>/verifyPolicies</b></h3>
         <ul>
-            <li>POST - Verify a group of policy pasing a list of policies (uset to specify the list of policies IDs) getting all the resoults for all policies
-                <br>("200 - OK" / "503 - Service Unavailable")</li>
+            <li>POST - Verify a group of policy pasing a list of policies (uset to specify the list of policies IDs) getting all the results for all policies
+                <br>("200 - OK" / "404 - Not Found" / "503 - Service Unavailable")</li>
         </ul>
 
 </p>
