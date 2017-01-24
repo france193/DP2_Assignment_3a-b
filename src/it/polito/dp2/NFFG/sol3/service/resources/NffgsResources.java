@@ -386,17 +386,17 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public synchronized Response postPolicies(FLPolicies policies,
-                                                  @Context UriInfo uriInfo) {
+                                              @Context UriInfo uriInfo) {
 
-            FLPolicies created = service.postPolicies(policies);
+        FLPolicies created = service.postPolicies(policies);
 
-            if (created != null) { // success
-                UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-                URI u = builder.path("").build();
-                return Response.created(u).entity(created).build();
-            } else {
-                throw new ServiceUnavailableException();
-            }
+        if (created != null) { // success
+            UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+            URI u = builder.path("").build();
+            return Response.created(u).entity(created).build();
+        } else {
+            throw new ServiceUnavailableException();
+        }
     }
 
     /**
@@ -414,7 +414,7 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public synchronized Response postPolicy(FLPolicy policy,
-                                                @Context UriInfo uriInfo) {
+                                            @Context UriInfo uriInfo) {
         try {
             FLPolicy created = service.postPolicy(policy);
 
@@ -450,7 +450,7 @@ public class NffgsResources {
             FLNffgs created = service.postNffgs(nffgs);
 
             if (created != null) { // success
-                if ( (created.getFLNffg().size() == 1) && (created.getFLNffg().get(0).getId().contains("-1")) ) {
+                if ((created.getFLNffg().size() == 1) && (created.getFLNffg().get(0).getId().contains("-1"))) {
                     throw new BadRequestException("Already loaded nffg");
                 } else {
                     UriBuilder builder = uriInfo.getAbsolutePathBuilder();
@@ -460,6 +460,7 @@ public class NffgsResources {
             } else {
                 throw new ServiceUnavailableException();
             }
+
     }
 
     /**
@@ -478,6 +479,7 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public synchronized Response postNffg(FLNffg nffg, @Context UriInfo uriInfo) {
+        try {
             FLNffg created = service.postNffg(nffg);
 
             if (created.getId().contains("-1")) {
@@ -491,6 +493,10 @@ public class NffgsResources {
             } else {
                 throw new ServiceUnavailableException();
             }
+
+        } catch (NullPointerException e) {
+            throw new ServiceUnavailableException();
+        }
     }
 
     /** DELETE **/

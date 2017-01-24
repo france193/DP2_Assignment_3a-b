@@ -1,15 +1,12 @@
-/*
 package it.polito.dp2.NFFG.sol3.client2;
 
 import it.polito.dp2.NFFG.*;
 
 import java.util.Set;
 
-*/
 /**
  * Created by FLDeviOS on 23/01/2017.
- *//*
-
+ */
 public class FLTraversalPolicyReader implements TraversalPolicyReader {
     @Override
     public Set<FunctionalType> getTraversedFuctionalTypes() {
@@ -46,4 +43,3 @@ public class FLTraversalPolicyReader implements TraversalPolicyReader {
         return null;
     }
 }
-*/

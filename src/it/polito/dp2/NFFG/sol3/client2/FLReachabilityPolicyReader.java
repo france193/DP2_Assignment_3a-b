@@ -1,4 +1,3 @@
-/*
 package it.polito.dp2.NFFG.sol3.client2;
 
 import it.polito.dp2.NFFG.NffgReader;
@@ -6,11 +5,9 @@ import it.polito.dp2.NFFG.NodeReader;
 import it.polito.dp2.NFFG.ReachabilityPolicyReader;
 import it.polito.dp2.NFFG.VerificationResultReader;
 
-*/
 /**
  * Created by FLDeviOS on 23/01/2017.
- *//*
-
+ */
 public class FLReachabilityPolicyReader implements ReachabilityPolicyReader {
     @Override
     public NodeReader getSourceNode() {
@@ -42,4 +39,3 @@ public class FLReachabilityPolicyReader implements ReachabilityPolicyReader {
         return null;
     }
 }
-*/

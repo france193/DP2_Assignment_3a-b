@@ -280,6 +280,7 @@ public class NffgServices {
     public synchronized FLNffg postNffg(FLNffg nffgToPost) {
         Response response;
         FLNffg nffgToReturn = new FLNffg();
+        String oldNodeID;
 
         // check (with the ned ID) if a nffg already exists
         if ( tempName.get(nffgToPost.getName()) != null ) {
@@ -332,8 +333,16 @@ public class NffgServices {
         }
         // success
 
+        StringBuilder debug = new StringBuilder();
+
+        debug.append("I HAVE NODE#: " + nffgToPost.getFLNode().size() + "\n");
+
+        logFile(debug.toString(), "NODE");
+
         // NODES
         for (FLNode node : nffgToPost.getFLNode()) {
+            oldNodeID = node.getId();
+
             FLNode nodeToReturn = new FLNode();
             nodeToReturn.setName(node.getName());
             nodeToReturn.setFunctionalType(node.getFunctionalType());
@@ -364,7 +373,6 @@ public class NffgServices {
 
             // update the new id with the one given by Neo4JXML for the node just entered
             nodeToReturn.setId(response.readEntity(Node.class).getId());
-            node.setId(nodeToReturn.getId());
 
             // create the relationship that indicate that the node belongs to the nffg on Neo4JXML
             Relationship r = new Relationship();
@@ -407,7 +415,22 @@ public class NffgServices {
             oldN = node.getName();
             newN = nodeToReturn.getId();
 
+            StringBuilder debug2 = new StringBuilder();
+
+            debug2.append("LOOKING FOR NODES " +
+                    "\noldNodeName: " + oldN +
+                    "\nnewNodeID: " + newN +
+                    "\noldNodeID: " + oldNodeID +
+                    "\n");
+
+            logFile(debug2.toString(), "NODE_ASSOCIATION");
+
+            // use for client given by NFFGInfo
             temporaryData.getOldNodeID_newNodeID().put(oldN, newN);
+
+            // use for my client
+            //temporaryData.getOldNodeID_newNodeID().put(oldNodeID, newN);
+
             nffgToReturn.getFLNode().add(nodeToReturn);
         }
 
@@ -419,8 +442,23 @@ public class NffgServices {
 
             String src_id, dst_id;
 
+            StringBuilder debug3 = new StringBuilder();
+
+            debug3.append("LOOKING FOR POLICIES " +
+                    "\nlinkSourceNode: " + link.getSourceNode() +
+                    "\nlinkDestinationNode: " + link.getDestinationNode() + "\n");
+
             src_id = tempName.get(nffgToReturn.getName()).getOldNodeID_newNodeID().get(link.getSourceNode());
             dst_id = tempName.get(nffgToReturn.getName()).getOldNodeID_newNodeID().get(link.getDestinationNode());
+
+            debug3.append("\nsrc_id: " + src_id +
+                    "\ndst_id: " + dst_id +
+                    "\nnffgToReturn.getName(): " + nffgToReturn.getName() +
+                    "\ntempName.get(nffgToReturn.getName()): " + tempName.get(nffgToReturn.getName()) +
+                    "\ntempName.get(nffgToReturn.getName()).getOldNodeID_newNodeID(): " + tempName.get(nffgToReturn.getName()).getOldNodeID_newNodeID() +
+                    "\n");
+
+            logFile(debug3.toString(), "POLCIES");
 
             linkToReturn.setName(link.getName());
             linkToReturn.setSourceNode(src_id);
@@ -468,7 +506,7 @@ public class NffgServices {
         allNffgs.put(nffgToReturn.getName(), nffgToReturn);
 
         for (FLPolicy p1 : nffgToPost.getFLPolicy()) {
-            FLPolicy p2 = postPolicy(p1);
+            postPolicy(p1);
         }
 
         return nffgToReturn;
@@ -501,7 +539,7 @@ public class NffgServices {
                     n.getName() + " " + "\n");
         }
 
-        logFile(debug.toString());
+        logFile(debug.toString(), "NFFGS");
 
         src_id = tempName.get(policy.getNffgName()).getOldNodeID_newNodeID().get(policy.getSourceNode());
         dst_id = tempName.get(policy.getNffgName()).getOldNodeID_newNodeID().get(policy.getDestinationNode());
@@ -769,12 +807,12 @@ public class NffgServices {
         return null;
     }
 
-    public void logFile(String toWtrite) {
+    public void logFile(String toWtrite, String filename) {
         BufferedWriter writer = null;
         try {
             //create a temporary file
             String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-            File logFile = new File("/Users/FLDeviOS/Desktop/log/" + "NffgService_" + timeLog + ".txt");
+            File logFile = new File("/Users/FLDeviOS/Desktop/log/" + "NffgService_" + filename + "_" + timeLog + ".txt");
 
             // This will output the full path where the file will be written to...
             System.out.println(logFile.getCanonicalPath());
