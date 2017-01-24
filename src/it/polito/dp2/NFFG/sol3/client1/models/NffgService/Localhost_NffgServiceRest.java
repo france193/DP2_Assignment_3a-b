@@ -18,7 +18,7 @@ import com.sun.jersey.api.uri.UriTemplate;
 
 @Generated(value = {
     "wadl|http://localhost:8080/NffgService/rest/application.wadl"
-}, comments = "wadl2java, http://wadl.java.net", date = "2017-01-23T19:08:22.927+01:00")
+}, comments = "wadl2java, http://wadl.java.net", date = "2017-01-24T17:19:09.479+01:00")
 public class Localhost_NffgServiceRest {
 
     /**
@@ -122,20 +122,12 @@ public class Localhost_NffgServiceRest {
             return new Localhost_NffgServiceRest.Resource.PolicyPolicy_id(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues), policyId);
         }
 
-        public Localhost_NffgServiceRest.Resource.Policy policy() {
-            return new Localhost_NffgServiceRest.Resource.Policy(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues));
-        }
-
         public Localhost_NffgServiceRest.Resource.Nffgs nffgs() {
             return new Localhost_NffgServiceRest.Resource.Nffgs(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues));
         }
 
         public Localhost_NffgServiceRest.Resource.NffgNffg_id nffgNffg_id(String nffgId) {
             return new Localhost_NffgServiceRest.Resource.NffgNffg_id(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues), nffgId);
-        }
-
-        public Localhost_NffgServiceRest.Resource.Nffg nffg() {
-            return new Localhost_NffgServiceRest.Resource.Nffg(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues));
         }
 
         public Localhost_NffgServiceRest.Resource.NffgNffg_idNodes nffgNffg_idNodes(String nffgId) {
@@ -174,12 +166,20 @@ public class Localhost_NffgServiceRest {
             return new Localhost_NffgServiceRest.Resource.Policies(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues));
         }
 
-        public Localhost_NffgServiceRest.Resource.PolicyPolicy_id2 policyPolicy_id2(String policyId) {
-            return new Localhost_NffgServiceRest.Resource.PolicyPolicy_id2(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues), policyId);
-        }
-
         public Localhost_NffgServiceRest.Resource.Policies2 policies2() {
             return new Localhost_NffgServiceRest.Resource.Policies2(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+        }
+
+        public Localhost_NffgServiceRest.Resource.Policy policy() {
+            return new Localhost_NffgServiceRest.Resource.Policy(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+        }
+
+        public Localhost_NffgServiceRest.Resource.Nffg nffg() {
+            return new Localhost_NffgServiceRest.Resource.Nffg(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+        }
+
+        public Localhost_NffgServiceRest.Resource.PolicyPolicy_id2 policyPolicy_id2(String policyId) {
+            return new Localhost_NffgServiceRest.Resource.PolicyPolicy_id2(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues), policyId);
         }
 
         public Localhost_NffgServiceRest.Resource.VerifyPolicy verifyPolicy() {
@@ -2320,6 +2320,74 @@ public class Localhost_NffgServiceRest {
                 _templateAndMatrixParameterValues = new HashMap<String, Object>();
             }
 
+            public<T >T postXml(Object input, GenericType<T> returnType) {
+                UriBuilder localUriBuilder = _uriBuilder.clone();
+                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
+                resourceBuilder = resourceBuilder.accept("application/xml");
+                resourceBuilder = resourceBuilder.type("application/xml");
+                ClientResponse response;
+                response = resourceBuilder.method("POST", ClientResponse.class, input);
+                if (response.getStatus()>= 400) {
+                    throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
+                }
+                return response.getEntity(returnType);
+            }
+
+            public<T >T postXml(Object input, Class<T> returnType) {
+                UriBuilder localUriBuilder = _uriBuilder.clone();
+                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
+                resourceBuilder = resourceBuilder.accept("application/xml");
+                resourceBuilder = resourceBuilder.type("application/xml");
+                ClientResponse response;
+                response = resourceBuilder.method("POST", ClientResponse.class, input);
+                if (!ClientResponse.class.isAssignableFrom(returnType)) {
+                    if (response.getStatus()>= 400) {
+                        throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
+                    }
+                }
+                if (!ClientResponse.class.isAssignableFrom(returnType)) {
+                    return response.getEntity(returnType);
+                } else {
+                    return returnType.cast(response);
+                }
+            }
+
+            public<T >T postJson(Object input, GenericType<T> returnType) {
+                UriBuilder localUriBuilder = _uriBuilder.clone();
+                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
+                resourceBuilder = resourceBuilder.accept("application/json");
+                resourceBuilder = resourceBuilder.type("application/json");
+                ClientResponse response;
+                response = resourceBuilder.method("POST", ClientResponse.class, input);
+                if (response.getStatus()>= 400) {
+                    throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
+                }
+                return response.getEntity(returnType);
+            }
+
+            public<T >T postJson(Object input, Class<T> returnType) {
+                UriBuilder localUriBuilder = _uriBuilder.clone();
+                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
+                resourceBuilder = resourceBuilder.accept("application/json");
+                resourceBuilder = resourceBuilder.type("application/json");
+                ClientResponse response;
+                response = resourceBuilder.method("POST", ClientResponse.class, input);
+                if (!ClientResponse.class.isAssignableFrom(returnType)) {
+                    if (response.getStatus()>= 400) {
+                        throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
+                    }
+                }
+                if (!ClientResponse.class.isAssignableFrom(returnType)) {
+                    return response.getEntity(returnType);
+                } else {
+                    return returnType.cast(response);
+                }
+            }
+
             public FLPolicies deleteAsFLPoliciesXml() {
                 UriBuilder localUriBuilder = _uriBuilder.clone();
                 WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
@@ -2488,74 +2556,6 @@ public class Localhost_NffgServiceRest {
                 resourceBuilder = resourceBuilder.accept("application/json");
                 ClientResponse response;
                 response = resourceBuilder.method("PUT", ClientResponse.class);
-                if (!ClientResponse.class.isAssignableFrom(returnType)) {
-                    if (response.getStatus()>= 400) {
-                        throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
-                    }
-                }
-                if (!ClientResponse.class.isAssignableFrom(returnType)) {
-                    return response.getEntity(returnType);
-                } else {
-                    return returnType.cast(response);
-                }
-            }
-
-            public<T >T postXml(Object input, GenericType<T> returnType) {
-                UriBuilder localUriBuilder = _uriBuilder.clone();
-                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
-                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
-                resourceBuilder = resourceBuilder.accept("application/xml");
-                resourceBuilder = resourceBuilder.type("application/xml");
-                ClientResponse response;
-                response = resourceBuilder.method("POST", ClientResponse.class, input);
-                if (response.getStatus()>= 400) {
-                    throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
-                }
-                return response.getEntity(returnType);
-            }
-
-            public<T >T postXml(Object input, Class<T> returnType) {
-                UriBuilder localUriBuilder = _uriBuilder.clone();
-                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
-                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
-                resourceBuilder = resourceBuilder.accept("application/xml");
-                resourceBuilder = resourceBuilder.type("application/xml");
-                ClientResponse response;
-                response = resourceBuilder.method("POST", ClientResponse.class, input);
-                if (!ClientResponse.class.isAssignableFrom(returnType)) {
-                    if (response.getStatus()>= 400) {
-                        throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
-                    }
-                }
-                if (!ClientResponse.class.isAssignableFrom(returnType)) {
-                    return response.getEntity(returnType);
-                } else {
-                    return returnType.cast(response);
-                }
-            }
-
-            public<T >T postJson(Object input, GenericType<T> returnType) {
-                UriBuilder localUriBuilder = _uriBuilder.clone();
-                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
-                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
-                resourceBuilder = resourceBuilder.accept("application/json");
-                resourceBuilder = resourceBuilder.type("application/json");
-                ClientResponse response;
-                response = resourceBuilder.method("POST", ClientResponse.class, input);
-                if (response.getStatus()>= 400) {
-                    throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
-                }
-                return response.getEntity(returnType);
-            }
-
-            public<T >T postJson(Object input, Class<T> returnType) {
-                UriBuilder localUriBuilder = _uriBuilder.clone();
-                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
-                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
-                resourceBuilder = resourceBuilder.accept("application/json");
-                resourceBuilder = resourceBuilder.type("application/json");
-                ClientResponse response;
-                response = resourceBuilder.method("POST", ClientResponse.class, input);
                 if (!ClientResponse.class.isAssignableFrom(returnType)) {
                     if (response.getStatus()>= 400) {
                         throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());

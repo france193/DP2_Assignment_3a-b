@@ -12,7 +12,7 @@
 
     <property name="path.prefix_service" value="it/polito/dp2/NFFG/sol3/service"/>
     <property name="path.prefix_client1" value="it/polito/dp2/NFFG/sol3/client1"/>
-    <!--<property name="path.prefix_client2" value="it/polito/dp2/NFFG/sol3/client2"/>-->
+    <property name="path.prefix_client2" value="it/polito/dp2/NFFG/sol3/client2"/>
 
     <!-- The location of the ... web service -->
     <property name="PORT" value="8080"/>
@@ -126,8 +126,7 @@
         <echo message=" --(client1 - 2)--> Done"/>
 
         <!-- Create annotated classes from wadl from Neo4jXML -->
-        <!--
-        <echo message=" - -(client2 - 1) - - > Generating annotated classes from the wadl of NffgService..." />
+        <echo message=" --(client2 - 1)--> Generating annotated classes from the wadl of NffgService..." />
         <wjc description="${WADL_NffgService}"
              package="it.polito.dp2.NFFG.sol3.client2.models.NffgService"
              autoSchemaPackage="false"
@@ -136,12 +135,10 @@
             <produces dir="${src.dir}/it/polito/dp2/NFFG/sol3/client2/models/NffgService" includes="*.java"/>
             <depends dir="." includes="build.xml"/>
         </wjc>
-        <echo message=" - -(client2 - 1)- - > Done"/>
-        -->
+        <echo message=" --(client2 - 1)--> Done"/>
 
         <!-- Build classes from java file -->
-        <!--
-        <echo message=" - -(client2 - 2)- - > Building java classes from java code..."/>
+        <echo message=" --(client2 - 2)--> Building java classes from java code..."/>
         <javac debug="on"
                fork="true"
                destdir="${build.dir}"
@@ -155,8 +152,7 @@
                 <path refid="classpath"/>
             </classpath>
         </javac>
-        <echo message=" - -(client2 - 2)- - > Done"/>
-        -->
+        <echo message=" --(client2 - 2)--> Done"/>
 
     </target>
 

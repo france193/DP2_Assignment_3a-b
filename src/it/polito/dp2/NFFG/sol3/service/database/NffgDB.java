@@ -10,15 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NffgDB {
     private static ConcurrentHashMap<String, FLNffg> nffgs = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<String, FLPolicy> policies = new ConcurrentHashMap<>();
-    private static ConcurrentHashMap<String, NameRefer> tempNffgIDs = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, TemporaryData> tempName = new ConcurrentHashMap<>();
 
     private static Boolean firstBoot = true;
 
     public NffgDB() {
-    }
-
-    public static synchronized ConcurrentHashMap<String, NameRefer> getTempNffgIDs() {
-        return tempNffgIDs;
     }
 
     public static synchronized ConcurrentHashMap<String, FLPolicy> getPolicies() {
@@ -27,6 +23,10 @@ public class NffgDB {
 
     public static synchronized ConcurrentHashMap<String, FLNffg> getNffgs() {
         return nffgs;
+    }
+
+    public static synchronized ConcurrentHashMap<String, TemporaryData> getTempName() {
+        return tempName;
     }
 
     public static synchronized Boolean getFirstBoot() {

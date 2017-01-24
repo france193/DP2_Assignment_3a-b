@@ -5,12 +5,7 @@ import it.polito.dp2.NFFG.lab3.AlreadyLoadedException;
 import it.polito.dp2.NFFG.lab3.NFFGClient;
 import it.polito.dp2.NFFG.lab3.ServiceException;
 import it.polito.dp2.NFFG.lab3.UnknownNameException;
-import it.polito.dp2.NFFG.sol3.client1.models.NffgService.FLLink;
-import it.polito.dp2.NFFG.sol3.client1.models.NffgService.FLNffg;
-import it.polito.dp2.NFFG.sol3.client1.models.NffgService.FLNode;
-import it.polito.dp2.NFFG.sol3.client1.models.NffgService.FLPolicy;
-import it.polito.dp2.NFFG.sol3.client1.models.NffgService.FLVResult;
-import it.polito.dp2.NFFG.sol3.client1.models.NffgService.NodeFunctionalType;
+import it.polito.dp2.NFFG.sol3.client1.models.NffgService.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -21,7 +16,11 @@ import javax.ws.rs.core.UriBuilder;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -97,47 +96,82 @@ public class FLNFFGClient1 implements NFFGClient {
     @Override
     public void loadAll() throws AlreadyLoadedException, ServiceException {
         Response response;
-        HashMap<String, String> nffgName_nffgID = new HashMap<>();
+        HashMap<String, FLNffg> nffgName_Nffg = new HashMap<>();
+        FLNffgs nffgs = new FLNffgs();
+
+        StringBuilder debug = new StringBuilder();
 
         for (NffgReader nffg : monitor.getNffgs()) {
             FLNffg nffg1 = convertNffgReaderToFLNffg(nffg);
 
-            response = target.path("nffg")
-                    .request()
-                    .accept("application/xml")
-                    .post(Entity.entity(nffg1, "application/xml"));
+            debug.append("\n***********************************************\n");
+            debug.append("NFFG\n");
+            debug.append("OLD name: " + nffg.getName() + " - NEW id: " + nffg1.getId() + " name: " + nffg1.getName() + "\n");
 
-            switch (response.getStatus()) {
-                case 201:
-                    nffgName_nffgID.put(response.readEntity(FLNffg.class).getName(),
-                            response.readEntity(FLNffg.class).getId());
-                    break;
-                case 400:
-                    throw new AlreadyLoadedException();
-                case 503:
-                    throw new ServiceException();
-                default:
-                    System.out.println("RESPONSE: " + response.getStatus());
-                    System.exit(0);
+            debug.append("\n-----------------------------------------------\n");
+            for (FLNode node : nffg1.getFLNode()) {
+                debug.append("NODES\n");
+                debug.append("NEW id: " + node.getId() + " name: " + node.getName() + " functionalType: " + node.getFunctionalType() + "\n");
             }
+            debug.append("\n-----------------------------------------------\n");
+            for (FLLink link : nffg1.getFLLink()) {
+                debug.append("LINKS\n");
+                debug.append("NEW id: " + link.getId() + " name: " + link.getName() + " srcNode: " + link.getSourceNode() + " dstNode: " + link.getDestinationNode() + "\n");
+            }
+            debug.append("\n-----------------------------------------------\n");
+            for (FLPolicy policy : nffg1.getFLPolicy()) {
+                debug.append("POLICIES\n");
+                debug.append("NEW name: " + policy.getName() + " nffgName: " + policy.getNffgName() + " srcNode: " + policy.getSourceNode() + " dstNode: " + policy.getDestinationNode() + "\n");
+            }
+            debug.append("\n***********************************************\n");
+
+            nffgs.getFLNffg().add(nffg1);
         }
 
-        for (PolicyReader policy : monitor.getPolicies()) {
-            response = target.path("nffg")
-                    .path(nffgName_nffgID.get(policy.getNffg()))
-                    .path("policy")
-                    .request()
-                    .accept("application/xml")
-                    .post(Entity.entity(convertPolicyReaderToFLPolicy(policy), "application/xml"));
+        debug.append("I have: " +
+                nffgs.getFLNffg().size() + " nffgs ready to load"  + "\n");
 
-            switch (response.getStatus()) {
-                case 201:
-                    break;
-                case 400:
-                    throw new AlreadyLoadedException();
-                default:
-                    throw new ServiceException();
-            }
+        logFile(debug.toString());
+
+        response = target.path("nffgs")
+                .request()
+                .accept("application/xml")
+                .post(Entity.entity(nffgs, "application/xml"));
+
+        switch (response.getStatus()) {
+            case 201:
+                for (FLNffg nffg1 : response.readEntity(FLNffgs.class).getFLNffg()) {
+                    nffgName_Nffg.put(nffg1.getName(), nffg1);
+                }
+
+                FLPolicies policies = new FLPolicies();
+                for (PolicyReader policy : monitor.getPolicies()) {
+                    FLPolicy policy1 = convertPolicyReaderToFLPolicy(policy);
+
+                    policies.getFLPolicy().add(policy1);
+                }
+
+                response = target.path("policies")
+                        .request()
+                        .accept("application/xml")
+                        .post(Entity.entity(policies, "application/xml"));
+
+                switch (response.getStatus()) {
+                    case 201:
+                        break;
+                    case 400:
+                        throw new AlreadyLoadedException();
+                    default:
+                        throw new ServiceException();
+                }
+                break;
+            case 400:
+                throw new AlreadyLoadedException();
+            case 503:
+                throw new ServiceException();
+            default:
+                System.out.println("ERROR: " + response.getStatus());
+                break;
         }
     }
 
@@ -337,6 +371,29 @@ public class FLNFFGClient1 implements NFFGClient {
         flvResult.setResult(result.getVerificationResult());
 
         return  flvResult;
+    }
+
+    public void logFile(String toWtrite) {
+        BufferedWriter writer = null;
+        try {
+            //create a temporary file
+            String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+            File logFile = new File("/Users/FLDeviOS/Desktop/log/" + "FLNFFGClient1_" + timeLog + ".txt");
+
+            // This will output the full path where the file will be written to...
+            System.out.println(logFile.getCanonicalPath());
+
+            writer = new BufferedWriter(new FileWriter(logFile));
+            writer.write(toWtrite);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                // Close the writer regardless of what happens...
+                writer.close();
+            } catch (Exception e) {
+            }
+        }
     }
 
 }

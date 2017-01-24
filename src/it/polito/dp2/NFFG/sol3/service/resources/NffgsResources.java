@@ -446,7 +446,7 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public synchronized Response postNffgs(FLNffgs nffgs, @Context UriInfo uriInfo) {
-        try {
+
             FLNffgs created = service.postNffgs(nffgs);
 
             if (created != null) { // success
@@ -460,9 +460,6 @@ public class NffgsResources {
             } else {
                 throw new ServiceUnavailableException();
             }
-        } catch (NullPointerException e) {
-            throw new ServiceUnavailableException();
-        }
     }
 
     /**
@@ -481,7 +478,6 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public synchronized Response postNffg(FLNffg nffg, @Context UriInfo uriInfo) {
-
             FLNffg created = service.postNffg(nffg);
 
             if (created.getId().contains("-1")) {
@@ -612,7 +608,8 @@ public class NffgsResources {
     /**
      * Update A policy
      *
-     * @param nffg_id
+     * @param policy_id
+     * @param policy
      * @return
      */
     @PUT
