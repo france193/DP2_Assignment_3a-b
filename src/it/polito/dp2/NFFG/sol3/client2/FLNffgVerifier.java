@@ -33,6 +33,7 @@ public class FLNffgVerifier implements NffgVerifier {
     private HashMap<String, FLPolicy> allFLPolicies;
 
     StringBuilder debug1 = new StringBuilder();
+    StringBuilder debug2 = new StringBuilder();
 
     public FLNffgVerifier() {
         allNffgs = new HashMap<>();
@@ -51,11 +52,15 @@ public class FLNffgVerifier implements NffgVerifier {
 
         // create a webtarget from the baseURL string
         target = client.target(getBaseURI(baseURL));
+
+        retrieveAllDataFromServer();
     }
 
-    private void retrieveNffgs() {
+    private synchronized void retrieveAllDataFromServer() {
         allFLNffgs.clear();
         allNffgs.clear();
+        allPolicies.clear();
+        allFLPolicies.clear();
 
         Response response = target.path("nffgs")
                 .request()
@@ -69,6 +74,8 @@ public class FLNffgVerifier implements NffgVerifier {
         debug1.append("NFFGS RESPONSE - " + status + "\n");
         debug1.append("------------------------------------------------\n");
         if (status == 200) {
+
+            //retrieve all nffgs
             FLNffgs nffgs = response.readEntity(FLNffgs.class);
             for (FLNffg nffg : nffgs.getFLNffg()) {
                 debug1.append("NAME: " + nffg.getName() + "\n");
@@ -77,73 +84,49 @@ public class FLNffgVerifier implements NffgVerifier {
                 //debug1.append("FLPolicies # - " + nffg.getFLPolicy().size() + "\n");
                 debug1.append("------------------------------------------------\n");
                 allFLNffgs.put(nffg.getName(), nffg);
+
+                //save policies separately
+                for (FLPolicy policy : nffg.getFLPolicy()) {
+                    allFLPolicies.put(policy.getName(), policy);
+                }
             }
             debug1.append("***********************************************\n");
             convertNffgInNffgReaders();
             debug1.append("FLNffgs # - " + allFLNffgs.size() + "\n");
             debug1.append("NffgReades # - " + allNffgs.size() + "\n");
             debug1.append("***********************************************\n");
-            logFile(debug1.toString());
-        }
-    }
+            logFile(debug1.toString(), "VERIFIER_downloaded_Nffgs_");
 
-    private void retrievePolicies() {
-        allPolicies.clear();
-        allFLPolicies.clear();
-
-        Response response = target.path("policies")
-                .request()
-                .accept("application/xml")
-                .get();
-
-        StringBuilder debug2 = new StringBuilder();
-        debug2.append("***********************************************\n");
-
-        int status = response.getStatus();
-
-        debug2.append("POLICIES RESPONSE - " + status + "\n");
-
-        if (status == 200) {
-            FLPolicies policies = response.readEntity(FLPolicies.class);
-
-            for (FLPolicy policy : policies.getFLPolicy()) {
-                allFLPolicies.put(policy.getName(), policy);
-            }
-
+            debug2.append("***********************************************\n");
             debug2.append("FLPolicies # - " + allFLPolicies.size() + "\n");
             convertPoliciesInPolicyReaders();
             debug2.append("PolicyReaders # - " + allPolicies.size() + "\n");
             debug2.append("***********************************************\n");
-            logFile(debug2.toString());
+            logFile(debug2.toString(), "VERIFIER_downloaded_Policies_");
         }
-    }
-
-    private void retrieveData() {
-        retrieveNffgs();
-        retrievePolicies();
     }
 
     @Override
     public Set<NffgReader> getNffgs() {
-        retrieveData();
+
         return new LinkedHashSet(allNffgs.values());
     }
 
     @Override
     public NffgReader getNffg(String s) {
-        retrieveData();
+
         return allNffgs.get(s);
     }
 
     @Override
     public Set<PolicyReader> getPolicies() {
-        retrieveData();
+
         return new LinkedHashSet(allFLPolicies.values());
     }
 
     @Override
     public Set<PolicyReader> getPolicies(String s) {
-        retrieveData();
+
 
         Set<PolicyReader> policies = new HashSet<>();
 
@@ -158,7 +141,7 @@ public class FLNffgVerifier implements NffgVerifier {
 
     @Override
     public Set<PolicyReader> getPolicies(Calendar calendar) {
-        retrieveData();
+
 
         Set<PolicyReader> policies = new HashSet<>();
 
@@ -176,7 +159,6 @@ public class FLNffgVerifier implements NffgVerifier {
     }
 
     private void convertNffgInNffgReaders() {
-        HashMap<String, String> namOfNode = new HashMap<>();
 
         for (FLNffg nffg : allFLNffgs.values()) {
             FLNffgReader nffgReader = new FLNffgReader(nffg.getName(), nffg.getLastUpdatedTime().toGregorianCalendar());
@@ -186,7 +168,7 @@ public class FLNffgVerifier implements NffgVerifier {
                 FLNodeReader nodeReader = new FLNodeReader(FunctionalType.fromValue(node.getFunctionalType().value()), node.getName());
 
                 //debug1.append("Added: " + node.getId() + " - " + node.getName() + "\n");
-                namOfNode.put(node.getId(), node.getName());
+                nffgReader.addNameOfNode(node.getId(), node.getName());
                 //debug1.append("--node-> " + nodeReader.getName() + ", " + nodeReader.getFuncType() + "\n");
                 //debug1.append("NodeREaders # - " + nffgReader.getNodes().size() + "\n");
                 nffgReader.addNode(nodeReader);
@@ -199,12 +181,12 @@ public class FLNffgVerifier implements NffgVerifier {
             for (FLLink link : nffg.getFLLink()) {
                 //debug1.append("I have node # - " + nffgReader.getNodes().size() + "\n");
                 //debug1.append("src - " + link.getSourceNode() + "\n");
-                //debug1.append("dst - " + link.getDestinationNode() + "\n");
-                FLLinkReader linkReader = new FLLinkReader(link.getId(),
-                        retriveNodeReaderFromID(namOfNode.get(link.getSourceNode()), nffgReader.getNodes()),
-                        retriveNodeReaderFromID(namOfNode.get(link.getDestinationNode()), nffgReader.getNodes()));
+                debug1.append("LINKID - " + link.getId() + "\n");
+                FLLinkReader linkReader = new FLLinkReader(link.getName(),
+                        nffgReader.getNode(nffgReader.getNamOfNode().get(link.getSourceNode())),
+                        nffgReader.getNode(nffgReader.getNamOfNode().get(link.getDestinationNode())));
 
-                retriveNodeReaderFromID(namOfNode.get(link.getSourceNode()), nffgReader.getNodes()).getLinks().add(linkReader);
+                nffgReader.getNode(nffgReader.getNamOfNode().get(link.getSourceNode())).addLink(linkReader);
                 c++;
             }
             debug1.append("LinkReaders # - " + c + "\n");
@@ -214,23 +196,25 @@ public class FLNffgVerifier implements NffgVerifier {
         }
     }
 
-    private NodeReader retriveNodeReaderFromID(String sourceNode, Set<NodeReader> nodeReaders) {
-        for (NodeReader nodeReader : nodeReaders) {
-            if (nodeReader.getName().equals(sourceNode)) {
-                return nodeReader;
-            }
-        }
-
-        return null;
-    }
-
     private void convertPoliciesInPolicyReaders() {
         for (FLPolicy policy : allFLPolicies.values()) {
+
+            FLNffgReader nffgReader = retrieveNffgReaderFromName(policy.getNffgName());
+            debug2.append("Want nffg: " + policy.getNffgName() + " - returned: " + nffgReader.getName() +"\n");
+            String src, dst;
+
+            debug2.append("Want - src: " + policy.getSourceNode() + " - dst: " + policy.getDestinationNode() +"\n");
+
+            src = nffgReader.getNamOfNode().get(policy.getSourceNode());
+            dst = nffgReader.getNamOfNode().get(policy.getDestinationNode());
+
+            debug2.append("Found - src: " + src + " - dst: " + dst +"\n");
+
             FLReachabilityPolicyReader flReachabilityPolicyReader = new FLReachabilityPolicyReader(policy.getName(),
                     retrieveNffgReaderFromName(policy.getNffgName()),
                     policy.isIsPositive(),
-                    retriveNodeReaderFromID(policy.getSourceNode(), retrieveNffgReaderFromName(policy.getNffgName()).getNodes()),
-                    retriveNodeReaderFromID(policy.getSourceNode(), retrieveNffgReaderFromName(policy.getNffgName()).getNodes()));
+                    nffgReader.getNode(src),
+                    nffgReader.getNode(dst));
 
             if (policy.getFLVResult() != null) {
                 FLVerificationResultReader flVerificationResultReader = new FLVerificationResultReader(flReachabilityPolicyReader,
@@ -252,8 +236,8 @@ public class FLNffgVerifier implements NffgVerifier {
         }
     }
 
-    private NffgReader retrieveNffgReaderFromName(String nffgName) {
-        for (NffgReader nffgReader : allNffgs.values()) {
+    private FLNffgReader retrieveNffgReaderFromName(String nffgName) {
+        for (FLNffgReader nffgReader : allNffgs.values()) {
             if (nffgReader.getName().equals(nffgName)) {
                 return nffgReader;
             }
@@ -261,12 +245,12 @@ public class FLNffgVerifier implements NffgVerifier {
         return null;
     }
 
-    public void logFile(String toWtrite) {
+    public void logFile(String toWtrite, String name) {
         BufferedWriter writer = null;
         try {
             //create a temporary file
-            String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-            File logFile = new File("/Users/FLDeviOS/Desktop/log/Client2/FLNffgVerifier/" + "C2_VERIFIER_" + counter + ".txt");
+            String timeLog = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
+            File logFile = new File("/Users/FLDeviOS/Desktop/log/Client2/FLNffgVerifier/" + name + counter + "_" + timeLog + ".txt");
             counter++;
 
             // This will output the full path where the file will be written to...

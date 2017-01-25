@@ -7,14 +7,13 @@ import it.polito.dp2.NFFG.VerificationResultReader;
 /**
  * Created by FLDeviOS on 23/01/2017.
  */
-public class FLPolicyReader implements PolicyReader {
+public class FLPolicyReader extends FLNamedEntityReader implements PolicyReader {
     /**
      * Class' attributes
      */
     private NffgReader nffg_refer;
     private VerificationResultReader policyVerificationReader;
     private boolean isPositive;
-    private String name;
 
     /**
      * Class' constructor
@@ -23,7 +22,7 @@ public class FLPolicyReader implements PolicyReader {
      * @param isPositive
      */
     FLPolicyReader(String policy_name_id, NffgReader nffg_refer, boolean isPositive) {
-        this.name = policy_name_id;
+        super(policy_name_id);
         this.nffg_refer = nffg_refer;
         this.isPositive = isPositive;
     }
@@ -65,10 +64,5 @@ public class FLPolicyReader implements PolicyReader {
      */
     public void setVerificationResult(FLVerificationResultReader verificationResult) {
         this.policyVerificationReader = verificationResult;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 }

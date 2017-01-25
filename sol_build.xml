@@ -36,6 +36,12 @@
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models"/>
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models/NffgService"/>
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models/Neo4jXML"/>
+
+        <mkdir dir="src/it/polito/dp2/NFFG/sol3/client1/models"/>
+        <mkdir dir="src/it/polito/dp2/NFFG/sol3/client1/models/NffgService"/>
+
+        <mkdir dir="src/it/polito/dp2/NFFG/sol3/client2/models"/>
+        <mkdir dir="src/it/polito/dp2/NFFG/sol3/client2/models/NffgService"/>
     </target>
 
     <!-- use a task of the library "org.jvnet.ws.wadl2java.WJCTask" creating a new task type named "wjc" -->
@@ -50,7 +56,7 @@
     <target name="build-service">
 
         <!-- Create annotated classes from wadl from Neo4jXML -->
-        <echo message=" --(1)--> Generating annotated classes from the wadl of Neo4jXML..." />
+        <echo message=" --(1)--> Generating annotated classes from the wadl of Neo4jXML..."/>
         <wjc description="${WADL_Neo4J}"
              package="it.polito.dp2.NFFG.sol3.service.models.Neo4jXML"
              autoSchemaPackage="false"
@@ -97,7 +103,7 @@
     <!-- all necessary operations to build the client (part 2) -->
     <target name="build-client">
         <!-- Create annotated classes from wadl from Neo4jXML -->
-        <echo message=" --(client1 - 1)--> Generating annotated classes from the wadl of NffgService..." />
+        <echo message=" --(client1 - 1)--> Generating annotated classes from the wadl of NffgService..."/>
         <wjc description="${WADL_NffgService}"
              package="it.polito.dp2.NFFG.sol3.client1.models.NffgService"
              autoSchemaPackage="false"
@@ -126,7 +132,7 @@
         <echo message=" --(client1 - 2)--> Done"/>
 
         <!-- Create annotated classes from wadl from Neo4jXML -->
-        <echo message=" --(client2 - 1)--> Generating annotated classes from the wadl of NffgService..." />
+        <echo message=" --(client2 - 1)--> Generating annotated classes from the wadl of NffgService..."/>
         <wjc description="${WADL_NffgService}"
              package="it.polito.dp2.NFFG.sol3.client2.models.NffgService"
              autoSchemaPackage="false"
@@ -160,6 +166,7 @@
     <target name="sol-clean">
         <delete dir="src/it/polito/dp2/NFFG/sol3/service/models"/>
         <delete dir="src/it/polito/dp2/NFFG/sol3/client1/models"/>
+        <delete dir="src/it/polito/dp2/NFFG/sol3/client2/models"/>
     </target>
 
 </project>

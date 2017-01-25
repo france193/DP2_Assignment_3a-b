@@ -11,13 +11,12 @@ import java.util.Set;
 /**
  * Created by FLDeviOS on 23/01/2017.
  */
-public class FLNodeReader implements NodeReader {
+public class FLNodeReader extends FLNamedEntityReader implements NodeReader {
     /**
      * Class' attributes
      */
     private FunctionalType myFunctionalType;
     private HashMap<String, LinkReader> links;
-    private String name;
 
     /**
      * Class' constructor
@@ -26,7 +25,7 @@ public class FLNodeReader implements NodeReader {
      * @param node_name_id
      */
     FLNodeReader(FunctionalType type, String node_name_id) {
-        this.name = node_name_id;
+        super(node_name_id);
         this.myFunctionalType = type;
         links = new HashMap();
     }
@@ -60,10 +59,5 @@ public class FLNodeReader implements NodeReader {
         if (link != null) {
             this.links.put(link.getName(), link);
         }
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 }

@@ -12,12 +12,10 @@ import java.util.Set;
 /**
  * Created by FLDeviOS on 23/01/2017.
  */
-public class FLNffgReader implements NffgReader {
-
+public class FLNffgReader extends FLNamedEntityReader implements NffgReader {
     private HashMap<String, FLPolicyReader> policies;
     private HashMap<String, FLNodeReader> nodes;
-
-    private String name;
+    private HashMap<String, String> namOfNode;
     private Calendar last_updated_time;
 
     /**
@@ -27,11 +25,20 @@ public class FLNffgReader implements NffgReader {
      * @param last_updated_time
      */
     public FLNffgReader(String nffg_name_id, Calendar last_updated_time) {
-        this.name = nffg_name_id;
+        super(nffg_name_id);
         this.last_updated_time = last_updated_time;
 
         nodes = new HashMap<>();
         policies = new HashMap<>();
+        namOfNode = new HashMap<>();
+    }
+
+    public HashMap<String, String> getNamOfNode() {
+        return namOfNode;
+    }
+
+    public void addNameOfNode(String s1, String s2) {
+        namOfNode.put(s1, s2);
     }
 
     /**
@@ -94,10 +101,5 @@ public class FLNffgReader implements NffgReader {
         if (policy != null) {
             policies.put(policy.getName(), policy);
         }
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 }
