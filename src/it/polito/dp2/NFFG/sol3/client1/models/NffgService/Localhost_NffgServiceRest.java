@@ -18,7 +18,7 @@ import com.sun.jersey.api.uri.UriTemplate;
 
 @Generated(value = {
     "wadl|http://localhost:8080/NffgService/rest/application.wadl"
-}, comments = "wadl2java, http://wadl.java.net", date = "2017-01-25T18:03:23.731+01:00")
+}, comments = "wadl2java, http://wadl.java.net", date = "2017-01-25T18:11:52.600+01:00")
 public class Localhost_NffgServiceRest {
 
     /**
