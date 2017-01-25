@@ -6,10 +6,11 @@ import it.polito.dp2.NFFG.NodeReader;
 /**
  * Created by FLDeviOS on 23/01/2017.
  */
-public class FLLinkReader extends FLNamedEntityReader implements LinkReader {
+public class FLLinkReader implements LinkReader {
     /**
      * Class' attributes
      */
+    private String name;
     private NodeReader sourceNode;
     private NodeReader destinationNode;
 
@@ -21,7 +22,7 @@ public class FLLinkReader extends FLNamedEntityReader implements LinkReader {
      * @param destinationNode
      */
     FLLinkReader(String link_name_id, NodeReader sourceNode, NodeReader destinationNode) {
-        super(link_name_id);
+        this.name = link_name_id;
         this.sourceNode = sourceNode;
         this.destinationNode = destinationNode;
     }
@@ -44,5 +45,10 @@ public class FLLinkReader extends FLNamedEntityReader implements LinkReader {
     @Override
     public NodeReader getDestinationNode() {
         return this.destinationNode;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

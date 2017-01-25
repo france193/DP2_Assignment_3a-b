@@ -378,7 +378,7 @@ public class FLNFFGClient1 implements NFFGClient {
         try {
             //create a temporary file
             String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-            File logFile = new File("/Users/FLDeviOS/Desktop/log/" + "FLNFFGClient1_" + timeLog + ".txt");
+            File logFile = new File("/Users/FLDeviOS/Desktop/log/Client1/FLNFFGClient1/" + "FLNFFGClient1_" + timeLog + ".txt");
 
             // This will output the full path where the file will be written to...
             System.out.println(logFile.getCanonicalPath());

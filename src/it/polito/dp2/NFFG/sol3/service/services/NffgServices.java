@@ -812,7 +812,7 @@ public class NffgServices {
         try {
             //create a temporary file
             String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-            File logFile = new File("/Users/FLDeviOS/Desktop/log/" + "NffgService_" + filename + "_" + timeLog + ".txt");
+            File logFile = new File("/Users/FLDeviOS/Desktop/log/Service/NffgService/" + filename + "_" + timeLog + ".txt");
 
             // This will output the full path where the file will be written to...
             System.out.println(logFile.getCanonicalPath());
