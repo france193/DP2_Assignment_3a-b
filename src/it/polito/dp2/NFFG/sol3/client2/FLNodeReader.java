@@ -4,24 +4,60 @@ import it.polito.dp2.NFFG.FunctionalType;
 import it.polito.dp2.NFFG.LinkReader;
 import it.polito.dp2.NFFG.NodeReader;
 
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
  * Created by FLDeviOS on 23/01/2017.
  */
-public class FLNodeReader implements NodeReader {
+public class FLNodeReader extends FLNamedEntityReader implements NodeReader {
+    /**
+     * Class' attributes
+     */
+    private FunctionalType myFunctionalType;
+    private HashMap<String, LinkReader> links;
+
+    /**
+     * Class' constructor
+     *
+     * @param type
+     * @param node_name_id
+     */
+    FLNodeReader(FunctionalType type, String node_name_id) {
+        super(node_name_id);
+        this.myFunctionalType = type;
+        links = new HashMap();
+    }
+
+    /**
+     * Gives the functional type of the node.
+     *
+     * @return
+     */
     @Override
     public FunctionalType getFuncType() {
-        return null;
+        return this.myFunctionalType;
     }
 
+    /**
+     * Gives the known links that connect this node (i.e. have this node as the source node) in the network topology.
+     *
+     * @return
+     */
     @Override
     public Set<LinkReader> getLinks() {
-        return null;
+        return new LinkedHashSet(this.links.values());
     }
 
-    @Override
-    public String getName() {
-        return null;
+    /**
+     * Add a link in the Hash Map
+     *
+     * @param link
+     */
+    public void addLink(LinkReader link) {
+        if (link != null) {
+            this.links.put(link.getName(), link);
+        }
     }
 }

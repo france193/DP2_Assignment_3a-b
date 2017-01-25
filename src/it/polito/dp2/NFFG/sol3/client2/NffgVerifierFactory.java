@@ -6,8 +6,6 @@ import it.polito.dp2.NFFG.NffgVerifierException;
 /**
  * Created by FLDeviOS on 23/01/2017.
  */
-
-
 public class NffgVerifierFactory extends it.polito.dp2.NFFG.NffgVerifierFactory {
     /**
      * Void constructor
@@ -28,6 +26,7 @@ public class NffgVerifierFactory extends it.polito.dp2.NFFG.NffgVerifierFactory 
             myNffgVerifier = new FLNffgVerifier();
         } catch (NullPointerException e) {
             System.err.println("NullPointerException Error: " + e.getMessage());
+            e.printStackTrace();
             throw new NullPointerException();
         }
 
