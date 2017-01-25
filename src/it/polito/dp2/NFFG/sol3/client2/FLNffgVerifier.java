@@ -200,15 +200,15 @@ public class FLNffgVerifier implements NffgVerifier {
         for (FLPolicy policy : allFLPolicies.values()) {
 
             FLNffgReader nffgReader = retrieveNffgReaderFromName(policy.getNffgName());
-            debug2.append("Want nffg: " + policy.getNffgName() + " - returned: " + nffgReader.getName() +"\n");
+            //debug2.append("Want nffg: " + policy.getNffgName() + " - returned: " + nffgReader.getName() +"\n");
             String src, dst;
 
-            debug2.append("Want - src: " + policy.getSourceNode() + " - dst: " + policy.getDestinationNode() +"\n");
+            //debug2.append("Want - src: " + policy.getSourceNode() + " - dst: " + policy.getDestinationNode() +"\n");
 
             src = nffgReader.getNamOfNode().get(policy.getSourceNode());
             dst = nffgReader.getNamOfNode().get(policy.getDestinationNode());
 
-            debug2.append("Found - src: " + src + " - dst: " + dst +"\n");
+            //debug2.append("Found - src: " + src + " - dst: " + dst +"\n");
 
             FLReachabilityPolicyReader flReachabilityPolicyReader = new FLReachabilityPolicyReader(policy.getName(),
                     retrieveNffgReaderFromName(policy.getNffgName()),
