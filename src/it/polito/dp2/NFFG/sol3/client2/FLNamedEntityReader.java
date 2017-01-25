@@ -26,13 +26,4 @@ public class FLNamedEntityReader implements NamedEntityReader {
     public String getName() {
         return this.entityName;
     }
-
-    /**
-     * Set the entityName of this entity.
-     *
-     * @param entityName
-     */
-    public void setEntityName(String entityName) {
-        this.entityName = entityName;
-    }
 }

@@ -32,7 +32,7 @@
     </path>
 
     <!-- my init -->
-    <target name="sol-init">
+    <target name="sol-init" depends="sol-clean">
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models"/>
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models/NffgService"/>
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models/Neo4jXML"/>
@@ -53,7 +53,7 @@
     </taskdef>
 
     <!-- all necessary operations to build the web-server service (part 1) -->
-    <target name="build-service">
+    <target name="build-service" depends="sol-init">
 
         <!-- Create annotated classes from wadl from Neo4jXML -->
         <echo message=" --(1)--> Generating annotated classes from the wadl of Neo4jXML..."/>

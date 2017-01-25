@@ -6,10 +6,11 @@
     </description>
 
     <!--
-        <property name="tomcatUsername" value="root"/>
-        <property name="tomcatPassword" value="root"/>
-        <property name="server.location" location="E:/apache-tomcat-8.0.39"/>
+    <property name="tomcatUsername" value="root" />
+    <property name="tomcatPassword" value="root" />
+    <property name="server.location" location="E:/apache-tomcat-8.0.39" />
     -->
+
     <property name="tomcatUsername" value="localUser"/>
     <property name="tomcatPassword" value="localPassword"/>
     <property name="server.location" location="/Applications/Tomcat"/>

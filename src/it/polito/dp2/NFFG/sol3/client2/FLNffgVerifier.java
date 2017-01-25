@@ -108,26 +108,21 @@ public class FLNffgVerifier implements NffgVerifier {
 
     @Override
     public Set<NffgReader> getNffgs() {
-
         return new LinkedHashSet(allNffgs.values());
     }
 
     @Override
     public NffgReader getNffg(String s) {
-
         return allNffgs.get(s);
     }
 
     @Override
     public Set<PolicyReader> getPolicies() {
-
-        return new LinkedHashSet(allFLPolicies.values());
+        return new LinkedHashSet(allPolicies.values());
     }
 
     @Override
     public Set<PolicyReader> getPolicies(String s) {
-
-
         Set<PolicyReader> policies = new HashSet<>();
 
         for (Map.Entry<String, PolicyReader> entry : allPolicies.entrySet()) {
@@ -141,8 +136,6 @@ public class FLNffgVerifier implements NffgVerifier {
 
     @Override
     public Set<PolicyReader> getPolicies(Calendar calendar) {
-
-
         Set<PolicyReader> policies = new HashSet<>();
 
         for (Map.Entry<String, PolicyReader> entry : allPolicies.entrySet()) {
@@ -159,7 +152,6 @@ public class FLNffgVerifier implements NffgVerifier {
     }
 
     private void convertNffgInNffgReaders() {
-
         for (FLNffg nffg : allFLNffgs.values()) {
             FLNffgReader nffgReader = new FLNffgReader(nffg.getName(), nffg.getLastUpdatedTime().toGregorianCalendar());
 
