@@ -32,11 +32,13 @@
     </path>
 
     <!-- my init -->
-    <target name="sol-init" depends="sol-clean">
+    <target name="sol-init_service" depends="sol-clean_service">
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models"/>
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models/NffgService"/>
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/service/models/Neo4jXML"/>
+    </target>
 
+    <target name="sol-init_client" depends="sol-clean_client">
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/client1/models"/>
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/client1/models/NffgService"/>
 
@@ -53,7 +55,7 @@
     </taskdef>
 
     <!-- all necessary operations to build the web-server service (part 1) -->
-    <target name="build-service" depends="sol-init">
+    <target name="build-service" depends="sol-init_service">
 
         <!-- Create annotated classes from wadl from Neo4jXML -->
         <echo message=" --(1)--> Generating annotated classes from the wadl of Neo4jXML..."/>
@@ -101,7 +103,7 @@
     </target>
 
     <!-- all necessary operations to build the client (part 2) -->
-    <target name="build-client">
+    <target name="build-client" depends="sol-init_client">
         <!-- Create annotated classes from wadl from Neo4jXML -->
         <echo message=" --(client1 - 1)--> Generating annotated classes from the wadl of NffgService..."/>
         <wjc description="${WADL_NffgService}"
@@ -163,8 +165,11 @@
     </target>
 
     <!-- my clean -->
-    <target name="sol-clean">
+    <target name="sol-clean_service">
         <delete dir="src/it/polito/dp2/NFFG/sol3/service/models"/>
+    </target>
+
+    <target name="sol-clean_client">
         <delete dir="src/it/polito/dp2/NFFG/sol3/client1/models"/>
         <delete dir="src/it/polito/dp2/NFFG/sol3/client2/models"/>
     </target>

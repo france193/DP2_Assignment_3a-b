@@ -62,7 +62,7 @@ public class NFFGTests_lab1 {
 	// method for comparing two non-null strings    
 	private void compareString(String rs, String ts, String meaning) {
 		assertNotNull("NULL "+meaning, ts);
-        assertEquals("Wrong "+meaning, rs, ts);		
+        assertEquals("Wrong  "+meaning, rs, ts);
 	}
 	
 	private void compareTime(Calendar rc, Calendar tc, String meaning) {
@@ -269,7 +269,7 @@ public class NFFGTests_lab1 {
 		assertNotNull("Internal tester error: null policy reader", rpr);
         assertNotNull("A null PolicyReader has been found", tpr);
         compareString(rpr.getName(), tpr.getName(), "policy name");
-        assertTrue("Wrong ispositive",rpr.isPositive()==tpr.isPositive());
+        assertTrue("Wrong ispositive, (" + rpr.getName() + " - " + tpr.getName() + ")",rpr.isPositive()==tpr.isPositive());
         compareVerificationResultReader(rpr.getResult(),tpr.getResult());
 	}
 

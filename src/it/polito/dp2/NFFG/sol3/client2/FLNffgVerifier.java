@@ -19,6 +19,9 @@ import java.util.*;
  * Created by FLDeviOS on 23/01/2017.
  */
 public class FLNffgVerifier implements NffgVerifier {
+    private final Boolean DEBUG = true;
+    private final Boolean VERBOSE = false;
+
     private static final String DEFAULT_URL = "http://localhost:8080/NffgService/rest";
     private static int counter = 0;
 
@@ -67,22 +70,30 @@ public class FLNffgVerifier implements NffgVerifier {
                 .accept("application/xml")
                 .get();
 
-        debug1.append("***********************************************\n");
+        if (DEBUG) {
+            debug1.append("***********************************************\n");
+        }
 
         int status = response.getStatus();
 
-        debug1.append("NFFGS RESPONSE - " + status + "\n");
-        debug1.append("------------------------------------------------\n");
+        if (DEBUG) {
+            debug1.append("NFFGS RESPONSE - " + status + "\n");
+            debug1.append("------------------------------------------------\n");
+        }
+
         if (status == 200) {
 
             //retrieve all nffgs
             FLNffgs nffgs = response.readEntity(FLNffgs.class);
             for (FLNffg nffg : nffgs.getFLNffg()) {
-                debug1.append("NAME: " + nffg.getName() + "\n");
-                debug1.append("FLNodes # - " + nffg.getFLNode().size() + "\n");
-                debug1.append("FLLinks # - " + nffg.getFLLink().size() + "\n");
-                //debug1.append("FLPolicies # - " + nffg.getFLPolicy().size() + "\n");
-                debug1.append("------------------------------------------------\n");
+                if (DEBUG) {
+                    debug1.append("NAME: " + nffg.getName() + "\n");
+                    debug1.append("FLNodes # - " + nffg.getFLNode().size() + "\n");
+                    debug1.append("FLLinks # - " + nffg.getFLLink().size() + "\n");
+                    //debug1.append("FLPolicies # - " + nffg.getFLPolicy().size() + "\n");
+                    debug1.append("------------------------------------------------\n");
+                }
+
                 allFLNffgs.put(nffg.getName(), nffg);
 
                 //save policies separately
@@ -90,19 +101,27 @@ public class FLNffgVerifier implements NffgVerifier {
                     allFLPolicies.put(policy.getName(), policy);
                 }
             }
-            debug1.append("***********************************************\n");
-            convertNffgInNffgReaders();
-            debug1.append("FLNffgs # - " + allFLNffgs.size() + "\n");
-            debug1.append("NffgReades # - " + allNffgs.size() + "\n");
-            debug1.append("***********************************************\n");
-            logFile(debug1.toString(), "VERIFIER_downloaded_Nffgs_");
+            if (DEBUG) {
+                debug1.append("***********************************************\n");
+            }
 
-            debug2.append("***********************************************\n");
-            debug2.append("FLPolicies # - " + allFLPolicies.size() + "\n");
+            convertNffgInNffgReaders();
+            if (DEBUG) {
+                debug1.append("FLNffgs # - " + allFLNffgs.size() + "\n");
+                debug1.append("NffgReades # - " + allNffgs.size() + "\n");
+                debug1.append("***********************************************\n");
+                logFile(debug1.toString(), "VERIFIER_downloaded_Nffgs_");
+            }
+
             convertPoliciesInPolicyReaders();
-            debug2.append("PolicyReaders # - " + allPolicies.size() + "\n");
-            debug2.append("***********************************************\n");
-            logFile(debug2.toString(), "VERIFIER_downloaded_Policies_");
+            if (DEBUG) {
+                debug2.append("***********************************************\n");
+                debug2.append("FLPolicies # - " + allFLPolicies.size() + "\n");
+                debug2.append("PolicyReaders # - " + allPolicies.size() + "\n");
+                debug2.append("***********************************************\n");
+                logFile(debug2.toString(), "VERIFIER_downloaded_Policies_");
+            }
+
         }
     }
 
@@ -158,22 +177,31 @@ public class FLNffgVerifier implements NffgVerifier {
             // NODE
             for (FLNode node : nffg.getFLNode()) {
                 FLNodeReader nodeReader = new FLNodeReader(FunctionalType.fromValue(node.getFunctionalType().value()), node.getName());
-
-                //debug1.append("Added: " + node.getId() + " - " + node.getName() + "\n");
+                if (DEBUG && VERBOSE) {
+                    debug1.append("Added: " + node.getId() + " - " + node.getName() + "\n");
+                }
                 nffgReader.addNameOfNode(node.getId(), node.getName());
-                //debug1.append("--node-> " + nodeReader.getName() + ", " + nodeReader.getFuncType() + "\n");
-                //debug1.append("NodeREaders # - " + nffgReader.getNodes().size() + "\n");
+                if (DEBUG && VERBOSE) {
+                    debug1.append("--node-> " + nodeReader.getName() + ", " + nodeReader.getFuncType() + "\n");
+                    debug1.append("NodeREaders # - " + nffgReader.getNodes().size() + "\n");
+                }
                 nffgReader.addNode(nodeReader);
-                //debug1.append("NodeREaders # - " + nffgReader.getNodes().size() + "\n");
+                if (DEBUG && VERBOSE) {
+                    debug1.append("NodeREaders # - " + nffgReader.getNodes().size() + "\n");
+                }
             }
-            debug1.append("NodeReaders # - " + nffgReader.getNodes().size() + "\n");
+            if (DEBUG) {
+                debug1.append("NodeReaders # - " + nffgReader.getNodes().size() + "\n");
+            }
 
             int c = 0;
             //LINK
             for (FLLink link : nffg.getFLLink()) {
-                //debug1.append("I have node # - " + nffgReader.getNodes().size() + "\n");
-                //debug1.append("src - " + link.getSourceNode() + "\n");
-                debug1.append("LINKID - " + link.getId() + "\n");
+                if (DEBUG && VERBOSE) {
+                    debug1.append("I have node # - " + nffgReader.getNodes().size() + "\n");
+                    debug1.append("src - " + link.getSourceNode() + "\n");
+                    debug1.append("LINKID - " + link.getId() + "\n");
+                }
                 FLLinkReader linkReader = new FLLinkReader(link.getName(),
                         nffgReader.getNode(nffgReader.getNamOfNode().get(link.getSourceNode())),
                         nffgReader.getNode(nffgReader.getNamOfNode().get(link.getDestinationNode())));
@@ -181,8 +209,10 @@ public class FLNffgVerifier implements NffgVerifier {
                 nffgReader.getNode(nffgReader.getNamOfNode().get(link.getSourceNode())).addLink(linkReader);
                 c++;
             }
-            debug1.append("LinkReaders # - " + c + "\n");
-            debug1.append("------------------------------------------------\n");
+            if (DEBUG) {
+                debug1.append("LinkReaders # - " + c + "\n");
+                debug1.append("------------------------------------------------\n");
+            }
 
             allNffgs.put(nffgReader.getName(), nffgReader);
         }
@@ -191,40 +221,75 @@ public class FLNffgVerifier implements NffgVerifier {
     private void convertPoliciesInPolicyReaders() {
         for (FLPolicy policy : allFLPolicies.values()) {
 
+            if (DEBUG) {
+                debug2.append("***********************************************************************\n");
+            }
             FLNffgReader nffgReader = retrieveNffgReaderFromName(policy.getNffgName());
-            //debug2.append("Want nffg: " + policy.getNffgName() + " - returned: " + nffgReader.getName() +"\n");
+            if (DEBUG && VERBOSE) {
+                debug2.append("Want nffg: " + policy.getNffgName() + " - returned: " + nffgReader.getName() +"\n");
+            }
             String src, dst;
-
-            //debug2.append("Want - src: " + policy.getSourceNode() + " - dst: " + policy.getDestinationNode() +"\n");
+            if (DEBUG && VERBOSE) {
+                debug2.append("Want - src: " + policy.getSourceNode() + " - dst: " + policy.getDestinationNode() +"\n");
+            }
 
             src = nffgReader.getNamOfNode().get(policy.getSourceNode());
             dst = nffgReader.getNamOfNode().get(policy.getDestinationNode());
-
-            //debug2.append("Found - src: " + src + " - dst: " + dst +"\n");
-
-            FLReachabilityPolicyReader flReachabilityPolicyReader = new FLReachabilityPolicyReader(policy.getName(),
+            if (DEBUG && VERBOSE) {
+                debug2.append("Found - src: " + src + " - dst: " + dst +"\n");
+            }
+            FLReachabilityPolicyReader y = new FLReachabilityPolicyReader(policy.getName(),
                     retrieveNffgReaderFromName(policy.getNffgName()),
                     policy.isIsPositive(),
                     nffgReader.getNode(src),
                     nffgReader.getNode(dst));
 
+            if (DEBUG) {
+                debug2.append("Name - FLPolicy: " + policy.getName() + " * PolicyReader: " + y.getName() + "\n");
+                debug2.append("NffgNAme - FLPolicy: " + policy.getNffgName() + " * PolicyReader: " + y.getNffg().getName() + "\n");
+                debug2.append("IsPositive - FLPolicy: " + policy.isIsPositive() + " * PolicyReader: " + y.isPositive() + "\n");
+                debug2.append("srcNode - FLPolicy: " + src + " * PolicyReader: " + y.getSourceNode().getName() + "\n");
+                debug2.append("dstNode - FLPolicy: " + dst + " * PolicyReader: " + y.getDestinationNode().getName() + "\n");
+            }
+
             if (policy.getFLVResult() != null) {
-                FLVerificationResultReader flVerificationResultReader = new FLVerificationResultReader(flReachabilityPolicyReader,
+                FLVerificationResultReader flVerificationResultReader = new FLVerificationResultReader(y,
                         policy.getFLVResult().isResult(),
                         policy.getFLVResult().getTime().toGregorianCalendar(),
                         policy.getFLVResult().getMessage());
-                flReachabilityPolicyReader.setVerificationResult(flVerificationResultReader);
+                y.setVerificationResult(flVerificationResultReader);
+
+                if (DEBUG) {
+                    debug2.append("ResultPolicy - FLPolicy: " + policy.getFLVResult().getPolicyName() + " * PolicyReader: " + y.getResult().getPolicy().getName() + "\n");
+                    debug2.append("ResultResult - FLPolicy: " + policy.getFLVResult().isResult() + " * PolicyReader: " + y.getResult().getVerificationResult() + "\n");
+                    //debug2.append("ResultTime - FLPolicy: " + policy.getFLVResult().getTime() + " * PolicyReader: " + y.getResult().getVerificationTime(). + "\n");
+                    debug2.append("ResultMessage - FLPolicy: " + policy.getFLVResult().getMessage() + " * PolicyReader: " + y.getResult().getVerificationResultMsg() + "\n");
+
+                }
+            } else {
+                y.setVerificationResult(null);
             }
 
             if (policy.getFLTraversalRequestedNode().size() != 0) {
-                FLTraversalPolicyReader x = (FLTraversalPolicyReader) flReachabilityPolicyReader;
+
+                FLTraversalPolicyReader x = new FLTraversalPolicyReader(y.getName(),
+                        y.getNffg(),
+                        y.isPositive(),
+                        y.getSourceNode(),
+                        y.getDestinationNode());
 
                 for (FLPolicy.FLTraversalRequestedNode traversalRequestedNode : policy.getFLTraversalRequestedNode()) {
-                    x.getTraversedFuctionalTypes().add(FunctionalType.fromValue(traversalRequestedNode.toString()));
+                    x.addTraversedFuctionalTypes((FunctionalType.fromValue(traversalRequestedNode.getFunctionalType().value())));
                 }
-            }
 
-            allPolicies.put(flReachabilityPolicyReader.getName(), flReachabilityPolicyReader);
+                if (DEBUG) {
+                    debug2.append("TraversalRequestedNode - FLPolicy: " + policy.getFLTraversalRequestedNode().size() + " * PolicyReader: " + x.getTraversedFuctionalTypes().size() + "\n");
+                }
+
+                allPolicies.put(x.getName(), x);
+            } else {
+                allPolicies.put(y.getName(), y);
+            }
         }
     }
 

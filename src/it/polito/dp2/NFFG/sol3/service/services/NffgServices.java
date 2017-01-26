@@ -1,5 +1,6 @@
 package it.polito.dp2.NFFG.sol3.service.services;
 
+import it.polito.dp2.NFFG.FunctionalType;
 import it.polito.dp2.NFFG.sol3.service.database.NffgDB;
 import it.polito.dp2.NFFG.sol3.service.database.TemporaryData;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.*;
@@ -30,6 +31,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by Francesco Longo (s223428) on 13/01/2017.
  */
 public class NffgServices {
+    private final Boolean MYTEST = false;
+    private final Boolean DEBUG = true;
+    private final Boolean VERBOSE = false;
+
+    private static int counter = 0;
+
     private static String defaultNeo4JXMLURL = "http://localhost:8080/Neo4JXML/rest";
 
     private ConcurrentHashMap<String, FLNffg> allNffgs = NffgDB.getNffgs();
@@ -42,9 +49,9 @@ public class NffgServices {
 
     public NffgServices(String neo4jurl) {
         if (neo4jurl == null) {
-            baseURL = defaultNeo4JXMLURL+"/resource";
+            baseURL = defaultNeo4JXMLURL + "/resource";
         } else {
-            baseURL = neo4jurl+"/resource";
+            baseURL = neo4jurl + "/resource";
         }
 
         // create a new client
@@ -206,7 +213,7 @@ public class NffgServices {
         FLPolicies policies1 = new FLPolicies();
 
         for (FLPolicy p : policies.values()) {
-            if (p != null && p.getNffgName().equals(allNffgs.get(nffg_id).getName())) {
+            if (p.getNffgName().equals(allNffgs.get(nffg_id).getName())) {
                 policies1.getFLPolicy().add(p);
             }
         }
@@ -229,18 +236,16 @@ public class NffgServices {
     public FLPolicies getPolicies() {
         FLPolicies policies1 = new FLPolicies();
 
-        for (FLPolicy p : NffgDB.getPolicies().values()) {
-            if (p != null) {
-                policies1.getFLPolicy().add(p);
-            }
+        for (FLPolicy p : policies.values()) {
+            policies1.getFLPolicy().add(p);
         }
 
         return policies1;
     }
 
     public FLPolicy getPolicy(String policy_id) {
-        for (FLPolicy p : NffgDB.getPolicies().values()) {
-            if (p != null && p.getName().equals(policy_id)) {
+        for (FLPolicy p : policies.values()) {
+            if (p.getName().equals(policy_id)) {
                 return p;
             }
         }
@@ -257,17 +262,17 @@ public class NffgServices {
 
         // check if at least one nffg is a duplicate
         for (FLNffg n : nffgs_t.getFLNffg()) {
-            if ( tempName.get(n.getName()) != null ) {
+            if (tempName.get(n.getName()) != null) {
                 FLNffg x1 = new FLNffg();
-                x1.setId(""+-1);
+                x1.setId("" + -1);
                 x.getFLNffg().add(x1);
                 return x;
             }
         }
 
-        //here it is the FLNffgs uploaded
+        // here it is the FLNffgs uploaded
         for (FLNffg n : nffgs_t.getFLNffg()) {
-            if ( (f = postNffg(n)) != null ) {
+            if ((f = postNffg(n)) != null) {
                 x.getFLNffg().add(f);
             } else {
                 return null;
@@ -283,9 +288,9 @@ public class NffgServices {
         String oldNodeID;
 
         // check (with the ned ID) if a nffg already exists
-        if ( tempName.get(nffgToPost.getName()) != null ) {
+        if (tempName.get(nffgToPost.getName()) != null) {
             FLNffg x = new FLNffg();
-            x.setId(""+-1);
+            x.setId("" + -1);
             return x;
         }
 
@@ -333,11 +338,10 @@ public class NffgServices {
         }
         // success
 
-        StringBuilder debug = new StringBuilder();
-
+        /*
         debug.append("I HAVE NODE#: " + nffgToPost.getFLNode().size() + "\n");
-
         logFile(debug.toString(), "NODE");
+        */
 
         // NODES
         for (FLNode node : nffgToPost.getFLNode()) {
@@ -415,8 +419,7 @@ public class NffgServices {
             oldN = node.getName();
             newN = nodeToReturn.getId();
 
-            StringBuilder debug2 = new StringBuilder();
-
+            /*
             debug2.append("LOOKING FOR NODES " +
                     "\noldNodeName: " + oldN +
                     "\nnewNodeID: " + newN +
@@ -424,12 +427,15 @@ public class NffgServices {
                     "\n");
 
             logFile(debug2.toString(), "NODE_ASSOCIATION");
+            */
 
-            // use for client given by NFFGInfo
-            temporaryData.getOldNodeID_newNodeID().put(oldN, newN);
-
-            // use for my client
-            //temporaryData.getOldNodeID_newNodeID().put(oldNodeID, newN);
+            if (MYTEST) {
+                // use for my client test with Postman
+                temporaryData.getOldNodeID_newNodeID().put(oldNodeID, newN);
+            } else {
+                // use for client given by NFFGInfo
+                temporaryData.getOldNodeID_newNodeID().put(oldN, newN);
+            }
 
             nffgToReturn.getFLNode().add(nodeToReturn);
         }
@@ -442,14 +448,13 @@ public class NffgServices {
 
             String src_id, dst_id;
 
-            StringBuilder debug3 = new StringBuilder();
+            src_id = tempName.get(nffgToReturn.getName()).getOldNodeID_newNodeID().get(link.getSourceNode());
+            dst_id = tempName.get(nffgToReturn.getName()).getOldNodeID_newNodeID().get(link.getDestinationNode());
 
+            /*
             debug3.append("LOOKING FOR POLICIES " +
                     "\nlinkSourceNode: " + link.getSourceNode() +
                     "\nlinkDestinationNode: " + link.getDestinationNode() + "\n");
-
-            src_id = tempName.get(nffgToReturn.getName()).getOldNodeID_newNodeID().get(link.getSourceNode());
-            dst_id = tempName.get(nffgToReturn.getName()).getOldNodeID_newNodeID().get(link.getDestinationNode());
 
             debug3.append("\nsrc_id: " + src_id +
                     "\ndst_id: " + dst_id +
@@ -459,6 +464,7 @@ public class NffgServices {
                     "\n");
 
             logFile(debug3.toString(), "POLCIES");
+            */
 
             linkToReturn.setName(link.getName());
             linkToReturn.setSourceNode(src_id);
@@ -512,7 +518,7 @@ public class NffgServices {
         return nffgToReturn;
     }
 
-    public synchronized FLPolicy postPolicy(FLPolicy policy)  {
+    public synchronized FLPolicy postPolicy(FLPolicy policy) {
         FLPolicy p = new FLPolicy();
 
         p.setName(policy.getName());
@@ -520,39 +526,73 @@ public class NffgServices {
 
         String src_id, dst_id;
 
-        StringBuilder debug = new StringBuilder();
-
-        debug.append("I have policies saved #: " +
-                policies.size() + " " +
-                "I have nffgs saved #: " +
-                allNffgs.size() + " " + "\n");
-
-        debug.append("Posting Policy: " +
-                policy.getName() + " " +
-                policy.getNffgName() + " " +
-                policy.getSourceNode() + " " +
-                policy.getDestinationNode() + "\n");
-
-        for (FLNffg n : allNffgs.values()) {
-            debug.append("I have: " +
-                    n.getId() + " " +
-                    n.getName() + " " + "\n");
-        }
-
-        logFile(debug.toString(), "NFFGS");
-
         src_id = tempName.get(policy.getNffgName()).getOldNodeID_newNodeID().get(policy.getSourceNode());
         dst_id = tempName.get(policy.getNffgName()).getOldNodeID_newNodeID().get(policy.getDestinationNode());
 
         p.setSourceNode(src_id);
         p.setDestinationNode(dst_id);
+        p.setIsPositive(policy.isIsPositive());
+
+        // save VerificationResult
+        if (policy.getFLVResult() != null) {
+            FLVResult result = new FLVResult();
+
+            result.setPolicyName(policy.getFLVResult().getPolicyName());
+            result.setResult(policy.getFLVResult().isResult());
+            result.setTime(policy.getFLVResult().getTime());
+            result.setMessage(policy.getFLVResult().getMessage());
+
+            p.setFLVResult(result);
+        } else {
+            p.setFLVResult(null);
+        }
+
+        // save traversal node request
+        if (policy.getFLTraversalRequestedNode().size() > 0) {
+            p.getFLTraversalRequestedNode().addAll(policy.getFLTraversalRequestedNode());
+        }
 
         if (policies.get(policy.getName()) != null) {
             policies.remove(policy.getName());
         }
 
+        if (DEBUG) {
+            StringBuilder debug = new StringBuilder();
+
+            String toload, saved;
+
+            if (policy.getFLVResult() != null) {
+                toload = "true";
+            } else {
+                toload = "null";
+            }
+
+            if (p.getFLVResult() != null) {
+                saved = "true";
+            } else {
+                saved = "null";
+            }
+
+            debug.append("***************** --> POSTED " + policy.getName() + " *******************\n");
+            debug.append("NAME - TOLOAD: " + policy.getName() + " SAVED: " + p.getName() + "\n" +
+                    "NFFGNAME - TOLOAD: " + policy.getNffgName() + " SAVED: " + p.getNffgName() + "\n" +
+                    "SOURCENODE - TOLOAD: " + src_id + " SAVED: " + p.getSourceNode() + "\n" +
+                    "DESTNODE - TOLOAD: " + dst_id + " SAVED: " + p.getDestinationNode() + "\n" +
+                    "ISPOSITIVE - TOLOAD: " + policy.isIsPositive() + " SAVED: " + p.isIsPositive() + "\n" +
+                    "FLVRESULT - TOLOAD: " + toload + " SAVED: " + saved + "\n");
+            if (policy.getFLVResult() != null) {
+                debug.append("FLVRESULT(POLICYNAME) - TOLOAD: " + policy.getFLVResult().getPolicyName() + " SAVED: " + p.getFLVResult().getPolicyName() + "\n" +
+                        "FLVRESULT(RESULT) - TOLOAD: " + policy.getFLVResult().isResult() + " SAVED: " + p.getFLVResult().isResult() + "\n" +
+                        "FLVRESULT(TIME) - TOLOAD: " + policy.getFLVResult().getTime() + " SAVED: " + p.getFLVResult().getTime() + "\n" +
+                        "FLVRESULT(MESSAGE) - TOLOAD: " + policy.getFLVResult().getMessage() + " SAVED: " + p.getFLVResult().getMessage() + "\n");
+            }
+            debug.append("# REQ. TRAV. NODE - TOLOAD: " + policy.getFLTraversalRequestedNode().size() + " SAVED: " + p.getFLTraversalRequestedNode().size() + "\n");
+            debug.append("**************************************************\n");
+
+            logFile(debug.toString(), "POSTED_" + policy.getName() + "@" + policy.getNffgName());
+        }
+
         policies.put(policy.getName(), p);
-        allNffgs.get(policy.getNffgName()).getFLPolicy().add(p);
 
         return p;
     }
@@ -576,7 +616,36 @@ public class NffgServices {
     public synchronized FLPolicy removePolicy(String policy_id) {
         for (FLPolicy p : policies.values()) {
             if (p.getName().equals(policy_id)) {
+
                 policies.remove(policy_id);
+
+                if (DEBUG) {
+                    StringBuilder debug = new StringBuilder();
+                    debug.append("***************** --> REMOVED " + p.getName() + " *******************\n");
+                    debug.append("NAME: " + p.getName() + "\n" +
+                            "NFFGNAME: " + p.getNffgName() + "\n"+
+                            "SRCNODE: " + p.getSourceNode() + "\n"+
+                            "DSTNODE: " + p.getDestinationNode() + "\n");
+
+                    if (p.getFLVResult() != null) {
+                        debug.append("RESULT(POLICY): " + p.getFLVResult().getPolicyName() + "\n" +
+                                "RESULT(RESULT): " + p.getFLVResult().isResult() + "\n"+
+                                "RESULT(MESSAGE): " + p.getFLVResult().getMessage() + "\n"+
+                                "RESULT(TIME): " + p.getFLVResult().getTime() + "\n");
+                    }
+
+                    if (p.getFLTraversalRequestedNode().size() > 0) {
+                        for (FLPolicy.FLTraversalRequestedNode functionalType : p.getFLTraversalRequestedNode()) {
+                            debug.append("REQUESTED NODE: " + functionalType.getFunctionalType().value() + "\n");
+                        }
+                    } else {
+                        debug.append("REQUESTED NODE: 0\n");
+                    }
+
+                    debug.append("*************************************************\n");
+                    logFile(debug.toString(), "REMOVED_" + p.getName() + "@" + p.getNffgName());
+                }
+
                 return p;
             }
         }
@@ -589,10 +658,10 @@ public class NffgServices {
         FLPolicy x;
 
         for (FLPolicy p : policies.getFLPolicy()) {
-            if ( (x = removePolicy(p.getName())) != null ) {
+            if ((x = removePolicy(p.getName())) != null) {
                 f.getFLPolicy().add(x);
             } else {
-                return  null;
+                return null;
             }
         }
 
@@ -604,7 +673,7 @@ public class NffgServices {
         FLNffg y;
 
         for (FLNffg f : flNffgs.getFLNffg()) {
-            if ( ( y = removeNffg(f.getId())) != null ) {
+            if ((y = removeNffg(f.getId())) != null) {
                 x.getFLNffg().add(y);
             } else {
                 return null;
@@ -684,12 +753,34 @@ public class NffgServices {
     public synchronized FLPolicy updatePolicy(String policy_id, FLPolicy flPolicy) {
         for (FLPolicy p : policies.values()) {
             if (p.getName().equals(policy_id)) {
+
+                p.setName(flPolicy.getName());
                 p.setSourceNode(tempName.get(flPolicy.getNffgName()).getOldNodeID_newNodeID().get(flPolicy.getSourceNode()));
                 p.setDestinationNode(tempName.get(flPolicy.getNffgName()).getOldNodeID_newNodeID().get(flPolicy.getDestinationNode()));
                 p.setIsPositive(flPolicy.isIsPositive());
-                p.setFLVResult(flPolicy.getFLVResult());
+
+                if (flPolicy.getFLVResult() != null) {
+                    FLVResult flvResult = new FLVResult();
+
+                    flvResult.setPolicyName(flPolicy.getFLVResult().getPolicyName());
+                    flvResult.setResult(flPolicy.getFLVResult().isResult());
+                    flvResult.setTime(flPolicy.getFLVResult().getTime());
+                    flvResult.setMessage(flPolicy.getFLVResult().getMessage());
+
+                    p.setFLVResult(flvResult);
+                } else {
+                    p.setFLVResult(null);
+                }
+
                 p.getFLTraversalRequestedNode().clear();
                 p.getFLTraversalRequestedNode().addAll(flPolicy.getFLTraversalRequestedNode());
+
+                if (DEBUG) {
+                    StringBuilder debug = new StringBuilder();
+                    debug.append("***************** --> UPDATED " + p.getName() + " *******************\n");
+                    logFile(debug.toString(), "UPDATED_" + p.getName() + "@" + p.getNffgName());
+                }
+
                 return p;
             }
         }
@@ -702,10 +793,10 @@ public class NffgServices {
         FLPolicy x;
 
         for (FLPolicy p : policies.getFLPolicy()) {
-            if ( (x = updatePolicy(p.getName(), p)) != null ) {
+            if ((x = updatePolicy(p.getName(), p)) != null) {
                 f.getFLPolicy().add(x);
             } else {
-                return  null;
+                return null;
             }
         }
 
@@ -738,15 +829,15 @@ public class NffgServices {
         response = target.path("node")
                 .path(src)
                 .path("paths")
-                .queryParam("dst",dst)
+                .queryParam("dst", dst)
                 .request()
                 .accept("application/xml")
                 .get();
 
         if (response.getStatus() != 200) {
             flvResult.setMessage("errore nella richiesta a Neo4JXML " + response.getStatus());
-            return flvResult;
-            //return null;
+            //return flvResult;
+            return null;
         }
 
         Paths paths = response.readEntity(Paths.class);
@@ -759,17 +850,20 @@ public class NffgServices {
             flvResult.setMessage("Policy is verified");
         }
 
+        // add result to policy
+        policies.get(flvResult.getPolicyName()).setFLVResult(flvResult);
+
         return flvResult;
     }
 
     public synchronized FLVResults verifyPolicies(FLVResults flvResults) {
-        FLVResult y;
+        FLVResults y = new FLVResults();
 
         for (FLVResult x : flvResults.getFLVResult()) {
-            verifyPolicy(x);
+            y.getFLVResult().add(verifyPolicy(x));
         }
 
-        return flvResults;
+        return y;
     }
 
     /**
@@ -797,22 +891,13 @@ public class NffgServices {
         }
     }
 
-    private String retrieveNffgIDFromNffgName(String nffgName) {
-        for (FLNffg nffg : allNffgs.values()) {
-            if (nffg.getName().contains(nffgName)) {
-                return nffg.getId();
-            }
-        }
-
-        return null;
-    }
-
-    public void logFile(String toWtrite, String filename) {
+    public void logFile(String toWtrite, String name) {
         BufferedWriter writer = null;
         try {
             //create a temporary file
-            String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-            File logFile = new File("/Users/FLDeviOS/Desktop/log/Service/NffgService/" + filename + "_" + timeLog + ".txt");
+            String timeLog = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
+            File logFile = new File("/Users/FLDeviOS/Desktop/log/Service/NffgService/" + name + "_" + counter + "_" + timeLog + ".txt");
+            counter++;
 
             // This will output the full path where the file will be written to...
             System.out.println(logFile.getCanonicalPath());
