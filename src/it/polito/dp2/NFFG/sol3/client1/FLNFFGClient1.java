@@ -362,7 +362,14 @@ public class FLNFFGClient1 implements NFFGClient {
         policy1.setName(p.getName());
         policy1.setNffgName(p.getNffg().getName());
         if (p.getResult() != null) {
-            policy1.setFLVResult(readVerificationResult(p.getResult()));
+            FLVResult flvResult = new FLVResult();
+
+            flvResult.setMessage(p.getResult().getVerificationResultMsg());
+            flvResult.setPolicyName(p.getResult().getPolicy().getName());
+            flvResult.setTime(getXMLCal(p.getResult().getVerificationTime()));
+            flvResult.setResult(p.getResult().getVerificationResult());
+
+            policy1.setFLVResult(flvResult);
         } else {
             policy1.setFLVResult(null);
         }
@@ -434,17 +441,6 @@ public class FLNFFGClient1 implements NFFGClient {
         }
 
         return policy1;
-    }
-
-    private FLVResult readVerificationResult(VerificationResultReader result) {
-        FLVResult flvResult = new FLVResult();
-
-        flvResult.setMessage(result.getVerificationResultMsg());
-        flvResult.setPolicyName(result.getPolicy().getName());
-        flvResult.setTime(getXMLCal(result.getVerificationTime()));
-        flvResult.setResult(result.getVerificationResult());
-
-        return flvResult;
     }
 
     private void logFile(String toWtrite, String name) {

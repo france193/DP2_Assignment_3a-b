@@ -100,6 +100,23 @@
         </javac>
         <echo message=" --(3)--> Done"/>
 
+        <!-- For JUNIT -->
+        <echo message=" --(4)--> Building java classes from JUNIT..."/>
+        <javac debug="on"
+               fork="true"
+               destdir="${build.dir}"
+               srcdir="${src.dir}"
+               includeantruntime="false"
+               source="${source}"
+               target="${target}">
+            <include name="it/polito/dp2/NFFG/lab3/*.java"/>
+            <include name="it/polito/dp2/NFFG/lab3/tests/*.java"/>
+            <classpath>
+                <path refid="classpath"/>
+            </classpath>
+        </javac>
+        <echo message=" --(4)--> Done"/>
+
     </target>
 
     <!-- all necessary operations to build the client (part 2) -->

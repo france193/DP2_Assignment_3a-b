@@ -2,48 +2,39 @@ package it.polito.dp2.NFFG.sol3.client2;
 
 import it.polito.dp2.NFFG.*;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
- * Created by FLDeviOS on 23/01/2017.
+ * Created by FLDeviOS on 27/01/2017.
  */
 public class FLTraversalPolicyReader extends FLReachabilityPolicyReader implements TraversalPolicyReader {
-    private List<FunctionalType> listOfRequiredTraversedNode;
+    private Set<FunctionalType> traversedFunctionalType;
 
     /**
-     * Class' constructor
      *
-     * @param policy_name_id
-     * @param nffg_refer
-     * @param isPositive
-     * @param nodeSource
-     * @param nodeDestination
+     * @param entityName
+     * @param nffgReader
+     * @param positive
+     * @param sourceNode
+     * @param destinationNode
+     * @param traversedFunctionalType
      */
-    FLTraversalPolicyReader(String policy_name_id,
-                            NffgReader nffg_refer,
-                            boolean isPositive,
-                            NodeReader nodeSource,
-                            NodeReader nodeDestination) {
-
-        super(policy_name_id, nffg_refer, isPositive, nodeSource, nodeDestination);
-
-        this.listOfRequiredTraversedNode = new ArrayList<>();
+    public FLTraversalPolicyReader(String entityName,
+                                   NffgReader nffgReader,
+                                   Boolean positive,
+                                   NodeReader sourceNode,
+                                   NodeReader destinationNode,
+                                   Set<FunctionalType> traversedFunctionalType) {
+        super(entityName, nffgReader, positive, sourceNode, destinationNode);
+        this.traversedFunctionalType = traversedFunctionalType;
     }
 
-    /**
-     * Gives the set of network functionalities that must be traversed for the property of this policy to hold.
-     *
-     * @return
-     */
     @Override
     public Set<FunctionalType> getTraversedFuctionalTypes() {
-        return new LinkedHashSet(this.listOfRequiredTraversedNode);
+        return traversedFunctionalType;
     }
 
-    public void addTraversedFuctionalTypes(FunctionalType t) {
-        listOfRequiredTraversedNode.add(t);
+    public void setVerificationResultReader(VerificationResultReader verificationResultReader) {
+        super.setVerificationResultReader(verificationResultReader);
     }
 }
