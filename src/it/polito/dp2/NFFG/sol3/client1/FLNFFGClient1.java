@@ -26,10 +26,10 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 /**
- * Created by FLDeviOS on 12/01/2017.
+ * Created by Francesco Longo (223428) on 12/01/2017.
  */
 public class FLNFFGClient1 implements NFFGClient {
-    private final Boolean DEBUG = true;
+    private final Boolean DEBUG = false;
 
     private static final String DEFAULT_URL = "http://localhost:8080/NffgService/rest";
     private static int counter = 0;

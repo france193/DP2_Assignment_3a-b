@@ -5,7 +5,7 @@ import it.polito.dp2.NFFG.*;
 import java.util.Set;
 
 /**
- * Created by FLDeviOS on 27/01/2017.
+ * Created by Francesco Longo (223428) on 27/01/2017.
  */
 public class FLTraversalPolicyReader extends FLReachabilityPolicyReader implements TraversalPolicyReader {
     private Set<FunctionalType> traversedFunctionalType;

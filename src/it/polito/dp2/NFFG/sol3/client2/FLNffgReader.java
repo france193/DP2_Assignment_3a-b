@@ -10,7 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Created by FLDeviOS on 23/01/2017.
+ * Created by Francesco Longo (223428) on 23/01/2017.
  */
 public class FLNffgReader extends FLNamedEntityReader implements NffgReader {
     private HashMap<String, FLPolicyReader> policies;

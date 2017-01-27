@@ -61,9 +61,9 @@
     <!-- The classpath to be used for running the tests -->
     <path id="test.classpath">
         <pathelement location="${lab3.location}/lib/NFFG.jar"/>
-        <!-- changed -->
-        <pathelement location="${lab3.location}/build/it/polito/dp2/NFFG/lab3"/>
-        <!--<pathelement location="${lab3.location}/lib/lab3.jar"/>-->
+        <!-- to use editable junit uncomment this -->
+        <!--<pathelement location="${lab3.location}/build/it/polito/dp2/NFFG/lab3"/>-->
+        <pathelement location="${lab3.location}/lib/lab3.jar"/>
         <pathelement location="${lab3.location}/lib/NFFGRandom.jar"/>
         <pathelement location="${lab3.location}/lib/junit-4.5.jar"/>
         <pathelement path="${build.dir}"/>

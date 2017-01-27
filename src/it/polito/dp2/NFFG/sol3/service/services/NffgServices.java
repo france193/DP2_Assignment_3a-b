@@ -1,6 +1,5 @@
 package it.polito.dp2.NFFG.sol3.service.services;
 
-import it.polito.dp2.NFFG.FunctionalType;
 import it.polito.dp2.NFFG.sol3.service.database.NffgDB;
 import it.polito.dp2.NFFG.sol3.service.database.TemporaryData;
 import it.polito.dp2.NFFG.sol3.service.models.Neo4jXML.*;
@@ -24,16 +23,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Francesco Longo (s223428) on 13/01/2017.
  */
 public class NffgServices {
-    private final Boolean MYTEST = false;
-    private final Boolean DEBUG = true;
-    private final Boolean VERBOSE = false;
+    private final Boolean MYTEST = true;
+    private final Boolean DEBUG = false;
 
     private static int counter = 0;
 

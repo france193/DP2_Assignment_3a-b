@@ -3,7 +3,7 @@ package it.polito.dp2.NFFG.sol3.service.database;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by FLDeviOS on 23/01/2017.
+ * Created by Francesco Longo (223428) on 23/01/2017.
  */
 public class TemporaryData {
     private ConcurrentHashMap<String, String> oldNodeID_newNodeID = new ConcurrentHashMap<>();

@@ -16,10 +16,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by FLDeviOS on 23/01/2017.
+ * Created by Francesco Longo (223428) on 23/01/2017.
  */
 public class FLNffgVerifier implements NffgVerifier {
-    private final Boolean DEBUG = true;
+    private final Boolean DEBUG = false;
     private final Boolean VERBOSE = false;
 
     private static final String DEFAULT_URL = "http://localhost:8080/NffgService/rest";

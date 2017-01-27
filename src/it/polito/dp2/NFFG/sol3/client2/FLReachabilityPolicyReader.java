@@ -6,7 +6,7 @@ import it.polito.dp2.NFFG.ReachabilityPolicyReader;
 import it.polito.dp2.NFFG.VerificationResultReader;
 
 /**
- * Created by FLDeviOS on 27/01/2017.
+ * Created by Francesco Longo (223428) on 27/01/2017.
  */
 public class FLReachabilityPolicyReader extends FLPolicyReader implements ReachabilityPolicyReader {
     private NodeReader sourceNode;

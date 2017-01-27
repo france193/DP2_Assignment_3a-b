@@ -5,7 +5,7 @@ import it.polito.dp2.NFFG.lab3.NFFGClient;
 import it.polito.dp2.NFFG.lab3.NFFGClientException;
 
 /**
- * Created by FLDeviOS on 12/01/2017.
+ * Created by Francesco Longo (223428) on 12/01/2017.
  */
 public class NFFGClientFactory extends it.polito.dp2.NFFG.lab3.NFFGClientFactory {
 

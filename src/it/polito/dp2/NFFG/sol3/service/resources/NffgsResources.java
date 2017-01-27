@@ -446,7 +446,7 @@ public class NffgsResources {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public synchronized Response postNffgs(FLNffgs nffgs, @Context UriInfo uriInfo) {
-
+        try {
             FLNffgs created = service.postNffgs(nffgs);
 
             if (created != null) { // success
@@ -460,7 +460,9 @@ public class NffgsResources {
             } else {
                 throw new ServiceUnavailableException();
             }
-
+        } catch (NullPointerException e) {
+            throw new ServiceUnavailableException();
+        }
     }
 
     /**
@@ -493,7 +495,6 @@ public class NffgsResources {
             } else {
                 throw new ServiceUnavailableException();
             }
-
         } catch (NullPointerException e) {
             throw new ServiceUnavailableException();
         }
