@@ -554,12 +554,7 @@ public class NffgsResources {
         }
     }
 
-    /**
-     * DELETE A GROUP OF NFFGS
-     *
-     * @param nffgs
-     * @return
-     */
+    /*
     @DELETE
     @Path("/nffgs")
     @ApiOperation(value = "delete a group of nffgs", notes = "json and xml formats")
@@ -582,12 +577,6 @@ public class NffgsResources {
         }
     }
 
-    /**
-     * DELETE 1 NFFG
-     *
-     * @param nffg_id
-     * @return
-     */
     @DELETE
     @Path("/nffg/{nffg_id}")
     @ApiOperation(value = "delete a nffg", notes = "json and xml formats")
@@ -609,6 +598,7 @@ public class NffgsResources {
             throw new ServiceUnavailableException();
         }
     }
+    */
 
     /** PUT **/
     /**

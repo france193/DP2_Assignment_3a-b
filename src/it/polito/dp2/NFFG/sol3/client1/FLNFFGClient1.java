@@ -29,8 +29,10 @@ import java.util.HashMap;
  * Created by FLDeviOS on 12/01/2017.
  */
 public class FLNFFGClient1 implements NFFGClient {
+    private final Boolean DEBUG = true;
 
     private static final String DEFAULT_URL = "http://localhost:8080/NffgService/rest";
+    private static int counter = 0;
 
     private NffgVerifier monitor;
     private WebTarget target;
@@ -42,7 +44,7 @@ public class FLNFFGClient1 implements NFFGClient {
         NffgVerifierFactory factory1 = NffgVerifierFactory.newInstance();
         monitor = factory1.newNffgVerifier();
 
-        if ( (baseURL = System.getProperty("it.polito.dp2.NFFG.sol1.NffgInfo.file")) == null) {
+        if ((baseURL = System.getProperty("it.polito.dp2.NFFG.sol1.NffgInfo.file")) == null) {
             baseURL = DEFAULT_URL;
         }
 
@@ -99,79 +101,86 @@ public class FLNFFGClient1 implements NFFGClient {
         HashMap<String, FLNffg> nffgName_Nffg = new HashMap<>();
         FLNffgs nffgs = new FLNffgs();
 
-        StringBuilder debug = new StringBuilder();
-
         for (NffgReader nffg : monitor.getNffgs()) {
             FLNffg nffg1 = convertNffgReaderToFLNffg(nffg);
 
-            debug.append("\n***********************************************\n");
-            debug.append("NFFG\n");
-            debug.append("OLD name: " + nffg.getName() + " - NEW id: " + nffg1.getId() + " name: " + nffg1.getName() + "\n");
+            /*
+            StringBuilder debug1 = new StringBuilder();
 
-            debug.append("\n-----------------------------------------------\n");
+            debug1.append("\n***********************************************\n");
+            debug1.append("NFFG\n");
+            debug1.append("TOLOAD OLD name: " + nffg.getName() + " - NEW id: " + nffg1.getId() + " name: " + nffg1.getName() + "\n");
+
+            debug1.append("\n-----------------------------------------------\n");
             for (FLNode node : nffg1.getFLNode()) {
-                debug.append("NODES\n");
-                debug.append("NEW id: " + node.getId() + " name: " + node.getName() + " functionalType: " + node.getFunctionalType() + "\n");
+                debug1.append("NODES\n");
+                debug1.append("NEW id: " + node.getId() + " name: " + node.getName() + " functionalType: " + node.getFunctionalType() + "\n");
             }
-            debug.append("\n-----------------------------------------------\n");
+            debug1.append("\n-----------------------------------------------\n");
             for (FLLink link : nffg1.getFLLink()) {
-                debug.append("LINKS\n");
-                debug.append("NEW id: " + link.getId() + " name: " + link.getName() + " srcNode: " + link.getSourceNode() + " dstNode: " + link.getDestinationNode() + "\n");
+                debug1.append("LINKS\n");
+                debug1.append("NEW id: " + link.getId() + " name: " + link.getName() + " srcNode: " + link.getSourceNode() + " dstNode: " + link.getDestinationNode() + "\n");
             }
-            debug.append("\n-----------------------------------------------\n");
+            debug1.append("\n-----------------------------------------------\n");
             for (FLPolicy policy : nffg1.getFLPolicy()) {
-                debug.append("POLICIES\n");
-                debug.append("NEW name: " + policy.getName() + " nffgName: " + policy.getNffgName() + " srcNode: " + policy.getSourceNode() + " dstNode: " + policy.getDestinationNode() + "\n");
+                debug1.append("POLICIES\n");
+                debug1.append("NEW name: " + policy.getName() + " nffgName: " + policy.getNffgName() + " srcNode: " + policy.getSourceNode() + " dstNode: " + policy.getDestinationNode() + "\n");
             }
-            debug.append("\n***********************************************\n");
+            debug1.append("\n***********************************************\n");
+
+            logFile(debug1.toString(), "UPLOADED_" + nffg.getName());
+            */
 
             nffgs.getFLNffg().add(nffg1);
         }
-
-        debug.append("I have: " +
-                nffgs.getFLNffg().size() + " nffgs ready to load"  + "\n");
-
-        logFile(debug.toString());
 
         response = target.path("nffgs")
                 .request()
                 .accept("application/xml")
                 .post(Entity.entity(nffgs, "application/xml"));
 
-        switch (response.getStatus()) {
-            case 201:
-                for (FLNffg nffg1 : response.readEntity(FLNffgs.class).getFLNffg()) {
-                    nffgName_Nffg.put(nffg1.getName(), nffg1);
+        if (response.getStatus() != 201) {
+            switch (response.getStatus()) {
+                case 400:
+                    throw new AlreadyLoadedException();
+                default:
+                case 503:
+                    throw new ServiceException();
+            }
+        }
+
+        for (FLNffg nffg1 : response.readEntity(FLNffgs.class).getFLNffg()) {
+            nffgName_Nffg.put(nffg1.getName(), nffg1);
+        }
+
+        FLPolicies policies4 = new FLPolicies();
+        for (PolicyReader policyr : monitor.getPolicies()) {
+
+            StringBuilder debug = new StringBuilder();
+            if (policyr.getResult() != null) {
+                if (DEBUG) {
+                    debug.append(" " + policyr.getResult().getPolicy().getName() + "\n");
+                    debug.append(" " + policyr.getResult().getVerificationResult() + "\n");
+                    debug.append(" " + policyr.getResult().getVerificationResultMsg() + "\n");
+                    debug.append(" " + policyr.getResult().getVerificationTime().getTime() + "\n");
                 }
-
-                FLPolicies policies = new FLPolicies();
-                for (PolicyReader policy : monitor.getPolicies()) {
-                    FLPolicy policy1 = convertPolicyReaderToFLPolicy(policy);
-
-                    policies.getFLPolicy().add(policy1);
+            } else {
+                if (DEBUG) {
+                    debug.append(" " + policyr.getResult() + "\n");
                 }
+            }
+            logFile(debug.toString(), "VRESULT_" + policyr.getName() + "_");
 
-                response = target.path("policies")
-                        .request()
-                        .accept("application/xml")
-                        .post(Entity.entity(policies, "application/xml"));
+            policies4.getFLPolicy().add(convertPolicyReaderToFLPolicy(policyr));
+        }
 
-                switch (response.getStatus()) {
-                    case 201:
-                        break;
-                    case 400:
-                        throw new AlreadyLoadedException();
-                    default:
-                        throw new ServiceException();
-                }
-                break;
-            case 400:
-                throw new AlreadyLoadedException();
-            case 503:
-                throw new ServiceException();
-            default:
-                System.out.println("ERROR: " + response.getStatus());
-                break;
+        response = target.path("policies")
+                .request()
+                .accept("application/xml")
+                .post(Entity.entity(policies4, "application/xml"));
+
+        if (response.getStatus() != 201) {
+            throw new ServiceException();
         }
     }
 
@@ -198,11 +207,20 @@ public class FLNFFGClient1 implements NFFGClient {
         policy.setIsPositive(isPositive);
         policy.setSourceNode(srcNodeName);
         policy.setDestinationNode(dstNodeName);
+        policy.setFLVResult(null);
+        policy.getFLTraversalRequestedNode().clear();
 
         response = target.path("policy")
                 .request()
                 .accept("application/xml")
                 .post(Entity.entity(policy, "application/xml"));
+
+        if (DEBUG) {
+            StringBuilder debug = new StringBuilder();
+            debug.append("RESPONSE\n");
+            debug.append(response.getStatus());
+            logFile(debug.toString(), "LOADED_" + name + "_");
+        }
 
         switch (response.getStatus()) {
             case 201:
@@ -231,6 +249,13 @@ public class FLNFFGClient1 implements NFFGClient {
                 .accept("application/xml")
                 .delete();
 
+        if (DEBUG) {
+            StringBuilder debug = new StringBuilder();
+            debug.append("RESPONSE\n");
+            debug.append(response.getStatus());
+            logFile(debug.toString(), "REMOVED_" + name + "_");
+        }
+
         switch (response.getStatus()) {
             case 200:
                 break;
@@ -245,9 +270,9 @@ public class FLNFFGClient1 implements NFFGClient {
      * Asks the service to test one of the previously uploaded reachability policies
      *
      * @param name the name of the reachability policy to be tested
+     * @return the result of the verification of the policy
      * @throws UnknownNameException if the policy name passed as argument does not correspond to a reachability policy already loaded in the remote service
      * @throws ServiceException     if any other error occurs when trying to test reachability
-     * @return the result of the verification of the policy
      */
     @Override
     public boolean testReachabilityPolicy(String name) throws UnknownNameException, ServiceException {
@@ -260,6 +285,13 @@ public class FLNFFGClient1 implements NFFGClient {
                 .request()
                 .accept("application/xml")
                 .post(Entity.entity(flvResult, "application/xml"));
+
+        if (DEBUG) {
+            StringBuilder debug = new StringBuilder();
+            debug.append("RESPONSE\n");
+            debug.append(response.getStatus());
+            logFile(debug.toString(), "VERIFIED_" + name + "_");
+        }
 
         switch (response.getStatus()) {
             case 200:
@@ -292,7 +324,7 @@ public class FLNFFGClient1 implements NFFGClient {
         return xmlCal;
     }
 
-    private FLNffg convertNffgReaderToFLNffg (NffgReader nffg) {
+    private FLNffg convertNffgReaderToFLNffg(NffgReader nffg) {
         FLNffg nffg1 = new FLNffg();
 
         nffg1.setName(nffg.getName());
@@ -323,40 +355,82 @@ public class FLNFFGClient1 implements NFFGClient {
     private FLPolicy convertPolicyReaderToFLPolicy(PolicyReader p) {
         FLPolicy policy1 = new FLPolicy();
 
-        if ( !(p instanceof  TraversalPolicyReader) ) {
-            ReachabilityPolicyReader policy = (ReachabilityPolicyReader) p;
+        String src_id, dst_id;
+        String toload, saved;
+        int t_node;
 
-            policy1.setName(policy.getName());
-            policy1.setNffgName(policy.getNffg().getName());
-
-            policy1.setSourceNode(policy.getSourceNode().getName());
-            policy1.setDestinationNode(policy.getDestinationNode().getName());
-
-            if (policy.getResult() != null) {
-                policy1.setFLVResult(readVerificationResult(policy.getResult()));
-            }
-
-            policy1.setIsPositive(policy.isPositive());
+        policy1.setName(p.getName());
+        policy1.setNffgName(p.getNffg().getName());
+        if (p.getResult() != null) {
+            policy1.setFLVResult(readVerificationResult(p.getResult()));
         } else {
-            TraversalPolicyReader policy = (TraversalPolicyReader) p;
+            policy1.setFLVResult(null);
+        }
+        policy1.setIsPositive(p.isPositive());
 
-            policy1.setName(policy.getName());
-            policy1.setNffgName(policy.getNffg().getName());
+        if (!(p instanceof TraversalPolicyReader)) {
+            ReachabilityPolicyReader policyre = (ReachabilityPolicyReader) p;
 
-            policy1.setSourceNode(policy.getSourceNode().getName());
-            policy1.setDestinationNode(policy.getDestinationNode().getName());
+            policy1.setSourceNode(policyre.getSourceNode().getName());
+            policy1.setDestinationNode(policyre.getDestinationNode().getName());
 
-            if (policy.getResult() != null) {
-                policy1.setFLVResult(readVerificationResult(policy.getResult()));
-            }
+            src_id = policyre.getSourceNode().getName();
+            dst_id = policyre.getDestinationNode().getName();
 
-            if (policy.getTraversedFuctionalTypes().size() > 0) {
-                for (FunctionalType functionalType : policy.getTraversedFuctionalTypes()) {
+            t_node = 0;
+
+        } else {
+            TraversalPolicyReader policyt = (TraversalPolicyReader) p;
+
+            policy1.setSourceNode(policyt.getSourceNode().getName());
+            policy1.setDestinationNode(policyt.getDestinationNode().getName());
+
+            src_id = policyt.getSourceNode().getName();
+            dst_id = policyt.getDestinationNode().getName();
+
+            t_node = policyt.getTraversedFuctionalTypes().size();
+
+            if (policyt.getTraversedFuctionalTypes().size() != 0) {
+                for (FunctionalType functionalType : policyt.getTraversedFuctionalTypes()) {
                     FLPolicy.FLTraversalRequestedNode traversalRequestedNode = new FLPolicy.FLTraversalRequestedNode();
                     traversalRequestedNode.setFunctionalType(NodeFunctionalType.valueOf(functionalType.value()));
                     policy1.getFLTraversalRequestedNode().add(traversalRequestedNode);
                 }
             }
+        }
+
+        if (DEBUG) {
+            StringBuilder debug = new StringBuilder();
+
+            if (p.getResult() != null) {
+                toload = "true";
+            } else {
+                toload = "null";
+            }
+
+            if (policy1.getFLVResult() != null) {
+                saved = "true";
+            } else {
+                saved = "null";
+            }
+
+            debug.append("***************** --> POSTED " + policy1.getName() + " *******************\n");
+            debug.append("NAME - ORIGINAL: " + p.getName() + " MY_COPY: " + policy1.getName() + "\n" +
+                    "NFFGNAME - ORIGINAL: " + p.getNffg().getName() + " MY_COPY: " + policy1.getNffgName() + "\n" +
+                    "SOURCENODE - ORIGINAL: " + src_id + " MY_COPY: " + policy1.getSourceNode() + "\n" +
+                    "DESTNODE - ORIGINAL: " + dst_id + " MY_COPY: " + policy1.getDestinationNode() + "\n" +
+                    "ISPOSITIVE - ORIGINAL: " + p.isPositive() + " MY_COPY: " + policy1.isIsPositive() + "\n" +
+                    "FLVRESULT - ORIGINAL: " + toload + " MY_COPY: " + saved + "\n");
+            if (p.getResult() != null) {
+                debug.append("FLVRESULT(POLICYNAME) - ORIGINAL: " + p.getResult().getPolicy().getName() + " MY_COPY: " + policy1.getFLVResult().getPolicyName() + "\n" +
+                        "FLVRESULT(RESULT) - ORIGINAL: " + p.getResult().getVerificationResult() + " MY_COPY: " + policy1.getFLVResult().isResult() + "\n" +
+                        "FLVRESULT(TIME) - ORIGINAL: " + p.getResult().getVerificationTime().getTime() + " MY_COPY: " + policy1.getFLVResult().getTime() + "\n" +
+                        "FLVRESULT(MESSAGE) - ORIGINAL: " + p.getResult().getVerificationResultMsg() + " MY_COPY: " + policy1.getFLVResult().getMessage() + "\n");
+            }
+            debug.append("# REQ. TRAV. NODE - ORIGINAL: " + t_node + " MY_COPY: " + policy1.getFLTraversalRequestedNode().size() + "\n");
+            debug.append("**************************************************\n");
+
+            logFile(debug.toString(), "UPLOADED_" + policy1.getName() + "_");
         }
 
         return policy1;
@@ -370,18 +444,20 @@ public class FLNFFGClient1 implements NFFGClient {
         flvResult.setTime(getXMLCal(result.getVerificationTime()));
         flvResult.setResult(result.getVerificationResult());
 
-        return  flvResult;
+        return flvResult;
     }
 
-    public void logFile(String toWtrite) {
+    private void logFile(String toWtrite, String name) {
         BufferedWriter writer = null;
         try {
             //create a temporary file
-            String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-            File logFile = new File("/Users/FLDeviOS/Desktop/log/Client1/FLNFFGClient1/" + "FLNFFGClient1_" + timeLog + ".txt");
+            String timeLog = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
+            File logFile = new File("/Users/FLDeviOS/Desktop/log/Client1/FLNFFGClient1/" + name + counter + "_" + timeLog + ".txt");
+            counter++;
+
 
             // This will output the full path where the file will be written to...
-            System.out.println(logFile.getCanonicalPath());
+            //System.out.println(logFile.getCanonicalPath());
 
             writer = new BufferedWriter(new FileWriter(logFile));
             writer.write(toWtrite);

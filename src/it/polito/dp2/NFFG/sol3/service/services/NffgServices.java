@@ -552,10 +552,6 @@ public class NffgServices {
             p.getFLTraversalRequestedNode().addAll(policy.getFLTraversalRequestedNode());
         }
 
-        if (policies.get(policy.getName()) != null) {
-            policies.remove(policy.getName());
-        }
-
         if (DEBUG) {
             StringBuilder debug = new StringBuilder();
 
@@ -592,6 +588,9 @@ public class NffgServices {
             logFile(debug.toString(), "POSTED_" + policy.getName() + "@" + policy.getNffgName());
         }
 
+        if (policies.get(policy.getName()) != null) {
+            policies.remove(policy.getName());
+        }
         policies.put(policy.getName(), p);
 
         return p;
@@ -604,6 +603,7 @@ public class NffgServices {
             if (policies.get(p.getName()) != null) {
                 policies.remove(p.getName());
             }
+            policies.put(p.getName(), p);
             policies1.getFLPolicy().add(postPolicy(p));
         }
 
@@ -617,20 +617,18 @@ public class NffgServices {
         for (FLPolicy p : policies.values()) {
             if (p.getName().equals(policy_id)) {
 
-                policies.remove(policy_id);
-
                 if (DEBUG) {
                     StringBuilder debug = new StringBuilder();
                     debug.append("***************** --> REMOVED " + p.getName() + " *******************\n");
                     debug.append("NAME: " + p.getName() + "\n" +
-                            "NFFGNAME: " + p.getNffgName() + "\n"+
-                            "SRCNODE: " + p.getSourceNode() + "\n"+
+                            "NFFGNAME: " + p.getNffgName() + "\n" +
+                            "SRCNODE: " + p.getSourceNode() + "\n" +
                             "DSTNODE: " + p.getDestinationNode() + "\n");
 
                     if (p.getFLVResult() != null) {
                         debug.append("RESULT(POLICY): " + p.getFLVResult().getPolicyName() + "\n" +
-                                "RESULT(RESULT): " + p.getFLVResult().isResult() + "\n"+
-                                "RESULT(MESSAGE): " + p.getFLVResult().getMessage() + "\n"+
+                                "RESULT(RESULT): " + p.getFLVResult().isResult() + "\n" +
+                                "RESULT(MESSAGE): " + p.getFLVResult().getMessage() + "\n" +
                                 "RESULT(TIME): " + p.getFLVResult().getTime() + "\n");
                     }
 
@@ -646,6 +644,7 @@ public class NffgServices {
                     logFile(debug.toString(), "REMOVED_" + p.getName() + "@" + p.getNffgName());
                 }
 
+                policies.remove(policy_id);
                 return p;
             }
         }
@@ -668,6 +667,7 @@ public class NffgServices {
         return f;
     }
 
+    /*
     public synchronized FLNffgs removeNffgs(FLNffgs flNffgs) {
         FLNffgs x = new FLNffgs();
         FLNffg y;
@@ -746,6 +746,7 @@ public class NffgServices {
 
         return x;
     }
+    */
 
     /**
      * UPDATE
@@ -835,7 +836,7 @@ public class NffgServices {
                 .get();
 
         if (response.getStatus() != 200) {
-            flvResult.setMessage("errore nella richiesta a Neo4JXML " + response.getStatus());
+            //flvResult.setMessage("errore nella richiesta a Neo4JXML " + response.getStatus());
             //return flvResult;
             return null;
         }
@@ -900,7 +901,7 @@ public class NffgServices {
             counter++;
 
             // This will output the full path where the file will be written to...
-            System.out.println(logFile.getCanonicalPath());
+            //System.out.println(logFile.getCanonicalPath());
 
             writer = new BufferedWriter(new FileWriter(logFile));
             writer.write(toWtrite);

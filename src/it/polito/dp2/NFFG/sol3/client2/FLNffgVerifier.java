@@ -35,8 +35,7 @@ public class FLNffgVerifier implements NffgVerifier {
     private HashMap<String, FLNffg> allFLNffgs;
     private HashMap<String, FLPolicy> allFLPolicies;
 
-    StringBuilder debug1 = new StringBuilder();
-    StringBuilder debug2 = new StringBuilder();
+    private StringBuilder debug1 = new StringBuilder();
 
     public FLNffgVerifier() {
         allNffgs = new HashMap<>();
@@ -115,13 +114,13 @@ public class FLNffgVerifier implements NffgVerifier {
 
             convertPoliciesInPolicyReaders();
             if (DEBUG) {
-                debug2.append("***********************************************\n");
-                debug2.append("FLPolicies # - " + allFLPolicies.size() + "\n");
-                debug2.append("PolicyReaders # - " + allPolicies.size() + "\n");
-                debug2.append("***********************************************\n");
-                logFile(debug2.toString(), "VERIFIER_downloaded_Policies_");
+                StringBuilder debug3 = new StringBuilder();
+                debug3.append("***********************************************\n");
+                debug3.append("FLPolicies #: " + allFLPolicies.size() + "\n");
+                debug3.append("PolicyReaders #: " + allPolicies.size() + "\n");
+                debug3.append("***********************************************\n");
+                logFile(debug3.toString(), "#POLICIES_");
             }
-
         }
     }
 
@@ -220,23 +219,24 @@ public class FLNffgVerifier implements NffgVerifier {
 
     private void convertPoliciesInPolicyReaders() {
         for (FLPolicy policy : allFLPolicies.values()) {
+            StringBuilder debug2 = new StringBuilder();
 
             if (DEBUG) {
                 debug2.append("***********************************************************************\n");
             }
             FLNffgReader nffgReader = retrieveNffgReaderFromName(policy.getNffgName());
             if (DEBUG && VERBOSE) {
-                debug2.append("Want nffg: " + policy.getNffgName() + " - returned: " + nffgReader.getName() +"\n");
+                debug2.append("Want nffg: " + policy.getNffgName() + " - returned: " + nffgReader.getName() + "\n");
             }
             String src, dst;
             if (DEBUG && VERBOSE) {
-                debug2.append("Want - src: " + policy.getSourceNode() + " - dst: " + policy.getDestinationNode() +"\n");
+                debug2.append("Want - src: " + policy.getSourceNode() + " - dst: " + policy.getDestinationNode() + "\n");
             }
 
             src = nffgReader.getNamOfNode().get(policy.getSourceNode());
             dst = nffgReader.getNamOfNode().get(policy.getDestinationNode());
             if (DEBUG && VERBOSE) {
-                debug2.append("Found - src: " + src + " - dst: " + dst +"\n");
+                debug2.append("Found - src: " + src + " - dst: " + dst + "\n");
             }
             FLReachabilityPolicyReader y = new FLReachabilityPolicyReader(policy.getName(),
                     retrieveNffgReaderFromName(policy.getNffgName()),
@@ -257,17 +257,21 @@ public class FLNffgVerifier implements NffgVerifier {
                         policy.getFLVResult().isResult(),
                         policy.getFLVResult().getTime().toGregorianCalendar(),
                         policy.getFLVResult().getMessage());
+
                 y.setVerificationResult(flVerificationResultReader);
 
                 if (DEBUG) {
                     debug2.append("ResultPolicy - FLPolicy: " + policy.getFLVResult().getPolicyName() + " * PolicyReader: " + y.getResult().getPolicy().getName() + "\n");
                     debug2.append("ResultResult - FLPolicy: " + policy.getFLVResult().isResult() + " * PolicyReader: " + y.getResult().getVerificationResult() + "\n");
-                    //debug2.append("ResultTime - FLPolicy: " + policy.getFLVResult().getTime() + " * PolicyReader: " + y.getResult().getVerificationTime(). + "\n");
+                    debug2.append("ResultTime - FLPolicy: " + policy.getFLVResult().getTime() + " * PolicyReader: " + y.getResult().getVerificationTime().getTime() + "\n");
                     debug2.append("ResultMessage - FLPolicy: " + policy.getFLVResult().getMessage() + " * PolicyReader: " + y.getResult().getVerificationResultMsg() + "\n");
-
                 }
             } else {
                 y.setVerificationResult(null);
+
+                if (DEBUG) {
+                    debug2.append("Result - FLPolicy: " + policy.getFLVResult() + " * PolicyReader: " + y.getResult() + "\n");
+                }
             }
 
             if (policy.getFLTraversalRequestedNode().size() != 0) {
@@ -284,10 +288,17 @@ public class FLNffgVerifier implements NffgVerifier {
 
                 if (DEBUG) {
                     debug2.append("TraversalRequestedNode - FLPolicy: " + policy.getFLTraversalRequestedNode().size() + " * PolicyReader: " + x.getTraversedFuctionalTypes().size() + "\n");
+                    logFile(debug2.toString(), "DOWNLOADED_" + policy.getName() + "_");
                 }
 
                 allPolicies.put(x.getName(), x);
             } else {
+
+                if (DEBUG) {
+                    debug2.append("TraversalRequestedNode - FLPolicy: " + policy.getFLTraversalRequestedNode().size() + " * PolicyReader: 0" + "\n");
+                    logFile(debug2.toString(), "DOWNLOADED_" + policy.getName() + "_");
+                }
+
                 allPolicies.put(y.getName(), y);
             }
         }
@@ -302,7 +313,7 @@ public class FLNffgVerifier implements NffgVerifier {
         return null;
     }
 
-    public void logFile(String toWtrite, String name) {
+    private void logFile(String toWtrite, String name) {
         BufferedWriter writer = null;
         try {
             //create a temporary file
@@ -311,7 +322,7 @@ public class FLNffgVerifier implements NffgVerifier {
             counter++;
 
             // This will output the full path where the file will be written to...
-            System.out.println(logFile.getCanonicalPath());
+            //System.out.println(logFile.getCanonicalPath());
 
             writer = new BufferedWriter(new FileWriter(logFile));
             writer.write(toWtrite);

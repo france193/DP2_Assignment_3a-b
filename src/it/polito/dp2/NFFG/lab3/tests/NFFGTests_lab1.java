@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-
 public class NFFGTests_lab1 {
 	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
     
