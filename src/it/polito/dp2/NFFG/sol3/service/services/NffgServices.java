@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by Francesco Longo (s223428) on 13/01/2017.
  */
 public class NffgServices {
-    private final Boolean MYTEST = true;
+    private final Boolean MYTEST = false;
     private final Boolean DEBUG = false;
 
     private static int counter = 0;
@@ -83,7 +83,7 @@ public class NffgServices {
     /**
      * GET
      **/
-    public FLNffgs getNffgs() {
+    public synchronized FLNffgs getNffgs() {
         FLNffgs x = new FLNffgs();
 
         for (FLNffg f : allNffgs.values()) {
@@ -99,7 +99,7 @@ public class NffgServices {
         return x;
     }
 
-    public FLNffg getNffg(String nffg_id) {
+    public synchronized FLNffg getNffg(String nffg_id) {
         FLNffg x = allNffgs.get(nffg_id);
         x.getFLPolicy().clear();
 
@@ -112,7 +112,7 @@ public class NffgServices {
         return x;
     }
 
-    public FLNodes getNffgNodes(String nffg_id) {
+    public synchronized FLNodes getNffgNodes(String nffg_id) {
         FLNffg n;
         FLNodes nodes = new FLNodes();
 
@@ -125,7 +125,7 @@ public class NffgServices {
         return nodes;
     }
 
-    public FLNode getNffgNode(String nffg_id, String node_id) {
+    public synchronized FLNode getNffgNode(String nffg_id, String node_id) {
         FLNffg n;
 
         if ((n = allNffgs.get(nffg_id)) != null) {
@@ -141,7 +141,7 @@ public class NffgServices {
         return null;
     }
 
-    public FLLinks getNffgNodeLinks(String nffg_id, String node_id) {
+    public synchronized FLLinks getNffgNodeLinks(String nffg_id, String node_id) {
         FLNffg n;
         FLLinks links = new FLLinks();
 
@@ -159,7 +159,7 @@ public class NffgServices {
         return links;
     }
 
-    public FLLink getNffgNodeLink(String nffg_id, String node_id, String link_id) {
+    public synchronized FLLink getNffgNodeLink(String nffg_id, String node_id, String link_id) {
         FLNffg n;
 
         if ((n = allNffgs.get(nffg_id)) != null) {
@@ -175,7 +175,7 @@ public class NffgServices {
         return null;
     }
 
-    public FLLinks getNffgLinks(String nffg_id) {
+    public synchronized FLLinks getNffgLinks(String nffg_id) {
         FLNffg n;
         FLLinks links = new FLLinks();
 
@@ -190,7 +190,7 @@ public class NffgServices {
         return links;
     }
 
-    public FLLink getNffgLink(String nffg_id, String link_id) {
+    public synchronized FLLink getNffgLink(String nffg_id, String link_id) {
         FLNffg n;
 
         if ((n = allNffgs.get(nffg_id)) != null) {
@@ -206,7 +206,7 @@ public class NffgServices {
         return null;
     }
 
-    public FLPolicies getNffgPolicies(String nffg_id) {
+    public synchronized FLPolicies getNffgPolicies(String nffg_id) {
         FLPolicies policies1 = new FLPolicies();
 
         for (FLPolicy p : policies.values()) {
@@ -218,7 +218,7 @@ public class NffgServices {
         return policies1;
     }
 
-    public FLPolicy getNffgPolicy(String nffg_id, String policy_id) {
+    public synchronized FLPolicy getNffgPolicy(String nffg_id, String policy_id) {
         FLPolicies policies1 = getNffgPolicies(nffg_id);
 
         for (FLPolicy p : policies1.getFLPolicy()) {
@@ -230,7 +230,7 @@ public class NffgServices {
         return null;
     }
 
-    public FLPolicies getPolicies() {
+    public synchronized FLPolicies getPolicies() {
         FLPolicies policies1 = new FLPolicies();
 
         for (FLPolicy p : policies.values()) {
@@ -240,7 +240,7 @@ public class NffgServices {
         return policies1;
     }
 
-    public FLPolicy getPolicy(String policy_id) {
+    public synchronized FLPolicy getPolicy(String policy_id) {
         for (FLPolicy p : policies.values()) {
             if (p.getName().equals(policy_id)) {
                 return p;
@@ -283,6 +283,7 @@ public class NffgServices {
         Response response;
         FLNffg nffgToReturn = new FLNffg();
         String oldNodeID;
+        XMLGregorianCalendar date2;
 
         // check (with the ned ID) if a nffg already exists
         if (tempName.get(nffgToPost.getName()) != null) {
@@ -292,7 +293,15 @@ public class NffgServices {
         }
 
         nffgToReturn.setName(nffgToPost.getName());
-        nffgToReturn.setLastUpdatedTime(nffgToPost.getLastUpdatedTime());
+
+        try {
+            GregorianCalendar c = new GregorianCalendar();
+            c.setTime(new Date());
+            date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+        } catch (DatatypeConfigurationException e) {
+            return null;
+        }
+        nffgToReturn.setLastUpdatedTime(date2);
 
         TemporaryData temporaryData = new TemporaryData();
         temporaryData.setNffgName(nffgToPost.getName());
@@ -867,7 +876,7 @@ public class NffgServices {
     /**
      * OTHER METHODS
      **/
-    private synchronized URI getBaseURI(String url) {
+    private URI getBaseURI(String url) {
         return UriBuilder.fromUri(url).build();
     }
 
@@ -880,7 +889,7 @@ public class NffgServices {
         return response.getStatus();
     }
 
-    private synchronized Integer errorSwitch(Integer status) {
+    private Integer errorSwitch(Integer status) {
         switch (status) {
             case 400:
                 return 1;

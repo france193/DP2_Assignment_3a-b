@@ -18,7 +18,7 @@ import com.sun.jersey.api.uri.UriTemplate;
 
 @Generated(value = {
     "wadl|http://localhost:8080/NffgService/rest/application.wadl"
-}, comments = "wadl2java, http://wadl.java.net", date = "2017-01-27T17:11:11.059+01:00")
+}, comments = "wadl2java, http://wadl.java.net", date = "2017-01-28T18:11:16.112+01:00")
 public class Localhost_NffgServiceRest {
 
     /**
@@ -118,8 +118,8 @@ public class Localhost_NffgServiceRest {
             _templateAndMatrixParameterValues = new HashMap<String, Object>();
         }
 
-        public Localhost_NffgServiceRest.Resource.Nffg nffg() {
-            return new Localhost_NffgServiceRest.Resource.Nffg(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+        public Localhost_NffgServiceRest.Resource.PolicyPolicy_id policyPolicy_id(String policyId) {
+            return new Localhost_NffgServiceRest.Resource.PolicyPolicy_id(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues), policyId);
         }
 
         public Localhost_NffgServiceRest.Resource.Nffgs nffgs() {
@@ -174,8 +174,12 @@ public class Localhost_NffgServiceRest {
             return new Localhost_NffgServiceRest.Resource.Policy(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues));
         }
 
-        public Localhost_NffgServiceRest.Resource.PolicyPolicy_id policyPolicy_id(String policyId) {
-            return new Localhost_NffgServiceRest.Resource.PolicyPolicy_id(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues), policyId);
+        public Localhost_NffgServiceRest.Resource.Nffg nffg() {
+            return new Localhost_NffgServiceRest.Resource.Nffg(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+        }
+
+        public Localhost_NffgServiceRest.Resource.PolicyPolicy_id2 policyPolicy_id2(String policyId) {
+            return new Localhost_NffgServiceRest.Resource.PolicyPolicy_id2(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues), policyId);
         }
 
         public Localhost_NffgServiceRest.Resource.VerifyPolicy verifyPolicy() {
@@ -184,10 +188,6 @@ public class Localhost_NffgServiceRest {
 
         public Localhost_NffgServiceRest.Resource.VerifyPolicies verifyPolicies() {
             return new Localhost_NffgServiceRest.Resource.VerifyPolicies(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues));
-        }
-
-        public Localhost_NffgServiceRest.Resource.PolicyPolicy_id2 policyPolicy_id2(String policyId) {
-            return new Localhost_NffgServiceRest.Resource.PolicyPolicy_id2(_client, _uriBuilder.buildFromMap(_templateAndMatrixParameterValues), policyId);
         }
 
         public static class Nffg {
@@ -2496,7 +2496,7 @@ public class Localhost_NffgServiceRest {
             public PolicyPolicy_id(Client client, URI baseUri, String policyId) {
                 _client = client;
                 _uriBuilder = UriBuilder.fromUri(baseUri);
-                _uriBuilder = _uriBuilder.path("policy/{policy_id}");
+                _uriBuilder = _uriBuilder.path("/policy/{policy_id}");
                 _templateAndMatrixParameterValues = new HashMap<String, Object>();
                 _templateAndMatrixParameterValues.put("policy_id", policyId);
             }
@@ -2539,6 +2539,162 @@ public class Localhost_NffgServiceRest {
                 UriBuilder copyUriBuilder = _uriBuilder.clone();
                 copyMap.put("policy_id", policyId);
                 return new Localhost_NffgServiceRest.Resource.PolicyPolicy_id(_client, copyUriBuilder, copyMap);
+            }
+
+            public FLPolicy getAsFLPolicyXml() {
+                UriBuilder localUriBuilder = _uriBuilder.clone();
+                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
+                resourceBuilder = resourceBuilder.accept("application/xml");
+                ClientResponse response;
+                response = resourceBuilder.method("GET", ClientResponse.class);
+                if (response.getStatus()>= 400) {
+                    throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
+                }
+                return response.getEntity(FLPolicy.class);
+            }
+
+            public<T >T getAsXml(GenericType<T> returnType) {
+                UriBuilder localUriBuilder = _uriBuilder.clone();
+                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
+                resourceBuilder = resourceBuilder.accept("application/xml");
+                ClientResponse response;
+                response = resourceBuilder.method("GET", ClientResponse.class);
+                if (response.getStatus()>= 400) {
+                    throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
+                }
+                return response.getEntity(returnType);
+            }
+
+            public<T >T getAsXml(Class<T> returnType) {
+                UriBuilder localUriBuilder = _uriBuilder.clone();
+                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
+                resourceBuilder = resourceBuilder.accept("application/xml");
+                ClientResponse response;
+                response = resourceBuilder.method("GET", ClientResponse.class);
+                if (!ClientResponse.class.isAssignableFrom(returnType)) {
+                    if (response.getStatus()>= 400) {
+                        throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
+                    }
+                }
+                if (!ClientResponse.class.isAssignableFrom(returnType)) {
+                    return response.getEntity(returnType);
+                } else {
+                    return returnType.cast(response);
+                }
+            }
+
+            public FLPolicy getAsFLPolicyJson() {
+                UriBuilder localUriBuilder = _uriBuilder.clone();
+                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
+                resourceBuilder = resourceBuilder.accept("application/json");
+                ClientResponse response;
+                response = resourceBuilder.method("GET", ClientResponse.class);
+                if (response.getStatus()>= 400) {
+                    throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
+                }
+                return response.getEntity(FLPolicy.class);
+            }
+
+            public<T >T getAsJson(GenericType<T> returnType) {
+                UriBuilder localUriBuilder = _uriBuilder.clone();
+                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
+                resourceBuilder = resourceBuilder.accept("application/json");
+                ClientResponse response;
+                response = resourceBuilder.method("GET", ClientResponse.class);
+                if (response.getStatus()>= 400) {
+                    throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
+                }
+                return response.getEntity(returnType);
+            }
+
+            public<T >T getAsJson(Class<T> returnType) {
+                UriBuilder localUriBuilder = _uriBuilder.clone();
+                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
+                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
+                resourceBuilder = resourceBuilder.accept("application/json");
+                ClientResponse response;
+                response = resourceBuilder.method("GET", ClientResponse.class);
+                if (!ClientResponse.class.isAssignableFrom(returnType)) {
+                    if (response.getStatus()>= 400) {
+                        throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
+                    }
+                }
+                if (!ClientResponse.class.isAssignableFrom(returnType)) {
+                    return response.getEntity(returnType);
+                } else {
+                    return returnType.cast(response);
+                }
+            }
+
+        }
+
+        public static class PolicyPolicy_id2 {
+
+            private Client _client;
+            private UriBuilder _uriBuilder;
+            private Map<String, Object> _templateAndMatrixParameterValues;
+
+            private PolicyPolicy_id2(Client client, UriBuilder uriBuilder, Map<String, Object> map) {
+                _client = client;
+                _uriBuilder = uriBuilder.clone();
+                _templateAndMatrixParameterValues = map;
+            }
+
+            /**
+             * Create new instance using existing Client instance, and a base URI and any parameters
+             * 
+             */
+            public PolicyPolicy_id2(Client client, URI baseUri, String policyId) {
+                _client = client;
+                _uriBuilder = UriBuilder.fromUri(baseUri);
+                _uriBuilder = _uriBuilder.path("policy/{policy_id}");
+                _templateAndMatrixParameterValues = new HashMap<String, Object>();
+                _templateAndMatrixParameterValues.put("policy_id", policyId);
+            }
+
+            /**
+             * Create new instance using existing Client instance, and the URI from which the parameters will be extracted
+             * 
+             */
+            public PolicyPolicy_id2(Client client, URI uri) {
+                _client = client;
+                StringBuilder template = new StringBuilder(BASE_URI.toString());
+                if (template.charAt((template.length()- 1))!= '/') {
+                    template.append("/resource/policy/{policy_id}");
+                } else {
+                    template.append("resource/policy/{policy_id}");
+                }
+                _uriBuilder = UriBuilder.fromPath(template.toString());
+                _templateAndMatrixParameterValues = new HashMap<String, Object>();
+                UriTemplate uriTemplate = new UriTemplate(template.toString());
+                HashMap<String, String> parameters = new HashMap<String, String>();
+                uriTemplate.match(uri.toString(), parameters);
+                _templateAndMatrixParameterValues.putAll(parameters);
+            }
+
+            /**
+             * Get policy_id
+             * 
+             */
+            public String getPolicyId() {
+                return ((String) _templateAndMatrixParameterValues.get("policy_id"));
+            }
+
+            /**
+             * Duplicate state and set policy_id
+             * 
+             */
+            public Localhost_NffgServiceRest.Resource.PolicyPolicy_id2 setPolicyId(String policyId) {
+                Map<String, Object> copyMap;
+                copyMap = new HashMap<String, Object>(_templateAndMatrixParameterValues);
+                UriBuilder copyUriBuilder = _uriBuilder.clone();
+                copyMap.put("policy_id", policyId);
+                return new Localhost_NffgServiceRest.Resource.PolicyPolicy_id2(_client, copyUriBuilder, copyMap);
             }
 
             public FLPolicy deleteAsFLPolicyXml() {
@@ -2709,162 +2865,6 @@ public class Localhost_NffgServiceRest {
                 resourceBuilder = resourceBuilder.accept("application/json");
                 ClientResponse response;
                 response = resourceBuilder.method("PUT", ClientResponse.class);
-                if (!ClientResponse.class.isAssignableFrom(returnType)) {
-                    if (response.getStatus()>= 400) {
-                        throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
-                    }
-                }
-                if (!ClientResponse.class.isAssignableFrom(returnType)) {
-                    return response.getEntity(returnType);
-                } else {
-                    return returnType.cast(response);
-                }
-            }
-
-        }
-
-        public static class PolicyPolicy_id2 {
-
-            private Client _client;
-            private UriBuilder _uriBuilder;
-            private Map<String, Object> _templateAndMatrixParameterValues;
-
-            private PolicyPolicy_id2(Client client, UriBuilder uriBuilder, Map<String, Object> map) {
-                _client = client;
-                _uriBuilder = uriBuilder.clone();
-                _templateAndMatrixParameterValues = map;
-            }
-
-            /**
-             * Create new instance using existing Client instance, and a base URI and any parameters
-             * 
-             */
-            public PolicyPolicy_id2(Client client, URI baseUri, String policyId) {
-                _client = client;
-                _uriBuilder = UriBuilder.fromUri(baseUri);
-                _uriBuilder = _uriBuilder.path("/policy/{policy_id}");
-                _templateAndMatrixParameterValues = new HashMap<String, Object>();
-                _templateAndMatrixParameterValues.put("policy_id", policyId);
-            }
-
-            /**
-             * Create new instance using existing Client instance, and the URI from which the parameters will be extracted
-             * 
-             */
-            public PolicyPolicy_id2(Client client, URI uri) {
-                _client = client;
-                StringBuilder template = new StringBuilder(BASE_URI.toString());
-                if (template.charAt((template.length()- 1))!= '/') {
-                    template.append("/resource/policy/{policy_id}");
-                } else {
-                    template.append("resource/policy/{policy_id}");
-                }
-                _uriBuilder = UriBuilder.fromPath(template.toString());
-                _templateAndMatrixParameterValues = new HashMap<String, Object>();
-                UriTemplate uriTemplate = new UriTemplate(template.toString());
-                HashMap<String, String> parameters = new HashMap<String, String>();
-                uriTemplate.match(uri.toString(), parameters);
-                _templateAndMatrixParameterValues.putAll(parameters);
-            }
-
-            /**
-             * Get policy_id
-             * 
-             */
-            public String getPolicyId() {
-                return ((String) _templateAndMatrixParameterValues.get("policy_id"));
-            }
-
-            /**
-             * Duplicate state and set policy_id
-             * 
-             */
-            public Localhost_NffgServiceRest.Resource.PolicyPolicy_id2 setPolicyId(String policyId) {
-                Map<String, Object> copyMap;
-                copyMap = new HashMap<String, Object>(_templateAndMatrixParameterValues);
-                UriBuilder copyUriBuilder = _uriBuilder.clone();
-                copyMap.put("policy_id", policyId);
-                return new Localhost_NffgServiceRest.Resource.PolicyPolicy_id2(_client, copyUriBuilder, copyMap);
-            }
-
-            public FLPolicy getAsFLPolicyXml() {
-                UriBuilder localUriBuilder = _uriBuilder.clone();
-                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
-                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
-                resourceBuilder = resourceBuilder.accept("application/xml");
-                ClientResponse response;
-                response = resourceBuilder.method("GET", ClientResponse.class);
-                if (response.getStatus()>= 400) {
-                    throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
-                }
-                return response.getEntity(FLPolicy.class);
-            }
-
-            public<T >T getAsXml(GenericType<T> returnType) {
-                UriBuilder localUriBuilder = _uriBuilder.clone();
-                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
-                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
-                resourceBuilder = resourceBuilder.accept("application/xml");
-                ClientResponse response;
-                response = resourceBuilder.method("GET", ClientResponse.class);
-                if (response.getStatus()>= 400) {
-                    throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
-                }
-                return response.getEntity(returnType);
-            }
-
-            public<T >T getAsXml(Class<T> returnType) {
-                UriBuilder localUriBuilder = _uriBuilder.clone();
-                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
-                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
-                resourceBuilder = resourceBuilder.accept("application/xml");
-                ClientResponse response;
-                response = resourceBuilder.method("GET", ClientResponse.class);
-                if (!ClientResponse.class.isAssignableFrom(returnType)) {
-                    if (response.getStatus()>= 400) {
-                        throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
-                    }
-                }
-                if (!ClientResponse.class.isAssignableFrom(returnType)) {
-                    return response.getEntity(returnType);
-                } else {
-                    return returnType.cast(response);
-                }
-            }
-
-            public FLPolicy getAsFLPolicyJson() {
-                UriBuilder localUriBuilder = _uriBuilder.clone();
-                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
-                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
-                resourceBuilder = resourceBuilder.accept("application/json");
-                ClientResponse response;
-                response = resourceBuilder.method("GET", ClientResponse.class);
-                if (response.getStatus()>= 400) {
-                    throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
-                }
-                return response.getEntity(FLPolicy.class);
-            }
-
-            public<T >T getAsJson(GenericType<T> returnType) {
-                UriBuilder localUriBuilder = _uriBuilder.clone();
-                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
-                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
-                resourceBuilder = resourceBuilder.accept("application/json");
-                ClientResponse response;
-                response = resourceBuilder.method("GET", ClientResponse.class);
-                if (response.getStatus()>= 400) {
-                    throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());
-                }
-                return response.getEntity(returnType);
-            }
-
-            public<T >T getAsJson(Class<T> returnType) {
-                UriBuilder localUriBuilder = _uriBuilder.clone();
-                WebResource resource = _client.resource(localUriBuilder.buildFromMap(_templateAndMatrixParameterValues));
-                com.sun.jersey.api.client.WebResource.Builder resourceBuilder = resource.getRequestBuilder();
-                resourceBuilder = resourceBuilder.accept("application/json");
-                ClientResponse response;
-                response = resourceBuilder.method("GET", ClientResponse.class);
                 if (!ClientResponse.class.isAssignableFrom(returnType)) {
                     if (response.getStatus()>= 400) {
                         throw new Localhost_NffgServiceRest.WebApplicationExceptionMessage(Response.status(response.getClientResponseStatus()).build());

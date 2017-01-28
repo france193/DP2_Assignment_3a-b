@@ -37,7 +37,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLNffgs getNffgs() {
+    public synchronized FLNffgs getNffgs() {
         try {
             FLNffgs x = service.getNffgs();
 
@@ -65,7 +65,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLNffg getNffg(@PathParam("nffg_id") String nffg_id) {
+    public synchronized FLNffg getNffg(@PathParam("nffg_id") String nffg_id) {
         try {
             FLNffg x = service.getNffg(nffg_id);
 
@@ -93,7 +93,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLNodes getNffgNodes(@PathParam("nffg_id") String nffg_id) {
+    public synchronized FLNodes getNffgNodes(@PathParam("nffg_id") String nffg_id) {
         try {
             FLNodes x = service.getNffgNodes(nffg_id);
 
@@ -122,8 +122,8 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLNode getNffgNode(@PathParam("nffg_id") String nffg_id,
-                              @PathParam("node_id") String node_id) {
+    public synchronized FLNode getNffgNode(@PathParam("nffg_id") String nffg_id,
+                                           @PathParam("node_id") String node_id) {
         try {
             FLNode x = service.getNffgNode(nffg_id, node_id);
 
@@ -152,8 +152,8 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLLinks getNffgNodeLinks(@PathParam("nffg_id") String nffg_id,
-                                    @PathParam("node_id") String node_id) {
+    public synchronized FLLinks getNffgNodeLinks(@PathParam("nffg_id") String nffg_id,
+                                                 @PathParam("node_id") String node_id) {
         try {
             FLLinks x = service.getNffgNodeLinks(nffg_id, node_id);
 
@@ -183,9 +183,9 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLLink getNffgNodeLink(@PathParam("nffg_id") String nffg_id,
-                                  @PathParam("node_id") String node_id,
-                                  @PathParam("link_id") String link_id) {
+    public synchronized FLLink getNffgNodeLink(@PathParam("nffg_id") String nffg_id,
+                                               @PathParam("node_id") String node_id,
+                                               @PathParam("link_id") String link_id) {
         try {
             FLLink x = service.getNffgNodeLink(nffg_id, node_id, link_id);
 
@@ -213,7 +213,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLLinks getNffgLinks(@PathParam("nffg_id") String nffg_id) {
+    public synchronized FLLinks getNffgLinks(@PathParam("nffg_id") String nffg_id) {
         try {
             FLLinks x = service.getNffgLinks(nffg_id);
 
@@ -242,8 +242,8 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLLink getNffgLink(@PathParam("nffg_id") String nffg_id,
-                              @PathParam("link_id") String link_id) {
+    public synchronized FLLink getNffgLink(@PathParam("nffg_id") String nffg_id,
+                                           @PathParam("link_id") String link_id) {
         try {
             FLLink x = service.getNffgLink(nffg_id, link_id);
 
@@ -271,7 +271,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLPolicies getNffgPolicies(@PathParam("nffg_id") String nffg_id) {
+    public synchronized FLPolicies getNffgPolicies(@PathParam("nffg_id") String nffg_id) {
         try {
             FLPolicies x = service.getNffgPolicies(nffg_id);
 
@@ -300,8 +300,8 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLPolicy getNffgPolicy(@PathParam("nffg_id") String nffg_id,
-                                  @PathParam("policy_id") String policy_id) {
+    public synchronized FLPolicy getNffgPolicy(@PathParam("nffg_id") String nffg_id,
+                                               @PathParam("policy_id") String policy_id) {
         try {
             FLPolicy x = service.getNffgPolicy(nffg_id, policy_id);
 
@@ -328,7 +328,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLPolicies getPolicies() {
+    public synchronized FLPolicies getPolicies() {
         try {
             FLPolicies x = service.getPolicies();
 
@@ -356,7 +356,7 @@ public class NffgsResources {
             @ApiResponse(code = 404, message = "Not found"),
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public FLPolicy getPolicy(@PathParam("policy_id") String policy_id) {
+    public synchronized FLPolicy getPolicy(@PathParam("policy_id") String policy_id) {
         try {
             FLPolicy x = service.getPolicy(policy_id);
 
@@ -387,14 +387,17 @@ public class NffgsResources {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public synchronized Response postPolicies(FLPolicies policies,
                                               @Context UriInfo uriInfo) {
+        try {
+            FLPolicies created = service.postPolicies(policies);
 
-        FLPolicies created = service.postPolicies(policies);
-
-        if (created != null) { // success
-            UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-            URI u = builder.path("").build();
-            return Response.created(u).entity(created).build();
-        } else {
+            if (created != null) { // success
+                UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+                URI u = builder.path("").build();
+                return Response.created(u).entity(created).build();
+            } else {
+                throw new ServiceUnavailableException();
+            }
+        } catch (NullPointerException e) {
             throw new ServiceUnavailableException();
         }
     }
