@@ -30,6 +30,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link FLNode }
+     * 
+     */
+    public FLNode createFLNode() {
+        return new FLNode();
+    }
+
+    /**
      * Create an instance of {@link FLPolicy }
      * 
      */
@@ -46,30 +54,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link FLLink }
-     * 
-     */
-    public FLLink createFLLink() {
-        return new FLLink();
-    }
-
-    /**
-     * Create an instance of {@link FLPolicy.FLTraversalRequestedNode }
-     * 
-     */
-    public FLPolicy.FLTraversalRequestedNode createFLPolicyFLTraversalRequestedNode() {
-        return new FLPolicy.FLTraversalRequestedNode();
-    }
-
-    /**
-     * Create an instance of {@link FLLinks }
-     * 
-     */
-    public FLLinks createFLLinks() {
-        return new FLLinks();
-    }
-
-    /**
      * Create an instance of {@link FLNffg }
      * 
      */
@@ -78,11 +62,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link FLNode }
+     * Create an instance of {@link FLNode.FLLink }
      * 
      */
-    public FLNode createFLNode() {
-        return new FLNode();
+    public FLNode.FLLink createFLNodeFLLink() {
+        return new FLNode.FLLink();
     }
 
     /**

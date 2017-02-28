@@ -86,13 +86,8 @@
     <!-- The target for compiling the NFFGInfo application -->
     <target name="buildNFFGInfo" depends="init">
         <echo>Building NFFGInfo (if needed)...</echo>
-        <javac
-                destdir="${build.dir}"
-                debug="${debug}"
-                debuglevel="${debuglevel}"
-                source="${source}"
-                target="${target}"
-                includeantruntime="false">
+        <javac destdir="${build.dir}" debug="${debug}" debuglevel="${debuglevel}" source="${source}" target="${target}"
+               includeantruntime="false">
             <src path="${src.dir}"/>
             <include name="it/polito/dp2/NFFG/lab1/NFFGInfo.java"/>
             <classpath>
@@ -152,11 +147,10 @@
 
     <target name="redeployNeo4JXML" description="re-Deploy the Neo4JXML service to tomcat">
         <echo>Uneploying Neo4JXML to tomcat...</echo>
-        <undeploy url="${tomcatUrl}" username="${tomcatUsername}"
-                  password="${tomcatPassword}" path="/Neo4JXML" failonerror="false"/>
+        <undeploy url="${tomcatUrl}" username="${tomcatUsername}" password="${tomcatPassword}" path="/Neo4JXML"
+                  failonerror="false"/>
         <echo>Deploying Neo4JXML to tomcat...</echo>
-        <deploy url="${tomcatUrl}" username="${tomcatUsername}"
-                password="${tomcatPassword}" path="/Neo4JXML"
+        <deploy url="${tomcatUrl}" username="${tomcatUsername}" password="${tomcatPassword}" path="/Neo4JXML"
                 war="file:${lab3.location}/war/Neo4JXML.war"/>
     </target>
 
@@ -234,12 +228,18 @@
     <target name="clean">
         <delete dir="${build.dir}"/>
         <delete dir="${gen-tomcat-service.dir}"/>
+
+        <ant antfile="${sol.build.filepath}" target="sol-clean_service">
+            <property name="basedir" value="${lab3.location}"/>
+        </ant>
+        <ant antfile="${sol.build.filepath}" target="sol-clean_client">
+            <property name="basedir" value="${lab3.location}"/>
+        </ant>
     </target>
 
     <!--target for building the final zip containing the solution -->
     <target name="make-final-zip">
-        <zip destfile="${sol.zip}"
-             basedir="${lab3.location}"
+        <zip destfile="${sol.zip}" basedir="${lab3.location}"
              includes="${sol.build.file} custom/* xsd/* doc/* WebContent/**/* ${sol3.dir}/service/**/*.java ${sol3.dir}/client1/**/*.java ${sol3.dir}/client2/**/*.java"/>
     </target>
 </project>

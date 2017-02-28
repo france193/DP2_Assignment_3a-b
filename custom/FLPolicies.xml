@@ -1,0 +1,26 @@
+<fran:FLPolicies xmlns:fran="https://france193.wordpress.com"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="https://france193.wordpress.com ../xsd/nffgVerifier.xsd">
+
+    <!-- flvresult must refers to an existing policy -->
+    <!-- policy name must be unique -->
+
+    <!-- flvresult name must be unique (already done) -->
+
+    <fran:FLPolicy name="policy0" nffg_name="nffg0"
+                   isPositive="false" source_node="node0" destination_node="node1">
+
+        <fran:traversed_node>WEB_CLIENT</fran:traversed_node>
+        <fran:traversed_node>DPI</fran:traversed_node>
+        <fran:traversed_node>NAT</fran:traversed_node>
+
+    </fran:FLPolicy>
+
+    <fran:FLPolicy name="policy1" nffg_name="nffg0"
+                   isPositive="false" source_node="node0" destination_node="node1">
+    </fran:FLPolicy>
+
+    <fran:FLVResult policy="policy0" result="false"
+                    time="2007-10-26T08:36:28" message="Policy is not verified"/>
+
+</fran:FLPolicies>

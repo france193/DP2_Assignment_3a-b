@@ -46,7 +46,8 @@
         <mkdir dir="src/it/polito/dp2/NFFG/sol3/client2/models/NffgService"/>
     </target>
 
-    <!-- use a task of the library "org.jvnet.ws.wadl2java.WJCTask" creating a new task type named "wjc" -->
+    <!-- use a task of the library "org.jvnet.ws.wadl2java.WJCTask" creating
+        a new task type named "wjc" -->
     <taskdef name="wjc" classname="org.jvnet.ws.wadl2java.WJCTask">
         <classpath>
             <!-- where can be find the library and the .jar file -->
@@ -57,12 +58,16 @@
     <!-- all necessary operations to build the web-server service (part 1) -->
     <target name="build-service" depends="sol-init_service">
 
+        <echo message=" --(0)--> copying xsd schema file into WebContent"/>
+        <copy todir="WebContent/WEB-INF/classes/xsd/">
+            <fileset dir="xsd"/>
+        </copy>
+        <echo message=" --(1)--> Done!"/>
+
         <!-- Create annotated classes from wadl from Neo4jXML -->
         <echo message=" --(1)--> Generating annotated classes from the wadl of Neo4jXML..."/>
-        <wjc description="${WADL_Neo4J}"
-             package="it.polito.dp2.NFFG.sol3.service.models.Neo4jXML"
-             autoSchemaPackage="false"
-             target="${src.dir}">
+        <wjc description="${WADL_Neo4J}" package="it.polito.dp2.NFFG.sol3.service.models.Neo4jXML"
+             autoSchemaPackage="false" target="${src.dir}">
             <customizations dir="." includes="binding.xjc"/>
             <produces dir="${src.dir}/it/polito/dp2/NFFG/sol3/service/models/Neo4jXML" includes="*.java"/>
             <depends dir="." includes="build.xml"/>
@@ -82,13 +87,8 @@
 
         <!-- Build classes from java file -->
         <echo message=" --(3)--> Building java classes from java code..."/>
-        <javac debug="on"
-               fork="true"
-               destdir="${build.dir}"
-               srcdir="${src.dir}"
-               includeantruntime="false"
-               source="${source}"
-               target="${target}">
+        <javac debug="on" fork="true" destdir="${build.dir}" srcdir="${src.dir}" includeantruntime="false"
+               source="${source}" target="${target}">
             <include name="${path.prefix_service}/database/*.java"/>
             <include name="${path.prefix_service}/models/NffgService/*.java"/>
             <include name="${path.prefix_service}/models/Neo4jXML/*.java"/>
@@ -101,23 +101,12 @@
         <echo message=" --(3)--> Done"/>
 
         <!-- For JUNIT -->
-        <!--
-        <echo message=" - -(4)- -> Building java classes from JUNIT..."/>
-        <javac debug="on"
-               fork="true"
-               destdir="${build.dir}"
-               srcdir="${src.dir}"
-               includeantruntime="false"
-               source="${source}"
-               target="${target}">
-            <include name="it/polito/dp2/NFFG/lab3/*.java"/>
-            <include name="it/polito/dp2/NFFG/lab3/tests/*.java"/>
-            <classpath>
-                <path refid="classpath"/>
-            </classpath>
-        </javac>
-        <echo message=" - -(4)- -> Done"/>
-        -->
+        <!-- <echo message=" - -(4)- -> Building java classes from JUNIT..."/>
+            <javac debug="on" fork="true" destdir="${build.dir}" srcdir="${src.dir}"
+            includeantruntime="false" source="${source}" target="${target}"> <include
+            name="it/polito/dp2/NFFG/lab3/*.java"/> <include name="it/polito/dp2/NFFG/lab3/tests/*.java"/>
+            <classpath> <path refid="classpath"/> </classpath> </javac> <echo message="
+            - -(4)- -> Done"/> -->
 
     </target>
 
@@ -125,10 +114,8 @@
     <target name="build-client" depends="sol-init_client">
         <!-- Create annotated classes from wadl from Neo4jXML -->
         <echo message=" --(client1 - 1)--> Generating annotated classes from the wadl of NffgService..."/>
-        <wjc description="${WADL_NffgService}"
-             package="it.polito.dp2.NFFG.sol3.client1.models.NffgService"
-             autoSchemaPackage="false"
-             target="${src.dir}">
+        <wjc description="${WADL_NffgService}" package="it.polito.dp2.NFFG.sol3.client1.models.NffgService"
+             autoSchemaPackage="false" target="${src.dir}">
             <customizations dir="." includes="binding.xjc"/>
             <produces dir="${src.dir}/it/polito/dp2/NFFG/sol3/client1/models/NffgService" includes="*.java"/>
             <depends dir="." includes="build.xml"/>
@@ -137,13 +124,8 @@
 
         <!-- Build classes from java file -->
         <echo message=" --(client1 - 2)--> Building java classes from java code..."/>
-        <javac debug="on"
-               fork="true"
-               destdir="${build.dir}"
-               srcdir="${src.dir}"
-               includeantruntime="false"
-               source="${source}"
-               target="${target}">
+        <javac debug="on" fork="true" destdir="${build.dir}" srcdir="${src.dir}" includeantruntime="false"
+               source="${source}" target="${target}">
             <include name="${path.prefix_client1}/*.java"/>
             <include name="${path.prefix_client1}/models/NffgService/*.java"/>
             <classpath>
@@ -154,10 +136,8 @@
 
         <!-- Create annotated classes from wadl from Neo4jXML -->
         <echo message=" --(client2 - 1)--> Generating annotated classes from the wadl of NffgService..."/>
-        <wjc description="${WADL_NffgService}"
-             package="it.polito.dp2.NFFG.sol3.client2.models.NffgService"
-             autoSchemaPackage="false"
-             target="${src.dir}">
+        <wjc description="${WADL_NffgService}" package="it.polito.dp2.NFFG.sol3.client2.models.NffgService"
+             autoSchemaPackage="false" target="${src.dir}">
             <customizations dir="." includes="binding.xjc"/>
             <produces dir="${src.dir}/it/polito/dp2/NFFG/sol3/client2/models/NffgService" includes="*.java"/>
             <depends dir="." includes="build.xml"/>
@@ -166,13 +146,8 @@
 
         <!-- Build classes from java file -->
         <echo message=" --(client2 - 2)--> Building java classes from java code..."/>
-        <javac debug="on"
-               fork="true"
-               destdir="${build.dir}"
-               srcdir="${src.dir}"
-               includeantruntime="false"
-               source="${source}"
-               target="${target}">
+        <javac debug="on" fork="true" destdir="${build.dir}" srcdir="${src.dir}" includeantruntime="false"
+               source="${source}" target="${target}">
             <include name="${path.prefix_client2}/*.java"/>
             <include name="${path.prefix_client2}/models/NffgService/*.java"/>
             <classpath>

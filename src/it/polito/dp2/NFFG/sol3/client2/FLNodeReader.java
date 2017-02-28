@@ -9,7 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Created by Francesco Longo (223428) on 23/01/2017.
+ * Created by Francesco Longo (223428) on 21/02/2017.
  */
 public class FLNodeReader extends FLNamedEntityReader implements NodeReader {
     /**
@@ -27,7 +27,7 @@ public class FLNodeReader extends FLNamedEntityReader implements NodeReader {
     FLNodeReader(FunctionalType type, String node_name_id) {
         super(node_name_id);
         this.myFunctionalType = type;
-        links = new HashMap();
+        links = new HashMap<String, LinkReader>();
     }
 
     /**
@@ -47,7 +47,7 @@ public class FLNodeReader extends FLNamedEntityReader implements NodeReader {
      */
     @Override
     public Set<LinkReader> getLinks() {
-        return new LinkedHashSet(this.links.values());
+        return new LinkedHashSet<LinkReader>(this.links.values());
     }
 
     /**

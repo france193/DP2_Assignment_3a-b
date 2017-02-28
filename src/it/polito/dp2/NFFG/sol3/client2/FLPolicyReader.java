@@ -5,7 +5,7 @@ import it.polito.dp2.NFFG.PolicyReader;
 import it.polito.dp2.NFFG.VerificationResultReader;
 
 /**
- * Created by Francesco Longo (223428) on 27/01/2017.
+ * Created by Francesco Longo (223428) on 21/02/2017.
  */
 public class FLPolicyReader extends FLNamedEntityReader implements PolicyReader {
     private NffgReader nffgReader;
@@ -13,7 +13,6 @@ public class FLPolicyReader extends FLNamedEntityReader implements PolicyReader 
     private Boolean positive;
 
     /**
-     *
      * @param entityName
      * @param nffgReader
      * @param positive

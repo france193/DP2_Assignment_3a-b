@@ -4,7 +4,7 @@ import it.polito.dp2.NFFG.NffgVerifier;
 import it.polito.dp2.NFFG.NffgVerifierException;
 
 /**
- * Created by Francesco Longo (223428) on 23/01/2017.
+ * Created by Francesco Longo (223428) on 21/02/2017.
  */
 public class NffgVerifierFactory extends it.polito.dp2.NFFG.NffgVerifierFactory {
     /**
@@ -14,7 +14,6 @@ public class NffgVerifierFactory extends it.polito.dp2.NFFG.NffgVerifierFactory 
     }
 
     /**
-     *
      * @return
      * @throws NffgVerifierException
      */

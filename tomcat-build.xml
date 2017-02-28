@@ -43,8 +43,7 @@
     <!-- TOMCAT LIFECICLE MANAGEMENT-->
     <target name="start-tomcat" depends="check-tomcat-status" unless="tomcat.started">
         <echo>Start Tomcat</echo>
-        <java classname="org.apache.catalina.startup.Bootstrap" fork="true"
-              classpathref="tomcat.class.path">
+        <java classname="org.apache.catalina.startup.Bootstrap" fork="true" classpathref="tomcat.class.path">
             <jvmarg value="-Dcatalina.home=${server.location}/"/>
             <jvmarg value="-Dit.polito.dp2.NFFG.lab3.NEO4JURL=${NEO4JURL}"/>
             <jvmarg value="-Dit.polito.dp2.NFFG.NFFGClientFactory=${Client2}"/>
@@ -53,8 +52,7 @@
 
     <target name="stop-tomcat" depends="check-tomcat-status" if="tomcat.started">
         <echo>Stop Tomcat</echo>
-        <java classname="org.apache.catalina.startup.Bootstrap" fork="true"
-              classpathref="tomcat.class.path">
+        <java classname="org.apache.catalina.startup.Bootstrap" fork="true" classpathref="tomcat.class.path">
             <jvmarg value="-Dcatalina.home=${server.location}/"/>
             <arg line="stop"/>
         </java>
@@ -70,33 +68,29 @@
     <!-- WEBSERVICE LIFECICLE MANAGEMENT-->
     <target name="deployWS" depends="package-service" description="Deploy service to tomcat">
         <echo>Deploying to tomcat...</echo>
-        <deploy url="${tomcatUrl}" username="${tomcatUsername}"
-                password="${tomcatPassword}" path="/${serviceName}"
+        <deploy url="${tomcatUrl}" username="${tomcatUsername}" password="${tomcatPassword}" path="/${serviceName}"
                 war="file:${lab3.location}/war/${serviceName}.war"/>
     </target>
 
     <target name="undeployWS" description="Undeploy to tomcat">
         <echo>Undeploying...</echo>
-        <undeploy url="${tomcatUrl}" username="${tomcatUsername}"
-                  password="${tomcatPassword}" path="/${serviceName}" failonerror="false"/>
+        <undeploy url="${tomcatUrl}" username="${tomcatUsername}" password="${tomcatPassword}" path="/${serviceName}"
+                  failonerror="false"/>
     </target>
 
     <target name="startWS" description="Start service in tomcat">
         <echo>Starting...</echo>
-        <start url="${tomcatUrl}" username="${tomcatUsername}" password="${tomcatPassword}"
-               path="/${serviceName}"/>
+        <start url="${tomcatUrl}" username="${tomcatUsername}" password="${tomcatPassword}" path="/${serviceName}"/>
     </target>
 
     <target name="stopWS" description="Stop service in tomcat">
         <echo>Stopping...</echo>
-        <stop url="${tomcatUrl}" username="${tomcatUsername}" password="${tomcatPassword}"
-              path="/${serviceName}"/>
+        <stop url="${tomcatUrl}" username="${tomcatUsername}" password="${tomcatPassword}" path="/${serviceName}"/>
     </target>
 
     <target name="reloadWS" description="Reload service in tomcat">
         <echo>Reloading...</echo>
-        <reload url="${tomcatUrl}" username="${tomcatUsername}" password="${tomcatPassword}"
-                path="/${serviceName}"/>
+        <reload url="${tomcatUrl}" username="${tomcatUsername}" password="${tomcatPassword}" path="/${serviceName}"/>
     </target>
 
     <target name="redeployWS" depends="undeployWS" description="Redeploy service in tomcat">

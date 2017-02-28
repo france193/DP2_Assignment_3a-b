@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element ref="{https://france193.wordpress.com}FLPolicy" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element ref="{https://france193.wordpress.com}FLVResult" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,13 +32,16 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "flPolicy"
+    "flPolicy",
+    "flvResult"
 })
 @XmlRootElement(name = "FLPolicies")
 public class FLPolicies {
 
     @XmlElement(name = "FLPolicy")
     protected List<FLPolicy> flPolicy;
+    @XmlElement(name = "FLVResult")
+    protected List<FLVResult> flvResult;
 
     /**
      * Gets the value of the flPolicy property.
@@ -66,6 +70,35 @@ public class FLPolicies {
             flPolicy = new ArrayList<FLPolicy>();
         }
         return this.flPolicy;
+    }
+
+    /**
+     * Gets the value of the flvResult property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the flvResult property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getFLVResult().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link FLVResult }
+     * 
+     * 
+     */
+    public List<FLVResult> getFLVResult() {
+        if (flvResult == null) {
+            flvResult = new ArrayList<FLVResult>();
+        }
+        return this.flvResult;
     }
 
 }

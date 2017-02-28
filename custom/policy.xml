@@ -1,6 +1,0 @@
-<fran:FLPolicy name="string" nffgName="string" isPositive="false" source_node="string" destination_node="string" xmlns:fran="https://france193.wordpress.com">
-  <!--Optional:-->
-  <fran:FLV_result policyName="string" result="true" time="2013-11-23T15:44:07" message="string"/>
-  <!--Zero or more repetitions:-->
-  <fran:FLTraversal_requested_node functional_type="MAIL_SERVER"/>
-</fran:FLPolicy>

@@ -1,0 +1,20 @@
+<fran:FLNodes xmlns:fran="https://france193.wordpress.com"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="https://france193.wordpress.com ../xsd/nffgVerifier.xsd">
+
+    <!-- node id must be unique -->
+
+    <!-- link id must be unique in a node (already done) -->
+
+    <fran:FLNode name="node0" functional_type="NAT">
+        <fran:FLLink name="link0" destination_node="node1"/>
+        <fran:FLLink name="link1" destination_node="node2"/>
+    </fran:FLNode>
+
+    <fran:FLNode name="node1" functional_type="MAIL_SERVER">
+        <fran:FLLink name="link0" destination_node="node1"/>
+        <fran:FLLink name="link1" destination_node="node2"/>
+        <fran:FLLink name="link2" destination_node="node3"/>
+    </fran:FLNode>
+
+</fran:FLNodes>

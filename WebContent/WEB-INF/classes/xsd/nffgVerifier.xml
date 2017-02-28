@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FLNffgs xmlns:fran="https://france193.wordpress.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://france193.wordpress.com nffgVerifier.xsd">
+	<FLNffg name="Nffg4" last_updated_time="2016-09-25T08:31:20.000+02:00">
+		<FLNode name="MAILSERVER5" functional_type="MAIL_SERVER">
+			<FLLink name="Link66" destination_node="DPI9" />
+			<FLLink name="Link26" destination_node="CACHE2" />
+			<FLLink name="Link46" destination_node="DPI6" />
+			<FLLink name="Link92" destination_node="VPN7" />
+		</FLNode>
+		<FLNode name="MAILSERVER2" functional_type="MAIL_SERVER">
+			<FLLink name="Link20" destination_node="FW0" />
+			<FLLink name="Link86" destination_node="CACHE1" />
+			<FLLink name="Link36" destination_node="DPI9" />
+		</FLNode>
+		<FLNode name="CACHE1" functional_type="CACHE">
+			<FLLink name="Link43" destination_node="MAILCLIENT3" />
+			<FLLink name="Link122" destination_node="MAILCLIENT1" />
+			<FLLink name="Link75" destination_node="DPI4" />
+			<FLLink name="Link162" destination_node="DPI5" />
+			<FLLink name="Link173" destination_node="MAILSERVER5" />
+			<FLLink name="Link161" destination_node="DPI8" />
+			<FLLink name="Link91" destination_node="WEBSERVER3" />
+			<FLLink name="Link5" destination_node="MAILCLIENT2" />
+			<FLLink name="Link63" destination_node="DPI9" />
+			<FLLink name="Link101" destination_node="MAILSERVER0" />
+			<FLLink name="Link9" destination_node="MAILCLIENT4" />
+		</FLNode>
+		<FLNode name="VPN7" functional_type="VPN">
+			<FLLink name="Link23" destination_node="WEBSERVER3" />
+			<FLLink name="Link76" destination_node="CACHE2" />
+			<FLLink name="Link144" destination_node="MAILSERVER1" />
+			<FLLink name="Link64" destination_node="DPI6" />
+			<FLLink name="Link49" destination_node="FW0" />
+			<FLLink name="Link15" destination_node="MAILCLIENT7" />
+			<FLLink name="Link1" destination_node="WEBCLIENT0" />
+			<FLLink name="Link40" destination_node="NAT3" />
+			<FLLink name="Link156" destination_node="DPI5" />
+			<FLLink name="Link72" destination_node="WEBCLIENT6" />
+		</FLNode>
+		<FLNode name="MAILCLIENT1" functional_type="MAIL_CLIENT">
+			<FLLink name="Link152" destination_node="DPI8" />
+			<FLLink name="Link165" destination_node="NAT3" />
+			<FLLink name="Link2" destination_node="FW0" />
+			<FLLink name="Link51" destination_node="DPI4" />
+			<FLLink name="Link50" destination_node="VPN7" />
+		</FLNode>
+		<FLNode name="MAILSERVER1" functional_type="MAIL_SERVER">
+			<FLLink name="Link160" destination_node="CACHE2" />
+			<FLLink name="Link18" destination_node="FW0" />
+			<FLLink name="Link95" destination_node="DPI6" />
+		</FLNode>
+		<FLNode name="MAILSERVER0" functional_type="MAIL_SERVER">
+			<FLLink name="Link56" destination_node="DPI4" />
+			<FLLink name="Link33" destination_node="DPI8" />
+			<FLLink name="Link44" destination_node="DPI5" />
+			<FLLink name="Link16" destination_node="DPI6" />
+			<FLLink name="Link102" destination_node="NAT3" />
+		</FLNode>
+		<FLNode name="MAILCLIENT5" functional_type="MAIL_CLIENT">
+			<FLLink name="Link10" destination_node="DPI8" />
+			<FLLink name="Link31" destination_node="DPI4" />
+			<FLLink name="Link171" destination_node="CACHE2" />
+			<FLLink name="Link151" destination_node="NAT3" />
+			<FLLink name="Link29" destination_node="DPI6" />
+			<FLLink name="Link157" destination_node="VPN7" />
+		</FLNode>
+		<FLNode name="MAILCLIENT4" functional_type="MAIL_CLIENT">
+			<FLLink name="Link107" destination_node="DPI8" />
+			<FLLink name="Link8" destination_node="CACHE1" />
+			<FLLink name="Link125" destination_node="DPI9" />
+		</FLNode>
+		<FLNode name="MAILCLIENT3" functional_type="MAIL_CLIENT">
+			<FLLink name="Link131" destination_node="VPN7" />
+			<FLLink name="Link155" destination_node="DPI4" />
+			<FLLink name="Link143" destination_node="DPI9" />
+			<FLLink name="Link37" destination_node="DPI6" />
+			<FLLink name="Link140" destination_node="DPI8" />
+			<FLLink name="Link108" destination_node="DPI5" />
+			<FLLink name="Link6" destination_node="NAT3" />
+		</FLNode>
+		<FLNode name="MAILCLIENT2" functional_type="MAIL_CLIENT">
+			<FLLink name="Link47" destination_node="VPN7" />
+			<FLLink name="Link150" destination_node="FW0" />
+			<FLLink name="Link127" destination_node="DPI8" />
+			<FLLink name="Link138" destination_node="DPI6" />
+			<FLLink name="Link4" destination_node="CACHE1" />
+			<FLLink name="Link146" destination_node="CACHE2" />
+			<FLLink name="Link112" destination_node="DPI9" />
+		</FLNode>
+		<FLNode name="MAILCLIENT7" functional_type="MAIL_CLIENT">
+			<FLLink name="Link163" destination_node="CACHE2" />
+			<FLLink name="Link111" destination_node="NAT3" />
+			<FLLink name="Link14" destination_node="VPN7" />
+			<FLLink name="Link96" destination_node="DPI6" />
+			<FLLink name="Link136" destination_node="DPI9" />
+			<FLLink name="Link169" destination_node="DPI5" />
+		</FLNode>
+		<FLNode name="NAT3" functional_type="NAT">
+			<FLLink name="Link67" destination_node="MAILSERVER0" />
+			<FLLink name="Link89" destination_node="VPN7" />
+			<FLLink name="Link42" destination_node="MAILCLIENT7" />
+			<FLLink name="Link59" destination_node="MAILCLIENT5" />
+			<FLLink name="Link172" destination_node="DPI9" />
+			<FLLink name="Link117" destination_node="MAILCLIENT4" />
+			<FLLink name="Link129" destination_node="MAILSERVER1" />
+			<FLLink name="Link124" destination_node="DPI5" />
+			<FLLink name="Link7" destination_node="MAILCLIENT3" />
+			<FLLink name="Link73" destination_node="DPI6" />
+			<FLLink name="Link167" destination_node="MAILCLIENT2" />
+			<FLLink name="Link104" destination_node="WEBCLIENT6" />
+			<FLLink name="Link126" destination_node="CACHE2" />
+		</FLNode>
+		<FLNode name="DPI4" functional_type="DPI">
+			<FLLink name="Link54" destination_node="WEBCLIENT0" />
+			<FLLink name="Link100" destination_node="MAILCLIENT2" />
+			<FLLink name="Link121" destination_node="MAILSERVER5" />
+			<FLLink name="Link154" destination_node="MAILSERVER1" />
+			<FLLink name="Link35" destination_node="CACHE2" />
+			<FLLink name="Link139" destination_node="FW0" />
+			<FLLink name="Link105" destination_node="NAT3" />
+			<FLLink name="Link116" destination_node="MAILSERVER2" />
+			<FLLink name="Link28" destination_node="DPI8" />
+			<FLLink name="Link30" destination_node="DPI6" />
+			<FLLink name="Link134" destination_node="CACHE1" />
+		</FLNode>
+		<FLNode name="WEBSERVER3" functional_type="WEB_SERVER">
+			<FLLink name="Link22" destination_node="VPN7" />
+			<FLLink name="Link141" destination_node="DPI8" />
+			<FLLink name="Link38" destination_node="FW0" />
+		</FLNode>
+		<FLNode name="CACHE2" functional_type="CACHE">
+			<FLLink name="Link78" destination_node="MAILCLIENT3" />
+			<FLLink name="Link120" destination_node="DPI5" />
+			<FLLink name="Link53" destination_node="MAILSERVER1" />
+			<FLLink name="Link27" destination_node="MAILSERVER5" />
+			<FLLink name="Link25" destination_node="WEBSERVER4" />
+			<FLLink name="Link57" destination_node="NAT3" />
+			<FLLink name="Link106" destination_node="WEBCLIENT6" />
+			<FLLink name="Link52" destination_node="CACHE1" />
+			<FLLink name="Link159" destination_node="MAILCLIENT4" />
+		</FLNode>
+		<FLNode name="DPI5" functional_type="DPI">
+			<FLLink name="Link166" destination_node="MAILCLIENT3" />
+			<FLLink name="Link97" destination_node="MAILSERVER5" />
+			<FLLink name="Link110" destination_node="DPI9" />
+			<FLLink name="Link132" destination_node="MAILSERVER0" />
+			<FLLink name="Link79" destination_node="WEBCLIENT6" />
+			<FLLink name="Link74" destination_node="FW0" />
+			<FLLink name="Link62" destination_node="DPI8" />
+			<FLLink name="Link145" destination_node="MAILCLIENT2" />
+			<FLLink name="Link61" destination_node="NAT3" />
+			<FLLink name="Link83" destination_node="WEBCLIENT0" />
+			<FLLink name="Link137" destination_node="MAILCLIENT1" />
+			<FLLink name="Link103" destination_node="MAILCLIENT5" />
+		</FLNode>
+		<FLNode name="WEBSERVER4" functional_type="WEB_SERVER">
+			<FLLink name="Link87" destination_node="DPI4" />
+			<FLLink name="Link58" destination_node="FW0" />
+			<FLLink name="Link24" destination_node="CACHE2" />
+			<FLLink name="Link149" destination_node="CACHE1" />
+			<FLLink name="Link119" destination_node="VPN7" />
+		</FLNode>
+		<FLNode name="DPI6" functional_type="DPI">
+			<FLLink name="Link55" destination_node="MAILCLIENT4" />
+			<FLLink name="Link98" destination_node="FW0" />
+			<FLLink name="Link69" destination_node="DPI5" />
+			<FLLink name="Link70" destination_node="MAILCLIENT7" />
+			<FLLink name="Link17" destination_node="MAILSERVER0" />
+			<FLLink name="Link39" destination_node="MAILSERVER5" />
+			<FLLink name="Link148" destination_node="DPI8" />
+			<FLLink name="Link82" destination_node="WEBCLIENT0" />
+			<FLLink name="Link93" destination_node="MAILCLIENT1" />
+			<FLLink name="Link147" destination_node="MAILSERVER2" />
+		</FLNode>
+		<FLNode name="WEBCLIENT6" functional_type="WEB_CLIENT">
+			<FLLink name="Link12" destination_node="FW0" />
+			<FLLink name="Link170" destination_node="NAT3" />
+			<FLLink name="Link118" destination_node="VPN7" />
+			<FLLink name="Link123" destination_node="DPI6" />
+			<FLLink name="Link114" destination_node="DPI4" />
+		</FLNode>
+		<FLNode name="DPI8" functional_type="DPI">
+			<FLLink name="Link11" destination_node="MAILCLIENT5" />
+			<FLLink name="Link99" destination_node="NAT3" />
+			<FLLink name="Link32" destination_node="CACHE1" />
+			<FLLink name="Link133" destination_node="MAILCLIENT1" />
+			<FLLink name="Link81" destination_node="WEBSERVER3" />
+			<FLLink name="Link128" destination_node="WEBCLIENT0" />
+			<FLLink name="Link80" destination_node="WEBCLIENT6" />
+		</FLNode>
+		<FLNode name="DPI9" functional_type="DPI">
+			<FLLink name="Link142" destination_node="CACHE1" />
+			<FLLink name="Link174" destination_node="MAILCLIENT4" />
+			<FLLink name="Link65" destination_node="WEBSERVER3" />
+			<FLLink name="Link48" destination_node="WEBSERVER4" />
+			<FLLink name="Link68" destination_node="MAILSERVER1" />
+			<FLLink name="Link90" destination_node="VPN7" />
+			<FLLink name="Link84" destination_node="MAILSERVER2" />
+			<FLLink name="Link94" destination_node="WEBCLIENT0" />
+			<FLLink name="Link115" destination_node="MAILSERVER5" />
+			<FLLink name="Link60" destination_node="DPI4" />
+			<FLLink name="Link71" destination_node="WEBCLIENT6" />
+		</FLNode>
+		<FLNode name="WEBCLIENT0" functional_type="WEB_CLIENT">
+			<FLLink name="Link88" destination_node="CACHE2" />
+			<FLLink name="Link0" destination_node="VPN7" />
+			<FLLink name="Link41" destination_node="DPI9" />
+			<FLLink name="Link113" destination_node="FW0" />
+			<FLLink name="Link135" destination_node="NAT3" />
+		</FLNode>
+		<FLNode name="FW0" functional_type="FW">
+			<FLLink name="Link109" destination_node="MAILSERVER0" />
+			<FLLink name="Link19" destination_node="MAILSERVER1" />
+			<FLLink name="Link34" destination_node="CACHE1" />
+			<FLLink name="Link45" destination_node="MAILSERVER5" />
+			<FLLink name="Link153" destination_node="DPI6" />
+			<FLLink name="Link164" destination_node="DPI8" />
+			<FLLink name="Link77" destination_node="NAT3" />
+			<FLLink name="Link130" destination_node="MAILCLIENT5" />
+			<FLLink name="Link21" destination_node="MAILSERVER2" />
+			<FLLink name="Link13" destination_node="WEBCLIENT6" />
+			<FLLink name="Link3" destination_node="MAILCLIENT1" />
+			<FLLink name="Link85" destination_node="WEBSERVER4" />
+			<FLLink name="Link168" destination_node="WEBCLIENT0" />
+			<FLLink name="Link158" destination_node="MAILCLIENT7" />
+		</FLNode>
+	</FLNffg>
+	<FLNffg name="Nffg3" last_updated_time="2016-09-27T05:40:20.000+02:00">
+		<FLNode name="SPAM11" functional_type="SPAM">
+			<FLLink name="Link15" destination_node="MAILSERVER1" />
+			<FLLink name="Link5" destination_node="WEBCLIENT2" />
+			<FLLink name="Link60" destination_node="MAILSERVER2" />
+		</FLNode>
+		<FLNode name="DPI14" functional_type="DPI">
+			<FLLink name="Link88" destination_node="WEBSERVER6" />
+			<FLLink name="Link32" destination_node="WEBSERVER7" />
+		</FLNode>
+		<FLNode name="CACHE1" functional_type="CACHE">
+			<FLLink name="Link25" destination_node="WEBSERVER6" />
+			<FLLink name="Link30" destination_node="MAILSERVER2" />
+		</FLNode>
+		<FLNode name="VPN5" functional_type="VPN">
+			<FLLink name="Link21" destination_node="WEBSERVER4" />
+			<FLLink name="Link36" destination_node="WEBCLIENT2" />
+			<FLLink name="Link19" destination_node="MAILSERVER3" />
+		</FLNode>
+		<FLNode name="MAILCLIENT1" functional_type="MAIL_CLIENT">
+			<FLLink name="Link2" destination_node="NAT16" />
+		</FLNode>
+		<FLNode name="VPN9" functional_type="VPN">
+			<FLLink name="Link11" destination_node="WEBCLIENT5" />
+			<FLLink name="Link48" destination_node="MAILCLIENT4" />
+			<FLLink name="Link90" destination_node="CACHE1" />
+			<FLLink name="Link62" destination_node="MAILSERVER5" />
+		</FLNode>
+		<FLNode name="NAT16" functional_type="NAT">
+			<FLLink name="Link67" destination_node="DPI14" />
+			<FLLink name="Link77" destination_node="CACHE15" />
+			<FLLink name="Link79" destination_node="CACHE1" />
+			<FLLink name="Link3" destination_node="MAILCLIENT1" />
+			<FLLink name="Link51" destination_node="WEBSERVER6" />
+			<FLLink name="Link95" destination_node="WEBCLIENT5" />
+		</FLNode>
+		<FLNode name="MAILCLIENT4" functional_type="MAIL_CLIENT">
+			<FLLink name="Link8" destination_node="CACHE15" />
+		</FLNode>
+		<FLNode name="MAILCLIENT3" functional_type="MAIL_CLIENT">
+			<FLLink name="Link6" destination_node="VPN13" />
+			<FLLink name="Link82" destination_node="FW12" />
+		</FLNode>
+		<FLNode name="FW12" functional_type="FW">
+			<FLLink name="Link64" destination_node="MAILSERVER5" />
+			<FLLink name="Link13" destination_node="WEBSERVER0" />
+			<FLLink name="Link46" destination_node="MAILSERVER8" />
+			<FLLink name="Link73" destination_node="CACHE6" />
+		</FLNode>
+		<FLNode name="VPN13" functional_type="VPN">
+			<FLLink name="Link44" destination_node="WEBCLIENT2" />
+			<FLLink name="Link69" destination_node="WEBSERVER7" />
+			<FLLink name="Link39" destination_node="CACHE15" />
+			<FLLink name="Link7" destination_node="MAILCLIENT3" />
+		</FLNode>
+		<FLNode name="WEBSERVER4" functional_type="WEB_SERVER">
+			<FLLink name="Link20" destination_node="VPN5" />
+			<FLLink name="Link74" destination_node="VPN9" />
+			<FLLink name="Link94" destination_node="SPAM2" />
+		</FLNode>
+		<FLNode name="WEBCLIENT5" functional_type="WEB_CLIENT">
+			<FLLink name="Link10" destination_node="VPN9" />
+		</FLNode>
+		<FLNode name="CACHE4" functional_type="CACHE">
+			<FLLink name="Link87" destination_node="WEBSERVER4" />
+			<FLLink name="Link27" destination_node="WEBSERVER7" />
+			<FLLink name="Link57" destination_node="MAILSERVER3" />
+			<FLLink name="Link80" destination_node="FW12" />
+		</FLNode>
+		<FLNode name="WEBSERVER6" functional_type="WEB_SERVER">
+			<FLLink name="Link24" destination_node="CACHE1" />
+		</FLNode>
+		<FLNode name="CACHE6" functional_type="CACHE">
+			<FLLink name="Link34" destination_node="CACHE4" />
+			<FLLink name="Link65" destination_node="SPAM3" />
+			<FLLink name="Link92" destination_node="WEBCLIENT5" />
+			<FLLink name="Link41" destination_node="WEBSERVER4" />
+			<FLLink name="Link50" destination_node="VPN9" />
+		</FLNode>
+		<FLNode name="WEBCLIENT0" functional_type="WEB_CLIENT">
+			<FLLink name="Link0" destination_node="CACHE8" />
+			<FLLink name="Link72" destination_node="CACHE1" />
+		</FLNode>
+		<FLNode name="WEBSERVER0" functional_type="WEB_SERVER">
+			<FLLink name="Link12" destination_node="FW12" />
+			<FLLink name="Link53" destination_node="CACHE6" />
+			<FLLink name="Link85" destination_node="NAT16" />
+		</FLNode>
+		<FLNode name="CACHE8" functional_type="CACHE">
+			<FLLink name="Link23" destination_node="MAILSERVER5" />
+			<FLLink name="Link55" destination_node="MAILSERVER1" />
+			<FLLink name="Link1" destination_node="WEBCLIENT0" />
+			<FLLink name="Link81" destination_node="CACHE1" />
+			<FLLink name="Link29" destination_node="MAILSERVER8" />
+		</FLNode>
+		<FLNode name="WEBCLIENT2" functional_type="WEB_CLIENT">
+			<FLLink name="Link54" destination_node="VPN13" />
+			<FLLink name="Link86" destination_node="DPI10" />
+			<FLLink name="Link49" destination_node="VPN5" />
+			<FLLink name="Link4" destination_node="SPAM11" />
+		</FLNode>
+		<FLNode name="MAILSERVER5" functional_type="MAIL_SERVER">
+			<FLLink name="Link22" destination_node="CACHE8" />
+			<FLLink name="Link63" destination_node="SPAM2" />
+			<FLLink name="Link84" destination_node="CACHE1" />
+		</FLNode>
+		<FLNode name="MAILSERVER3" functional_type="MAIL_SERVER">
+			<FLLink name="Link43" destination_node="VPN9" />
+			<FLLink name="Link18" destination_node="VPN5" />
+		</FLNode>
+		<FLNode name="MAILSERVER2" functional_type="MAIL_SERVER">
+			<FLLink name="Link16" destination_node="SPAM0" />
+			<FLLink name="Link68" destination_node="FW12" />
+			<FLLink name="Link40" destination_node="VPN5" />
+		</FLNode>
+		<FLNode name="WEBSERVER7" functional_type="WEB_SERVER">
+			<FLLink name="Link26" destination_node="CACHE4" />
+			<FLLink name="Link83" destination_node="VPN9" />
+			<FLLink name="Link93" destination_node="SPAM11" />
+		</FLNode>
+		<FLNode name="MAILSERVER8" functional_type="MAIL_SERVER">
+			<FLLink name="Link47" destination_node="SPAM11" />
+			<FLLink name="Link28" destination_node="CACHE8" />
+		</FLNode>
+		<FLNode name="MAILSERVER1" functional_type="MAIL_SERVER">
+			<FLLink name="Link14" destination_node="SPAM11" />
+		</FLNode>
+		<FLNode name="SPAM0" functional_type="SPAM">
+			<FLLink name="Link45" destination_node="MAILSERVER5" />
+			<FLLink name="Link17" destination_node="MAILSERVER2" />
+		</FLNode>
+		<FLNode name="NAT7" functional_type="NAT">
+			<FLLink name="Link75" destination_node="CACHE4" />
+			<FLLink name="Link37" destination_node="CACHE8" />
+			<FLLink name="Link61" destination_node="MAILCLIENT4" />
+			<FLLink name="Link71" destination_node="WEBSERVER6" />
+		</FLNode>
+		<FLNode name="CACHE15" functional_type="CACHE">
+			<FLLink name="Link33" destination_node="MAILCLIENT1" />
+			<FLLink name="Link76" destination_node="WEBCLIENT2" />
+			<FLLink name="Link31" destination_node="CACHE1" />
+			<FLLink name="Link38" destination_node="SPAM3" />
+			<FLLink name="Link70" destination_node="WEBSERVER6" />
+			<FLLink name="Link91" destination_node="WEBSERVER7" />
+			<FLLink name="Link96" destination_node="WEBSERVER4" />
+			<FLLink name="Link9" destination_node="MAILCLIENT4" />
+		</FLNode>
+		<FLNode name="SPAM3" functional_type="SPAM">
+			<FLLink name="Link89" destination_node="CACHE1" />
+			<FLLink name="Link42" destination_node="MAILSERVER8" />
+			<FLLink name="Link59" destination_node="CACHE4" />
+			<FLLink name="Link35" destination_node="MAILCLIENT4" />
+		</FLNode>
+		<FLNode name="SPAM2" functional_type="SPAM">
+			<FLLink name="Link56" destination_node="NAT16" />
+			<FLLink name="Link58" destination_node="MAILCLIENT3" />
+			<FLLink name="Link52" destination_node="WEBCLIENT0" />
+		</FLNode>
+		<FLNode name="DPI10" functional_type="DPI">
+			<FLLink name="Link78" destination_node="MAILSERVER8" />
+			<FLLink name="Link66" destination_node="CACHE6" />
+		</FLNode>
+	</FLNffg>
+	<FLNffg name="Nffg2" last_updated_time="2016-09-25T21:54:20.000+02:00">
+		<FLNode name="MAILSERVER4" functional_type="MAIL_SERVER">
+			<FLLink name="Link12" destination_node="NAT0" />
+		</FLNode>
+		<FLNode name="WEBSERVER3" functional_type="WEB_SERVER">
+			<FLLink name="Link10" destination_node="NAT0" />
+		</FLNode>
+		<FLNode name="NAT0" functional_type="NAT">
+			<FLLink name="Link11" destination_node="WEBSERVER3" />
+			<FLLink name="Link1" destination_node="MAILCLIENT0" />
+			<FLLink name="Link13" destination_node="MAILSERVER4" />
+			<FLLink name="Link3" destination_node="WEBCLIENT1" />
+			<FLLink name="Link5" destination_node="MAILSERVER0" />
+			<FLLink name="Link7" destination_node="WEBSERVER1" />
+			<FLLink name="Link9" destination_node="WEBSERVER2" />
+		</FLNode>
+		<FLNode name="MAILCLIENT0" functional_type="MAIL_CLIENT">
+			<FLLink name="Link0" destination_node="NAT0" />
+		</FLNode>
+		<FLNode name="MAILSERVER0" functional_type="MAIL_SERVER">
+			<FLLink name="Link4" destination_node="NAT0" />
+		</FLNode>
+		<FLNode name="WEBCLIENT1" functional_type="WEB_CLIENT">
+			<FLLink name="Link2" destination_node="NAT0" />
+		</FLNode>
+		<FLNode name="WEBSERVER1" functional_type="WEB_SERVER">
+			<FLLink name="Link6" destination_node="NAT0" />
+		</FLNode>
+		<FLNode name="WEBSERVER2" functional_type="WEB_SERVER">
+			<FLLink name="Link8" destination_node="NAT0" />
+		</FLNode>
+	</FLNffg>
+	<FLNffg name="Nffg1" last_updated_time="2016-09-25T11:49:20.000+02:00">
+		<FLNode name="MAILSERVER5" functional_type="MAIL_SERVER">
+			<FLLink name="Link28" destination_node="SPAM2" />
+		</FLNode>
+		<FLNode name="MAILSERVER4" functional_type="MAIL_SERVER">
+			<FLLink name="Link26" destination_node="SPAM2" />
+		</FLNode>
+		<FLNode name="FW1" functional_type="FW">
+			<FLLink name="Link23" destination_node="MAILSERVER2" />
+			<FLLink name="Link33" destination_node="WEBSERVER7" />
+			<FLLink name="Link43" destination_node="WEBCLIENT6" />
+			<FLLink name="Link54" destination_node="WEBCLIENT0" />
+			<FLLink name="Link53" destination_node="WEBCLIENT4" />
+			<FLLink name="Link48" destination_node="MAILSERVER9" />
+			<FLLink name="Link25" destination_node="MAILSERVER3" />
+			<FLLink name="Link19" destination_node="MAILSERVER0" />
+			<FLLink name="Link5" destination_node="WEBCLIENT2" />
+			<FLLink name="Link41" destination_node="MAILCLIENT1" />
+			<FLLink name="Link7" destination_node="WEBCLIENT3" />
+			<FLLink name="Link40" destination_node="MAILCLIENT7" />
+		</FLNode>
+		<FLNode name="MAILSERVER3" functional_type="MAIL_SERVER">
+			<FLLink name="Link24" destination_node="FW1" />
+		</FLNode>
+		<FLNode name="MAILSERVER2" functional_type="MAIL_SERVER">
+			<FLLink name="Link22" destination_node="FW1" />
+		</FLNode>
+		<FLNode name="WEBSERVER7" functional_type="WEB_SERVER">
+			<FLLink name="Link32" destination_node="FW1" />
+		</FLNode>
+		<FLNode name="MAILSERVER9" functional_type="MAIL_SERVER">
+			<FLLink name="Link36" destination_node="SPAM2" />
+		</FLNode>
+		<FLNode name="MAILSERVER8" functional_type="MAIL_SERVER">
+			<FLLink name="Link34" destination_node="NAT0" />
+		</FLNode>
+		<FLNode name="MAILSERVER6" functional_type="MAIL_SERVER">
+			<FLLink name="Link30" destination_node="NAT0" />
+		</FLNode>
+		<FLNode name="NAT0" functional_type="NAT">
+			<FLLink name="Link56" destination_node="MAILSERVER4" />
+			<FLLink name="Link21" destination_node="WEBSERVER1" />
+			<FLLink name="Link31" destination_node="MAILSERVER6" />
+			<FLLink name="Link1" destination_node="WEBCLIENT0" />
+			<FLLink name="Link35" destination_node="MAILSERVER8" />
+			<FLLink name="Link52" destination_node="MAILSERVER2" />
+			<FLLink name="Link50" destination_node="FW1" />
+			<FLLink name="Link9" destination_node="WEBCLIENT4" />
+		</FLNode>
+		<FLNode name="MAILCLIENT1" functional_type="MAIL_CLIENT">
+			<FLLink name="Link2" destination_node="SPAM2" />
+		</FLNode>
+		<FLNode name="MAILSERVER0" functional_type="MAIL_SERVER">
+			<FLLink name="Link18" destination_node="FW1" />
+		</FLNode>
+		<FLNode name="MAILCLIENT5" functional_type="MAIL_CLIENT">
+			<FLLink name="Link44" destination_node="FW1" />
+			<FLLink name="Link10" destination_node="SPAM2" />
+		</FLNode>
+		<FLNode name="WEBCLIENT8" functional_type="WEB_CLIENT">
+			<FLLink name="Link55" destination_node="NAT0" />
+			<FLLink name="Link16" destination_node="SPAM2" />
+		</FLNode>
+		<FLNode name="MAILCLIENT7" functional_type="MAIL_CLIENT">
+			<FLLink name="Link14" destination_node="SPAM2" />
+		</FLNode>
+		<FLNode name="WEBCLIENT3" functional_type="WEB_CLIENT">
+			<FLLink name="Link6" destination_node="FW1" />
+		</FLNode>
+		<FLNode name="WEBCLIENT4" functional_type="WEB_CLIENT">
+			<FLLink name="Link46" destination_node="FW1" />
+			<FLLink name="Link51" destination_node="SPAM2" />
+			<FLLink name="Link8" destination_node="NAT0" />
+		</FLNode>
+		<FLNode name="WEBCLIENT6" functional_type="WEB_CLIENT">
+			<FLLink name="Link12" destination_node="SPAM2" />
+			<FLLink name="Link38" destination_node="NAT0" />
+		</FLNode>
+		<FLNode name="WEBCLIENT0" functional_type="WEB_CLIENT">
+			<FLLink name="Link0" destination_node="NAT0" />
+		</FLNode>
+		<FLNode name="WEBSERVER1" functional_type="WEB_SERVER">
+			<FLLink name="Link20" destination_node="NAT0" />
+		</FLNode>
+		<FLNode name="WEBCLIENT2" functional_type="WEB_CLIENT">
+			<FLLink name="Link45" destination_node="SPAM2" />
+			<FLLink name="Link4" destination_node="FW1" />
+		</FLNode>
+		<FLNode name="SPAM2" functional_type="SPAM">
+			<FLLink name="Link29" destination_node="MAILSERVER5" />
+			<FLLink name="Link17" destination_node="WEBCLIENT8" />
+			<FLLink name="Link39" destination_node="MAILSERVER3" />
+			<FLLink name="Link11" destination_node="MAILCLIENT5" />
+			<FLLink name="Link42" destination_node="MAILSERVER2" />
+			<FLLink name="Link27" destination_node="MAILSERVER4" />
+			<FLLink name="Link49" destination_node="FW1" />
+			<FLLink name="Link15" destination_node="MAILCLIENT7" />
+			<FLLink name="Link37" destination_node="MAILSERVER9" />
+			<FLLink name="Link47" destination_node="WEBSERVER1" />
+			<FLLink name="Link13" destination_node="WEBCLIENT6" />
+			<FLLink name="Link57" destination_node="WEBCLIENT2" />
+			<FLLink name="Link3" destination_node="MAILCLIENT1" />
+		</FLNode>
+	</FLNffg>
+	<FLNffg name="Nffg5" last_updated_time="2016-09-25T10:55:20.000+02:00">
+		<FLNode name="SPAM13" functional_type="SPAM">
+			<FLLink name="Link11" destination_node="MAILCLIENT5" />
+			<FLLink name="Link33" destination_node="WEBSERVER6" />
+			<FLLink name="Link38" destination_node="DPI0" />
+			<FLLink name="Link60" destination_node="MAILSERVER2" />
+		</FLNode>
+		<FLNode name="SPAM14" functional_type="SPAM">
+			<FLLink name="Link23" destination_node="WEBSERVER5" />
+			<FLLink name="Link31" destination_node="MAILSERVER0" />
+			<FLLink name="Link49" destination_node="FW12" />
+			<FLLink name="Link7" destination_node="MAILCLIENT3" />
+		</FLNode>
+		<FLNode name="SPAM16" functional_type="SPAM">
+			<FLLink name="Link1" destination_node="WEBCLIENT0" />
+			<FLLink name="Link35" destination_node="CACHE4" />
+			<FLLink name="Link46" destination_node="MAILCLIENT3" />
+		</FLNode>
+		<FLNode name="CACHE1" functional_type="CACHE">
+			<FLLink name="Link34" destination_node="WEBSERVER7" />
+			<FLLink name="Link45" destination_node="FW12" />
+			<FLLink name="Link25" destination_node="WEBSERVER6" />
+			<FLLink name="Link68" destination_node="WEBCLIENT0" />
+		</FLNode>
+		<FLNode name="VPN9" functional_type="VPN">
+			<FLLink name="Link66" destination_node="MAILSERVER0" />
+			<FLLink name="Link57" destination_node="VPN2" />
+		</FLNode>
+		<FLNode name="MAILCLIENT5" functional_type="MAIL_CLIENT">
+			<FLLink name="Link10" destination_node="SPAM13" />
+		</FLNode>
+		<FLNode name="MAILCLIENT3" functional_type="MAIL_CLIENT">
+			<FLLink name="Link6" destination_node="SPAM14" />
+		</FLNode>
+		<FLNode name="MAILCLIENT2" functional_type="MAIL_CLIENT">
+			<FLLink name="Link4" destination_node="SPAM3" />
+			<FLLink name="Link30" destination_node="VPN9" />
+		</FLNode>
+		<FLNode name="FW12" functional_type="FW">
+			<FLLink name="Link29" destination_node="WEBCLIENT1" />
+			<FLLink name="Link41" destination_node="CACHE4" />
+		</FLNode>
+		<FLNode name="VPN11" functional_type="VPN">
+			<FLLink name="Link67" destination_node="CACHE8" />
+			<FLLink name="Link52" destination_node="WEBSERVER6" />
+			<FLLink name="Link9" destination_node="WEBCLIENT4" />
+		</FLNode>
+		<FLNode name="WEBSERVER3" functional_type="WEB_SERVER">
+			<FLLink name="Link18" destination_node="CACHE8" />
+		</FLNode>
+		<FLNode name="WEBCLIENT4" functional_type="WEB_CLIENT">
+			<FLLink name="Link8" destination_node="VPN11" />
+		</FLNode>
+		<FLNode name="WEBSERVER4" functional_type="WEB_SERVER">
+			<FLLink name="Link55" destination_node="VPN2" />
+			<FLLink name="Link20" destination_node="DPI10" />
+			<FLLink name="Link53" destination_node="SPAM14" />
+			<FLLink name="Link36" destination_node="SPAM3" />
+			<FLLink name="Link69" destination_node="VPN11" />
+		</FLNode>
+		<FLNode name="WEBSERVER5" functional_type="WEB_SERVER">
+			<FLLink name="Link22" destination_node="SPAM14" />
+			<FLLink name="Link37" destination_node="CACHE6" />
+			<FLLink name="Link62" destination_node="CACHE4" />
+		</FLNode>
+		<FLNode name="CACHE4" functional_type="CACHE">
+			<FLLink name="Link32" destination_node="MAILCLIENT5" />
+			<FLLink name="Link43" destination_node="WEBCLIENT4" />
+			<FLLink name="Link59" destination_node="MAILSERVER0" />
+		</FLNode>
+		<FLNode name="WEBSERVER6" functional_type="WEB_SERVER">
+			<FLLink name="Link24" destination_node="CACHE1" />
+		</FLNode>
+		<FLNode name="CACHE6" functional_type="CACHE">
+			<FLLink name="Link56" destination_node="CACHE1" />
+			<FLLink name="Link27" destination_node="WEBSERVER7" />
+		</FLNode>
+		<FLNode name="WEBCLIENT0" functional_type="WEB_CLIENT">
+			<FLLink name="Link0" destination_node="SPAM16" />
+		</FLNode>
+		<FLNode name="WEBCLIENT1" functional_type="WEB_CLIENT">
+			<FLLink name="Link47" destination_node="SPAM3" />
+			<FLLink name="Link2" destination_node="SPAM7" />
+		</FLNode>
+		<FLNode name="WEBSERVER1" functional_type="WEB_SERVER">
+			<FLLink name="Link65" destination_node="DPI10" />
+			<FLLink name="Link14" destination_node="VPN2" />
+		</FLNode>
+		<FLNode name="CACHE8" functional_type="CACHE">
+			<FLLink name="Link19" destination_node="WEBSERVER3" />
+			<FLLink name="Link40" destination_node="CACHE1" />
+			<FLLink name="Link51" destination_node="SPAM3" />
+		</FLNode>
+		<FLNode name="MAILSERVER2" functional_type="MAIL_SERVER">
+			<FLLink name="Link16" destination_node="VPN2" />
+		</FLNode>
+		<FLNode name="WEBSERVER7" functional_type="WEB_SERVER">
+			<FLLink name="Link26" destination_node="CACHE6" />
+			<FLLink name="Link63" destination_node="VPN11" />
+		</FLNode>
+		<FLNode name="MAILSERVER0" functional_type="MAIL_SERVER">
+			<FLLink name="Link12" destination_node="DPI0" />
+			<FLLink name="Link61" destination_node="CACHE17" />
+		</FLNode>
+		<FLNode name="DPI0" functional_type="DPI">
+			<FLLink name="Link13" destination_node="MAILSERVER0" />
+		</FLNode>
+		<FLNode name="VPN2" functional_type="VPN">
+			<FLLink name="Link54" destination_node="CACHE6" />
+			<FLLink name="Link15" destination_node="WEBSERVER1" />
+			<FLLink name="Link17" destination_node="MAILSERVER2" />
+			<FLLink name="Link50" destination_node="WEBSERVER3" />
+		</FLNode>
+		<FLNode name="CACHE17" functional_type="CACHE">
+			<FLLink name="Link48" destination_node="DPI0" />
+			<FLLink name="Link28" destination_node="WEBSERVER7" />
+		</FLNode>
+		<FLNode name="DPI5" functional_type="DPI">
+			<FLLink name="Link44" destination_node="CACHE8" />
+			<FLLink name="Link64" destination_node="VPN9" />
+		</FLNode>
+		<FLNode name="SPAM7" functional_type="SPAM">
+			<FLLink name="Link3" destination_node="WEBCLIENT1" />
+			<FLLink name="Link39" destination_node="SPAM16" />
+		</FLNode>
+		<FLNode name="CACHE15" functional_type="CACHE">
+			<FLLink name="Link42" destination_node="VPN2" />
+		</FLNode>
+		<FLNode name="SPAM3" functional_type="SPAM">
+			<FLLink name="Link5" destination_node="MAILCLIENT2" />
+		</FLNode>
+		<FLNode name="DPI10" functional_type="DPI">
+			<FLLink name="Link21" destination_node="WEBSERVER4" />
+			<FLLink name="Link58" destination_node="SPAM16" />
+		</FLNode>
+	</FLNffg>
+	<FLNffg name="Nffg0" last_updated_time="2016-09-28T19:08:20.000+02:00">
+		<FLNode name="MAILSERVER4" functional_type="MAIL_SERVER">
+			<FLLink name="Link20" destination_node="FW7" />
+		</FLNode>
+		<FLNode name="FW5" functional_type="FW">
+			<FLLink name="Link15" destination_node="MAILSERVER1" />
+			<FLLink name="Link17" destination_node="WEBSERVER2" />
+		</FLNode>
+		<FLNode name="CACHE0" functional_type="CACHE">
+			<FLLink name="Link23" destination_node="WEBSERVER2" />
+			<FLLink name="Link1" destination_node="WEBCLIENT0" />
+			<FLLink name="Link19" destination_node="WEBSERVER3" />
+			<FLLink name="Link7" destination_node="WEBCLIENT3" />
+		</FLNode>
+		<FLNode name="FW7" functional_type="FW">
+			<FLLink name="Link21" destination_node="MAILSERVER4" />
+			<FLLink name="Link9" destination_node="WEBCLIENT4" />
+		</FLNode>
+		<FLNode name="MAILCLIENT1" functional_type="MAIL_CLIENT">
+			<FLLink name="Link25" destination_node="NAT2" />
+			<FLLink name="Link2" destination_node="SPAM1" />
+		</FLNode>
+		<FLNode name="MAILSERVER1" functional_type="MAIL_SERVER">
+			<FLLink name="Link14" destination_node="FW5" />
+		</FLNode>
+		<FLNode name="MAILSERVER0" functional_type="MAIL_SERVER">
+			<FLLink name="Link12" destination_node="NAT2" />
+			<FLLink name="Link22" destination_node="SPAM3" />
+		</FLNode>
+		<FLNode name="MAILCLIENT5" functional_type="MAIL_CLIENT">
+			<FLLink name="Link10" destination_node="SPAM3" />
+		</FLNode>
+		<FLNode name="NAT6" functional_type="NAT">
+			<FLLink name="Link5" destination_node="WEBCLIENT2" />
+		</FLNode>
+		<FLNode name="NAT2" functional_type="NAT">
+			<FLLink name="Link13" destination_node="MAILSERVER0" />
+			<FLLink name="Link24" destination_node="NAT6" />
+		</FLNode>
+		<FLNode name="WEBCLIENT3" functional_type="WEB_CLIENT">
+			<FLLink name="Link26" destination_node="FW7" />
+			<FLLink name="Link6" destination_node="CACHE0" />
+		</FLNode>
+		<FLNode name="WEBSERVER3" functional_type="WEB_SERVER">
+			<FLLink name="Link18" destination_node="CACHE0" />
+		</FLNode>
+		<FLNode name="WEBCLIENT4" functional_type="WEB_CLIENT">
+			<FLLink name="Link8" destination_node="FW7" />
+		</FLNode>
+		<FLNode name="DPI8" functional_type="DPI">
+			<FLLink name="Link27" destination_node="CACHE0" />
+		</FLNode>
+		<FLNode name="SPAM3" functional_type="SPAM">
+			<FLLink name="Link11" destination_node="MAILCLIENT5" />
+		</FLNode>
+		<FLNode name="WEBCLIENT0" functional_type="WEB_CLIENT">
+			<FLLink name="Link0" destination_node="CACHE0" />
+		</FLNode>
+		<FLNode name="SPAM4" functional_type="SPAM" />
+		<FLNode name="SPAM1" functional_type="SPAM">
+			<FLLink name="Link3" destination_node="MAILCLIENT1" />
+		</FLNode>
+		<FLNode name="WEBCLIENT2" functional_type="WEB_CLIENT">
+			<FLLink name="Link4" destination_node="NAT6" />
+		</FLNode>
+		<FLNode name="WEBSERVER2" functional_type="WEB_SERVER">
+			<FLLink name="Link16" destination_node="FW5" />
+		</FLNode>
+	</FLNffg>
+</FLNffgs>

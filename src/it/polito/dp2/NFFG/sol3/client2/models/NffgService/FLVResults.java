@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{https://france193.wordpress.com}FLV_result" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element ref="{https://france193.wordpress.com}FLVResult" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -33,10 +33,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "flvResult"
 })
-@XmlRootElement(name = "FLV_results")
+@XmlRootElement(name = "FLVResults")
 public class FLVResults {
 
-    @XmlElement(name = "FLV_result")
+    @XmlElement(name = "FLVResult")
     protected List<FLVResult> flvResult;
 
     /**

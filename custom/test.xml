@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<FLNffgs xmlns="https://france193.wordpress.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://france193.wordpress.com ../xsd/nffgVerifier.xsd">
+
+    <FLNffg last_updated_time="2017-02-22T12:40:32.248+01:00" name="Nffg0">
+        <FLNode functional_type="NAT" name="Node0">
+            <FLLink destination_node="Node1" name="Link0"/>
+        </FLNode>
+        <FLNode functional_type="DPI" name="Node1">
+            <FLLink destination_node="Node2" name="Link1"/>
+        </FLNode>
+        <FLNode functional_type="CACHE" name="Node2"/>
+    </FLNffg>
+
+</FLNffgs>

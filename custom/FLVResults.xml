@@ -1,0 +1,14 @@
+<fran:FLVResults xmlns:fran="https://france193.wordpress.com"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="https://france193.wordpress.com ../xsd/nffgVerifier.xsd">
+
+    <!-- FLVResult must be unique -->
+
+    <fran:FLVResult policy="policy0" result="false"
+                    time="2007-10-26T08:36:28" message="Policy is not verified"/>
+    <fran:FLVResult policy="policy1" result="false"
+                    time="2007-10-26T08:36:28" message="Policy is not verified"/>
+    <fran:FLVResult policy="policy2" result="true"
+                    time="2007-10-26T08:36:28" message="Policy is verified"/>
+
+</fran:FLVResults>

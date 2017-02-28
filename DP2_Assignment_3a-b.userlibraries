@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="javax.ws.rs-api-2.0.1-sources">
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib-src/javax.ws.rs-api-2.0.1-sources.jar" />
+  </library>
+  <library name="lib">
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jackson-annotations-2.2.0.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/xsom-20140925.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/validation-api-1.1.0.Final.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jersey-guava-2.24.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/org.osgi.core-4.2.0.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/aopalliance-repackaged-2.5.0-b05.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/scala-compiler-2.10.0.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/lab1.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jersey-server.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/json-simple-1.1.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/swagger-jaxrs_2.10-1.3.5.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jackson-core-2.2.0.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/javax.annotation-api-1.2.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/junit-4.5.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/wadl-core-1.1.6.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jackson-jaxrs-base-2.5.4.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/javax.inject-2.5.0-b05.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jersey-client.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/scalap-2.10.0.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/NFFG.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/osgi-resource-locator-1.0.1.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/swagger-core_2.10-1.3.5.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/javax.servlet-api-3.0.1.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jersey-media-json-jackson-2.24.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/lab3.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/scala-reflect-2.10.0.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/swagger-jersey2-jaxrs_2.10-1.3.5.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/scala-library-2.10.0.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/slf4j-api-1.6.3.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jersey-container-servlet.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jackson-module-jaxb-annotations-2.5.4.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/NFFGRandom.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/hk2-api-2.5.0-b05.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jackson-core-2.5.4.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jaxb-runtime-2.2.11.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/lab2.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jackson-databind-2.2.0.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jersey-client-1.19.1.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/wadl-xslt-1.1.6.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jackson-mapper-asl-1.9.11.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/javax.ws.rs-api-2.0.1.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/codemodel-2.6.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jersey-common.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jsr311-api-0.6.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jaxb-core-2.2.10-b140310.1920.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/javassist-3.20.0-GA.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jackson-jaxrs-json-provider-2.5.4.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jaxb-xjc-2.2.10.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jersey-media-jaxb.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/hk2-locator-2.5.0-b05.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/persistence-api-1.0.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jaxb-api-2.2.7.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jersey-guava-2.7.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jackson-annotations-2.5.4.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jaxb-api-2.2.12-b140109.1041.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jsonschema2pojo-core-0.4.0.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/swagger-annotations-1.3.5.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jersey-core-1.19.1.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/wadl-ant-1.1.6.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jersey-entity-filtering-2.24.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jersey-container-servlet-core.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jackson-databind-2.5.4.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/hk2-utils-2.5.0-b05.jar" />
+    <archive path="/Users/FLDeviOS/IdeaProjects/DP2_Assignment_3a-b/lib/jackson-core-asl-1.9.11.jar" />
+  </library>
+</eclipse-userlibraries>
+

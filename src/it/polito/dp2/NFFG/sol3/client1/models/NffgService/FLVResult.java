@@ -21,7 +21,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *       &lt;/sequence>
- *       &lt;attribute name="policyName" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="policy" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="result" type="{http://www.w3.org/2001/XMLSchema}boolean" />
  *       &lt;attribute name="time" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
  *       &lt;attribute name="message" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -34,11 +34,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
-@XmlRootElement(name = "FLV_result")
+@XmlRootElement(name = "FLVResult")
 public class FLVResult {
 
-    @XmlAttribute(name = "policyName", required = true)
-    protected String policyName;
+    @XmlAttribute(name = "policy", required = true)
+    protected String policy;
     @XmlAttribute(name = "result")
     protected Boolean result;
     @XmlAttribute(name = "time")
@@ -48,27 +48,27 @@ public class FLVResult {
     protected String message;
 
     /**
-     * Gets the value of the policyName property.
+     * Gets the value of the policy property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getPolicyName() {
-        return policyName;
+    public String getPolicy() {
+        return policy;
     }
 
     /**
-     * Sets the value of the policyName property.
+     * Sets the value of the policy property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setPolicyName(String value) {
-        this.policyName = value;
+    public void setPolicy(String value) {
+        this.policy = value;
     }
 
     /**

@@ -6,7 +6,7 @@ import it.polito.dp2.NFFG.VerificationResultReader;
 import java.util.Calendar;
 
 /**
- * Created by Francesco Longo (223428) on 27/01/2017.
+ * Created by Francesco Longo (223428) on 21/02/2017.
  */
 public class FLVerificationResultReader implements VerificationResultReader {
     private PolicyReader policyReader;

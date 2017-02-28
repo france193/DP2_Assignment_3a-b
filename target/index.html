@@ -1,68 +1,187 @@
-<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="ISO-8859-1">
-    <title>DP2 - Assignment 3b</title>
+    <meta charset="UTF-8"/>
+    <link href="screen.css" media="screen" rel="stylesheet" type="text/css"></link>
+    <title>Swadl API documentation generator</title>
+    <script>
+        /** POINT TO YOUR WADL **/
+
+        var xmlDoc = "./rest/application.wadl";
+
+        /** END CHANGES **/
+
+        var xslDoc = "wadl.xsl?" + Math.random();
+        var grammarDefs = {};
+        function goToWadl() {
+            var win = window.open(xmlDoc, '_blank');
+            win.focus();
+        }
+        function loadWadl() {
+            xmlDoc = document.getElementById('input_baseUrl').value;
+            document.getElementById('example').innerHTML = '';
+            document.getElementById('grammars').innerHTML = '';
+            document.getElementById('message').innerHTML = '';
+            try {
+                displayResult();
+            } catch (e) {
+                console.log(e);
+                document.getElementById('message').innerHTML = "Unable to load wadl. Check cross-domain compatibility.";
+            }
+        }
+        function loadXMLDoc(filename) {
+            if (window.ActiveXObject) {
+                xhttp = new ActiveXObject("Msxml2.XMLHTTP");
+            } else {
+                xhttp = new XMLHttpRequest();
+            }
+            if (xhttp.overrideMimeType) {
+                xhttp.overrideMimeType('text/xml');
+            }
+            xhttp.open("GET", filename, false);
+            try {
+                xhttp.responseType = "msxml-document"
+            } catch (err) {
+            } // Helping IE11
+            xhttp.send("");
+            return xhttp.responseXML;
+        }
+
+        function foreach(list, callback) {
+            for (var i = 0; i < list.length; i++) {
+                callback(list[i]);
+            }
+        }
+
+        function slide(el) {
+            if (el.style.height == 'auto')
+                el.style.height = el.scrollHeight + 'px';
+            var height = el.opened ? el.scrollHeight + 'px' : '0px';
+            if (el.style.height == height) {
+                endTransition(el);
+            } else {
+                setTimeout(function () {
+                    el.style.setProperty("transition", "1s");
+                    setTimeout(function () {
+                        el.style.height = height;
+                    }, 10);
+                }, 10);
+            }
+        }
+
+        function slideToggle(el, className, force, callback) {
+            while (el
+            && (!el.getAttribute('class') || (el.getAttribute('class') && !el
+                .getAttribute('class').match('slideContainer')))) {
+                el = el.parentNode;
+            }
+            foreach(el.getElementsByClassName(className), function (el) {
+                el.callback = callback;
+                el.opened = (typeof force != 'undefined' ? force : !el.opened);
+                slide(el);
+            });
+        }
+
+        function endTransition(el) {
+            el.style.removeProperty("transition");
+            if (el.opened) {
+                setTimeout(function () {
+                    el.style.height = "auto";
+                }, 0);
+            }
+            if (el.callback) {
+                el.callback();
+                el.callback = null;
+            }
+        }
+
+        function displayResult() {
+            document.getElementById('input_baseUrl').setAttribute('value', xmlDoc);
+            xml = loadXMLDoc(xmlDoc);
+            xsl = loadXMLDoc(xslDoc);
+            // code for IE
+            if (window.ActiveXObject || xhttp.responseType == "msxml-document") {
+                ex = xml.transformNode(xsl);
+                document.getElementById("example").innerHTML = ex;
+            }
+            // code for Chrome, Firefox, Opera, etc.
+            else if (document.implementation
+                && document.implementation.createDocument) {
+                xsltProcessor = new XSLTProcessor();
+                xsltProcessor.importStylesheet(xsl);
+                resultDocument = xsltProcessor.transformToFragment(xml, document);
+                document.getElementById("example").appendChild(resultDocument);
+                foreach(document.getElementsByClassName('grammar'), function (el) {
+                    addGrammar(el.getAttribute('href'), 'xsd.xsl');
+                });
+                foreach(
+                    document.getElementsByClassName('schema_def'),
+                    function (el) {
+                        var target = el.getAttribute('target');
+                        var content = el.innerHTML;
+                        foreach(
+                            document.getElementsByClassName(target),
+                            function (el) {
+                                el.innerHTML += content;
+                                foreach(
+                                    el
+                                        .getElementsByClassName('schema_link'),
+                                    function (el) {
+                                        el.className += " active_schema_link";
+                                    });
+                            });
+                    });
+                foreach(document.getElementsByClassName('active_schema_link'),
+                    function (el) {
+                        el.onclick = function () {
+                            slideToggle(this, 'model-signature');
+                        }
+                    });
+                foreach(document.getElementsByClassName('slider'), function (el) {
+                    el.addEventListener('webkitTransitionEnd', function () {
+                        endTransition(el);
+                    });
+                    el.addEventListener('transitionend', function () {
+                        endTransition(el);
+                    });
+                });
+            }
+        }
+
+        function addGrammar(xmlGrammarDoc, xslGrammarDoc) {
+            var xmlGrammar = loadXMLDoc(xmlGrammarDoc);
+            var xslGrammar = loadXMLDoc(xslGrammarDoc);
+            // code for IE
+            if (window.ActiveXObject || xhttp.responseType == "msxml-document") {
+                ex = xmlGrammar.transformNode(xslGrammar);
+            }
+            // code for Chrome, Firefox, Opera, etc.
+            else if (document.implementation
+                && document.implementation.createDocument) {
+                xsltProcessor = new XSLTProcessor();
+                xsltProcessor.importStylesheet(xslGrammar);
+                resultDocument = xsltProcessor.transformToFragment(xmlGrammar,
+                    document);
+            }
+            document.getElementById('grammars').appendChild(resultDocument);
+        }
+    </script>
 </head>
-<body>
-<h1>DP2 Assignment 3a-b</h1>
-<p>
-    <pre>
-        This is the home page for the RESTfull web-service developed by Francesco Longo (s223428) for the Assignement 3b for the course
-        Distributed Programming 2. Here it is the wadl file <a href="rest/application.wadl">Application.wadl</a> the xsd0.xsd <a
-        href="rest/application.wadl/xsd0.xsd">file</a>, click here for <a href="rest/info_resources">other info</a>.
-    </pre>
-
-</p>
-<p>
-    <pre>
-        As requested the service stores all nffgs and policies on a local database (the class that act as a DB is declared
-        static and all the methods that access to the ConcurrentHashMap are syncronized in order to allow the access to the
-        same data from many clients at same time).
-        At the first runtime (service know the first runtime because there is a flag initialized true in the DB class) is
-        executed the deletion of all the nodes and relationships in the Neo4JXML service.
-        Policies are stored only on the service and use the same id of the client (policy name) so in my project the policy
-        name is unique in all the nffgs (it is not possible to have a policy with the same name in two different nffgs).
-        All the nffgs and nodes (nffgs are saved as a node in Neo4JXML), as they are stored also in the Neo4JXML service,
-        must have a reference of the id given from the Neo4JXML.
-        In my project the id of the nffg is the name, so i cannot have two nffg with the same name.
-        One nffg has inside a list of node, a list of link and a list of policy.
-        When a new nffg is uploaded to the service, the service upload it (in the required format) on the Neo4JXML and saves
-        the id given by Neo4JXML (from this moment also in the service the nffg and nodes are referenced using the id of the
-        Neo4JXML). To maintain a relation with the old name of the node and nffgs, all the name are saved in a
-        ConcurrentHashMap (aved in the DB class) where the key is the id (given by Neo4JXML service) of the nffgs and the
-        value is a class where store the name of the nffg and all the old name of the node of the nffg paired with the id
-        (given by Neo4JXML service) in order to permit in future to add some link referring to the name of the old node name
-        and not the id of the Neo4JXML.
-        Every time i must remove, update or post a new resource i update the value in my db and on the neo4JXML service.
-        I designed and developed all the possible granularity in getting info from resource in order to download only the
-        required information insted of the whole data every time i need some info.
-        For example:
-            - /nffg/nffg_id/node/node_id/links ---> gives all the link with the node as the source of link
-            - /nffg/nffg_id/links              ---> gives all the link of the nffg
-            - /policies                        ---> gives all policies of the all nffgs
-            - /nffg/nffg_id/policies           ---> gives all policies of the specified nffg
-
-        Here there are all the possibilities to GET information:
-            - /nffgs
-            - /nffg/nffg_id
-            - /nffg/nffg_id/nodes
-            - /nffg/nffg_id/node/node_id
-            - /nffg/nffg_id/node/node_id/links
-            - /nffg/nffg_id/node/node_id/link/link_id
-            - /nffg/nffg_id/links
-            - /nffg/nffg_id/link/link_id
-            - /nffg/nffg_id/policies
-            - /nffg/nffg_id/policy/policy_id
-            - /policies
-            - /policy/policy_id
-
-        For DELETE, UPDATE or REMOVE the path available are "/nffgs" or "/nffg/nffg_name" "/policies" or
-        "/policy/policy_id" in order to perform action to a single element or to a group of element.
-
-        To VERIFY a policy or a group of policies the path are "verifyPolicy" or "verifyPolicies" and it must post a list of
-        policy name (an element FLV_result or a group of elements FLV_results which contains only the name of the policy or
-        policies), then the service return the same element compiled with the resulting info.
-    </pre>
-</p>
+<body onload="displayResult()">
+<div id="header">
+    <div class="swadl-ui-wrap">
+        <a id="logo">Swadl</a>
+        <form id="api_selector">
+            <div class="input">
+                <input id="input_baseUrl" name="baseUrl" type="text"> </input>
+            </div>
+            <div class="input">
+                <a id="explore" onclick="loadWadl()">Swadl it!</a>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="message" class="error"></div>
+<div id="example"></div>
+<div id="grammars"></div>
 </body>
+</html>

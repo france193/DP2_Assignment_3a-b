@@ -1,16 +1,16 @@
 package it.polito.dp2.NFFG.sol3.service.database;
 
-import it.polito.dp2.NFFG.sol3.service.models.NffgService.*;
+import it.polito.dp2.NFFG.sol3.service.models.NffgService.FLNffg;
+import it.polito.dp2.NFFG.sol3.service.models.NffgService.FLPolicy;
+import it.polito.dp2.NFFG.sol3.service.models.NffgService.FLVResult;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Created by Francesco Longo (s223428) on 13/01/2017.
- */
 public class NffgDB {
+
     private static ConcurrentHashMap<String, FLNffg> nffgs = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<String, FLPolicy> policies = new ConcurrentHashMap<>();
-    private static ConcurrentHashMap<String, TemporaryData> tempName = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, FLVResult> vresults = new ConcurrentHashMap<>();
 
     private static Boolean firstBoot = true;
 
@@ -25,8 +25,8 @@ public class NffgDB {
         return nffgs;
     }
 
-    public static synchronized ConcurrentHashMap<String, TemporaryData> getTempName() {
-        return tempName;
+    public static synchronized ConcurrentHashMap<String, FLVResult> getVresults() {
+        return vresults;
     }
 
     public static synchronized Boolean getFirstBoot() {

@@ -1,0 +1,62 @@
+<fran:FLNffgs xmlns:fran="https://france193.wordpress.com"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="https://france193.wordpress.com ../xsd/nffgVerifier.xsd">
+
+    <!-- nffg name must be unique inside nffgs -->
+    <!-- in policy, nffg_name must refers to an existing nffg -->
+
+    <!-- policy name must be unique (already done) -->
+    <!-- flvresult name must be unique (already done) -->
+    <!-- flvresult must refers to an existing policy (already done) -->
+    <!-- in link, destination_node must refers to an existiong node (already
+        done) -->
+    <!-- link id must be unique in a nffg (already done) -->
+    <!-- link id must be unique in a node (already done) -->
+    <!-- node id must be unique in nffg (already done) -->
+
+    <fran:FLNffg name="nffg0" last_updated_time="2008-09-29T03:49:45">
+
+        <fran:FLNode name="node0" functional_type="NAT">
+            <fran:FLLink name="link0" destination_node="node1"/>
+        </fran:FLNode>
+
+        <fran:FLNode name="node1" functional_type="MAIL_SERVER">
+            <fran:FLLink name="link1" destination_node="node0"/>
+            <fran:FLLink name="link2" destination_node="node1"/>
+        </fran:FLNode>
+
+    </fran:FLNffg>
+
+    <fran:FLNffg name="nffg1" last_updated_time="2008-09-29T03:49:45">
+
+
+        <fran:FLNode name="node0" functional_type="NAT">
+            <fran:FLLink name="link0" destination_node="node1"/>
+        </fran:FLNode>
+
+        <fran:FLNode name="node1" functional_type="MAIL_SERVER">
+            <fran:FLLink name="link2" destination_node="node0"/>
+            <fran:FLLink name="link3" destination_node="node1"/>
+        </fran:FLNode>
+
+    </fran:FLNffg>
+
+    <fran:FLPolicy name="policy0" nffg_name="nffg0"
+                   isPositive="false" source_node="node0" destination_node="node1">
+
+        <fran:traversed_node>WEB_CLIENT</fran:traversed_node>
+        <fran:traversed_node>DPI</fran:traversed_node>
+        <fran:traversed_node>NAT</fran:traversed_node>
+
+    </fran:FLPolicy>
+
+    <fran:FLPolicy name="policy1" nffg_name="nffg1"
+                   isPositive="false" source_node="node0" destination_node="node1">
+    </fran:FLPolicy>
+
+    <fran:FLVResult policy="policy0" result="false"
+                    time="2007-10-26T08:36:28" message="Policy is not verified"/>
+    <fran:FLVResult policy="policy1" result="false"
+                    time="2007-10-26T08:36:28" message="Policy is not verified"/>
+
+</fran:FLNffgs>
