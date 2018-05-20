@@ -1,35 +1,65 @@
 Distributed Programming II A.Y. 2016-17
 =======================================
 
-Assignment n. 3 - Part b
-------------------------
+Distributed Programming II
+A.Y. 2016/17
+Assignment n. 3 – part a)
+All the material needed for this assignment is included in the .zip archive where you have found this file. Please extract the archive to an empty directory (that will be called [root]) where you will work.
+This assignment is about the design of an XML-based RESTful API for remote access to the system considered in the previous assignments. The web service has to be designed according to the following specifications.
+- The web service must allow its clients to:
+1. Read all the information available about NFFGs and policies.
+2. Add and remove whole NFFGs.
+3. Add, remove or update whole policies.
+4. Execute the verification of one or more reachability policies that are already available in the service (the client selects the policies to be verified).
+5. Execute the verification of one or more policies passed by the client, but without storing the policies in the service (in this case, the service returns the verification results of the policies that the client has sent).
+- For point 1, the information to be provided is the same that was used for Assignment 1 (the same specifications apply).
+- The operations that may alter the data about NFFGs and policies in the service must never violate the specifications given for Assignment 1 (e.g. an NFFG can be removed only after having removed all the policies that refer to it, but the service may also offer the possibility to automatically remove an NFFG along with all the policies that refer to it; similarly, a policy can be added only if it refers to an existing NFFG; for point 2, the addition of a NFFG with the same name as one of the previously added NFFGs must raise an error; etc.).
+- For point 2, when a new NFFG is added, its update time is set to the current time.
+- For point 3, it must be possible to add policies with or without verification results.
+- For point 4, the execution of the verification changes the verification result of the policy (if there was one, it is overwritten by the new one and the verification time is set to the current time).
+The output of this design phase has to be written into 2 files: a report, stored into a pdf file named [root]/doc/nffgVerifier.pdf, and an XML schema, stored into a file named [root]/xsd/nffgVerifier.xsd. If you want, you can split the schema into multiple files. In this case, nffgVerifier.xsd must be the main file which includes the other local files and all files must be stored in [root]/xsd.
+The report must document the design of the RESTful API. It must include the following items:
+1. Description of the conceptual structure of resources (identify the resources, with their hierarchical structure; use plural names for collections and singular names for resources that are not collections; specify the methods allowed for each resource).
+2. Mapping of the resources to URLs (for simplicity, use URLs that are relative to the base URL of the service; for resources that belong to collections, use the notation {id}, where id is the name of the field that identifies the resource in the collection )
+3. Description of each possible operation. For each resource, and for each method allowed on the resource, specify the allowed query string parameters and/or the allowed request body, the possible status codes, and, for each possible status code, the response body. For each allowed query string parameter, specify name and XML schema type of the value (either a standard XML schema simple type or one defined by you in the nffgVerifier.xsd schema document). For request body and response body, specify the XML element, which must be defined at the global level in the nffgVerifier.xsd schema document. Schema elements and types in this description must be referenced by name. In practice, the nffgVerifier.xsd schema document must include a set of global named types and a set of global elements. As far as possible, you can reuse the definitions you already developed in the schema for Assignment 1. For each possible operation, give also a short description when not obvious.
+The web service must be designed so as to be compliant with the REST principles and conventions, robust, easy to be used by clients, and enabling efficient execution of all the operations for which it has been designed. The documentation should be self-contained (it should include all that is necessary for a user to know to be able to consume the service, apart from what can be deduced from the service itself).
+When designing the service, consider that it should be able to scale to hundreds of policies and NFFGs (with a total of many thousands of nodes).
+Correctness verification
+In order to be acceptable for examination, the produced XML schema document must be valid. This can be checked by means of the Eclipse schema validator.
+Submission format
+The produced documents will be submitted along with Part b) of Assignment 3, for which instructions will be given later on.
 
-This archive includes:
+Distributed Programming II
+A.Y. 2016/17
+Assignment n. 3 – part b)
+All the material needed for this assignment is included in the .zip archive where you have found this file. Please extract the archive to the same working directory where you have already extracted the material for part a) and where you will work. In this way, you should have the xsd and documentation pdf developed in part a) in the [root]/xsd and [root]/doc folders respectively.
+This second part of the assignment consists of three sub-parts:
+1. Write a simplified Java implementation (using the JAX-RS framework) of the web service designed in part a). This simplified implementation must implement only functionalities 1, 2 (with the exclusion of removal), 3, and 4 specified in part a). Accordingly, some of the operations that are possible in your design may be disabled in this implementation. The web service will be packaged into a war archive that can be deployed to Tomcat. This will be done by the ant script [root]/build.xml, which includes a target named package-service that builds and packages the service. The name of the service packaged in this way will be “NffgService”, and its base URL will be http://localhost:8080/NffgService/rest (the WADL description will be available at the standard location, i.e. http://localhost:8080/NffgService/rest/application.wadl).
+The service does not have to provide data persistency but has to manage concurrency, i.e. several clients can operate concurrently on the same service without restrictions. When deployed, NffgService must be initialized with an empty data set (i.e. no NFFGs and no policies).
+The service must exploit the Neo4JXML service (the one already used for Assignment 2; a new war is provided in this assignment with an updated implementation) in the following way: when a new NFFG is added (point 2 of the functionality list), the new NFFG is stored into the Neo4JXML service (if this is not possible for some reason, e.g. service not reachable, the add operation must fail); when a reachability policy has to be verified (point 4 of the functionality list), this is done by exploiting the Neo4JXML service, as done in Assignment 2 (if the operation that Neo4JXML is requested to perform fails, the corresponding operation will fail in NffgService). In order to enable the storage of multiple NFFGs in Neo4JXML, the way NFFGs are mapped to Neo4J nodes will be slightly different from the one adopted in Assignment 2: for each NFFG, in addition to the nodes and relationships used in Assignment2, the service will create another node that represents the NFFG itself, with a property “name” that stores the name of the NFFG and the label “NFFG”; this node will be connected to all the nodes that represent the nodes of that NFFG by means of relationships named “belongs”. Note that only the NFFGs are stored in the Neo4JXML service, while policies are not (of course, they are stored by NffgService). NffgService has to read the actual URL of Neo4JXML as the value of the system property it.polito.dp2.NFFG.lab3.NEO4JURL. If the property is not set, the default value to be used is http://localhost:8080/Neo4JXML/rest.
+The service must be developed entirely in package it.polito.dp2.NFFG.sol3.service, and the corresponding source code must be stored under [root]/src/it/polito/dp2/NFFG/sol3/service.
+Write an ant script that automates the building of your service, including the generation of any necessary artifacts. The script must have a target called build-service to build the service. All the class files must be saved under [root]/build. Customization files, if necessary, can be stored under [root]/custom, while XML schema files can be stored under [root]/xsd. Of course, the schema file developed in part a) can also be used (it is stored in [root]/xsd, as specified previously).
+The ant script must be named sol_build.xml and must be saved directly in folder [root]. Important: your ant script must define basedir=”.” and all paths used by the script must be under ${basedir} and must be referenced in a relative way starting from ${basedir}. Any other files that are necessary and that are not included in the other folders should be saved in [root]/custom.
+The package-service target available in build.xml calls the build-service target of your sol_build.xml and then packages the service into the archive [root]/war/NffgService.war. The descriptor of the service used for the package is under WebContent. The deployment of the package to a Tomcat server can be done by calling the deployWS target available in the build.xml script. Note that this target re-builds the war and also deploys Neo4JXML. Before running this target you need to start Tomcat. This has to be done by calling the start-tomcat ant target on build.xml (which also sets the expected system properties). Important: before using build.xml it is necessary to set the tomcat-related properties in the ant script tomcat-build.xml imported by build.xml. Complete the documentation you already developed for part a) by adding a section that illustrates the most relevant design and implementation choices you made (including any assumptions you made). Limit the size of this section to 1 page. Turn your documentation into HTML and add it to the WebContent/WEB-INF folder, so that it can be browsed (the main file must be index.html).
+2. Implement a client for the web service designed in part a) and implemented in part b).1. This client must take the form of a Java library that implements the interface it.polito.dp2.NFFG.lab3.NFFGClient, available in source form in the package of this assignment (its documentation is included in the source file).
+The library to be developed must include a factory class named it.polito.dp2.NFFG.sol3.client1.NFFGClientFactory, which extends the abstract factory it.polito.dp2.NFFG.lab3.client1.NFFGClientFactory and, through the method newNFFGClient(), creates an instance of your concrete class that implements the NFFGClient interface. An instance of the client library, when created, must read the information about NFFGs and policies from the same interfaces already used for Assignment 1 (defined in package it.polito.dp2.NFFG), using the same abstract factory already used for Assignment 1, then it must respond to method invocations.
+The client must be developed entirely in package it.polito.dp2.NFFG.sol3.client1, and the source code for the client must be stored under [root]/src/it/polito/dp2/NFFG/sol3/client1. The actual base URL of the web service to be used by the client must be obtained by reading the it.polito.dp2.NFFG.lab3.URL system property. If this property is not set, the default URL http://localhost:8080/NffgService/rest/ must be used.
+In your sol_build.xml file, add a new target named build-client that automates the building of your client, including the generation of artifacts if necessary. All the class files must be saved under [root]/build. You can assume that the Tomcat server is running with NffgService deployed when the build-client target is called (of course, the target may fail if this is not the case). Customization files, if necessary, can be stored under [root]/custom.
+3. Implement another client for the web service, which provides information about NFFGs and policies. The client must take the form of a library similar to the one implemented in Assignment 1.
 
-- README            	This file
-- Assignment3a.pdf   	The text of Assignment 3 - Part a
-- Assignment3b.pdf   	The text of Assignment 3 - Part b
-- build.xml				The ant script for this assignment
-- tomcat-build.xml		The ant script for tomcat-related targets (included by build.xml)
-- custom				The location of custom files
-- doc               	The folder where you have to put the documentation of your design.
-- lib					The location of the jar files necessary for this assignment
-- lib-src				The location of library sources (to be attached to the
-						corresponding lib jar files in eclipse)
-- src					The location of source files
-- WebContent			The folder including the files used for the deployment to Tomcat
-- war					The location of the .war file of the Neo4JXML service and of the
-						.war file that will be generated
-- xsd					The location of your schema files
+The library must load information about NFFGs and policies from the web service at startup. The library must implement all the interfaces and abstract classes defined in package it.polito.dp2.NFFG. The classes of the library must be entirely in package it.polito.dp2.NFFG.sol3.client2 and their sources must be stored in [root]/src/it/polito/dp2/NFFG/sol3/client2. The library must include a factory class named it.polito.dp2.NFFG.sol3.client2.NffgVerifierFactory, which extends the abstract factory it.polito.dp2.NFFG.NffgVerifierFactory and, through the method newNffgVerifier(), creates an instance of your concrete class implementing the NffgVerifier interface. The actual base URL of the web service to be used for getting the information must be obtained by reading the it.polito.dp2.NFFG.lab3.URL system property. If this property is not set, the default URL http://localhost:8080/NffgService/rest/ must be used.
+Update your sol_build.xml file, so that the target named build-client also builds your second client. All the class files must be saved under [root]/build. You can assume that the Tomcat server is running with NffgService deployed when the build-client target is called (of course, the target may fail if this is not the case). Customization files, if necessary, can be stored under [root]/custom.
+The client library classes developed in points 2 and 3 must be robust and interoperable, without dependencies on locales. However, these classes are meant for single-thread use only, i.e. the classes will be used by a single thread, which means there cannot be concurrent calls to the methods of these classes.
+Correctness verification
+Before submitting your solution, you are expected to verify its correctness and adherence to all the specifications given here. In order to be acceptable for examination, your assignment must pass at least all the automatic mandatory tests. Note that these tests check just part of the functional specifications! In particular, they only check that:
+• the submitted schema is valid (you can check this requirement by means of the Eclipse XML schema validator);
+• the implemented web service and clients behave as expected, in some scenarios: after calling an NNFG add or policy add operation (by means of your client1), the information about NFFGs and policies returned by your service and received by your client2 is consistent with the performed operations.
+The same tests that will run on the server can be executed on your computer by issuing the following command
+ant –Dseed=<seed> run-tests
+Note that this command also deploys your service and the Neo4JXML service. However, before running this command you have to start Tomcat and Neo4J on your local machine, as explained for Assignment 2.
+Other checks and evaluations on the code will be done at exam time (i.e. passing all tests does not guarantee the maximum of marks). Hence, you are advised to test your program with care (e.g. you can also test your solution by running your service and then test it by using your clients in different scenarios and by means of other general-purpose clients).
 
-Setting the work environment for the project
---------------------------------------------
-After Tomcat installation, set the Tomcat-related properties in tomcat-build.xml.
-You can create a single eclipse java project for this package and then add the
-jars under lib to the build path. It is also suggested to attach the sources
-available in lib-src to the corresponding jar library.
-DO NOT USE tomcat-build.xml directly. Instead use the build.xml (which imports it).
-
-Start tomcat by running the start-tomcat target
-(from build.xml).
-The other instructions for using build.xml are included in the assignment text.
+Submission format
+A single .zip file must be submitted, including all the files that have been produced. The .zip file to be submitted must be produced by issuing the following command (from the [root] directory):
+     ant make-final-zip
+In order to make sure the content of the zip file is as expected by the automatic submission system, do not create the .zip file in other ways.
